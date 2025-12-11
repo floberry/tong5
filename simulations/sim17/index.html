@@ -3,570 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>에너지 효율 시뮬레이션</title>
+    <title>에너지 효율 문제</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Malgun Gothic', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
-        }
-
-        .container {
+            padding: 15px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px 0;
         }
-
-        .header {
-            background: white;
-            padding: 15px;
-            border-radius: 10px 10px 0 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
         }
-
-        .header h1 {
-            font-size: 20px;
+        
+        .problem-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
             color: #333;
-            margin-bottom: 10px;
         }
-
-        .mode-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #667eea;
-            background: white;
-            border-radius: 5px;
-            cursor: pointer;
+        
+        .problem-text {
             font-size: 14px;
-            transition: all 0.3s;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #2d2d2d;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 12px;
+            border-left: 4px solid #666;
         }
-
-        .mode-btn.active {
-            background: #667eea;
-            color: white;
+        
+        /* SVG 다이어그램 영역 */
+        .diagram-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 30px 15px;
+            border-radius: 20px;
+            margin: 25px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
-
-        .match-section {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: #f0f0f0;
-            border-radius: 5px;
-        }
-
-        .match-section.active {
-            display: block;
-        }
-
-        .match-btn {
+        
+        #energyDiagram {
             width: 100%;
-            padding: 12px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
+            max-width: 550px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
-
-        .match-status {
-            text-align: center;
-            padding: 10px;
-            color: #666;
-        }
-
-        .paper {
+        
+        .question-section {
             background: #e8e8e8;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            position: relative;
+            border-radius: 15px;
+            margin: 25px 0;
         }
-
-        .paper::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: repeating-linear-gradient(90deg, #333 0px, #333 20px, transparent 20px, transparent 40px);
-        }
-
-        .score-board {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-        }
-
-        .score-item {
-            text-align: center;
-        }
-
-        .score-label {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .score-value {
-            font-size: 20px;
+        
+        .question-title {
             font-weight: bold;
-            color: #667eea;
-        }
-
-        .opponent-score {
-            display: none;
-        }
-
-        .opponent-score.active {
-            display: block;
-        }
-
-        .question-box {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .question-number {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .question-text {
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .data-box {
-            background: #f5f5f5;
-            border: 2px solid #ddd;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-
-        .data-item {
-            margin: 8px 0;
+            margin-bottom: 12px;
+            color: #2d2d2d;
             font-size: 15px;
         }
-
-        .choices {
-            list-style: none;
-        }
-
-        .choice {
+        
+        .bogie-box {
             background: white;
-            border: 2px solid #ddd;
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 18px;
+            border: 3px dashed #888;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+        
+        .bogie-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .bogie-item {
+            margin: 10px 0;
+            padding-left: 20px;
+            color: #333;
             position: relative;
-        }
-
-        .choice:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-
-        .choice.selected {
-            border-color: #667eea;
-            background: #e8eaff;
-        }
-
-        .choice.correct {
-            border-color: #51cf66;
-            background: #d3f9d8;
-        }
-
-        .choice.wrong {
-            border-color: #ff6b6b;
-            background: #ffe0e0;
-        }
-
-        .choice.disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .explanation {
-            display: none;
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 5px;
             line-height: 1.6;
         }
-
-        .explanation.show {
-            display: block;
+        
+        .bogie-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #666;
         }
-
-        .explanation-title {
-            font-weight: bold;
-            color: #856404;
-            margin-bottom: 8px;
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 25px 0;
         }
-
-        .new-problem-btn {
-            width: 100%;
-            padding: 15px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 0 0 10px 10px;
-            font-size: 16px;
+        
+        .option-btn {
+            padding: 18px;
+            font-size: 17px;
             font-weight: bold;
+            border: 3px solid #888;
+            background: linear-gradient(135deg, white 0%, #f5f5f5 100%);
+            border-radius: 15px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            color: #333;
+            position: relative;
         }
-
-        .new-problem-btn:hover {
-            background: #5568d3;
+        
+        .option-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
-
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            pointer-events: none;
-            animation: fall 2s linear forwards;
+        
+        .option-btn.selected {
+            background: linear-gradient(135deg, #444 0%, #222 100%);
+            color: white;
+            border-color: #000;
+            transform: scale(1.05);
         }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
+        
+        .option-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
         }
-
-        .penalty-flash {
-            animation: shake 0.5s;
+        
+        .selection-display {
+            background: #e8e8e8;
+            padding: 18px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid #999;
         }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+        
+        .selection-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 14px;
         }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px 0;
-            }
-            .paper {
-                padding: 15px;
-            }
-            .question-text {
-                font-size: 14px;
-            }
+        
+        .selection-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-new {
+            background: linear-gradient(135deg, #666 0%, #444 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(135deg, #999 0%, #777 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .btn-check {
+            background: linear-gradient(135deg, #333 0%, #000 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            font-size: 18px;
+        }
+        
+        .result.correct {
+            background: linear-gradient(135deg, #d4d4d4 0%, #c0c0c0 100%);
+            color: #000;
+            display: block;
+            border: 3px solid #888;
+        }
+        
+        .result.incorrect {
+            background: linear-gradient(135deg, #888 0%, #666 100%);
+            color: white;
+            display: block;
+            border: 3px solid #444;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔋 에너지 효율 시뮬레이션</h1>
-            <div class="mode-selector">
-                <button class="mode-btn active" onclick="setMode('single')">혼자 풀기</button>
-                <button class="mode-btn" onclick="setMode('match')">친구와 대결</button>
-            </div>
-            <div class="match-section" id="matchSection">
-                <div class="match-status" id="matchStatus">친구와 실시간 대결을 시작하세요!</div>
-                <button class="match-btn" onclick="startMatch()">매칭 시작</button>
+        <div class="problem-number">5.</div>
+        <div class="problem-text">
+            그림은 발전기에 공급된 화학 에너지의 에너지 전환 과정을 나타낸 것이다. 
+            발전기는 화학 에너지를 모두 전기 에너지와 ⓐ으로, 
+            조명 장치는 전기 에너지를 모두 빛에너지와 ⓑ으로 전환한다.
+        </div>
+        
+        <div class="diagram-container">
+            <svg id="energyDiagram" viewBox="0 0 550 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- 발전기 (왼쪽 아래) -->
+                <g id="generator">
+                    <!-- 발전기 본체 -->
+                    <rect x="20" y="280" width="80" height="70" rx="5" fill="#888" stroke="#333" stroke-width="2"/>
+                    <rect x="25" y="285" width="70" height="60" rx="3" fill="#999"/>
+                    
+                    <!-- 발전기 손잡이 -->
+                    <rect x="90" y="305" width="15" height="30" rx="3" fill="#777"/>
+                    
+                    <!-- 발전기 라벨 -->
+                    <text x="60" y="370" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">발전기</text>
+                    
+                    <!-- 열 표시 (ⓐ) -->
+                    <circle cx="60" cy="260" r="15" fill="white" stroke="#333" stroke-width="2"/>
+                    <text x="60" y="267" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">ⓐ</text>
+                </g>
+                
+                <!-- 화학 에너지 → 발전기 -->
+                <g id="chemicalArrow">
+                    <line x1="60" y1="120" x2="60" y2="260" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+                    <text x="15" y="180" font-size="13" font-weight="bold" fill="#333">화학</text>
+                    <text x="15" y="195" font-size="13" font-weight="bold" fill="#333">에너지</text>
+                    
+                    <!-- 에너지 값 박스 -->
+                    <rect x="80" y="165" width="70" height="40" rx="5" fill="white" stroke="#666" stroke-width="2"/>
+                    <text id="chemicalValue" x="115" y="192" font-size="18" font-weight="bold" text-anchor="middle" fill="#000">100 J</text>
+                </g>
+                
+                <!-- 전기 에너지 → 조명 장치 -->
+                <g id="electricalArrow">
+                    <line x1="120" y1="315" x2="260" y2="300" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+                    <text x="160" y="300" font-size="13" font-weight="bold" fill="#333">전기</text>
+                    <text x="160" y="315" font-size="13" font-weight="bold" fill="#333">에너지</text>
+                    
+                    <!-- 에너지 값 박스 -->
+                    <rect x="165" y="320" width="70" height="40" rx="5" fill="white" stroke="#666" stroke-width="2"/>
+                    <text id="electricalValue" x="200" y="347" font-size="18" font-weight="bold" text-anchor="middle" fill="#000">40 J</text>
+                </g>
+                
+                <!-- 조명 장치 (오른쪽) -->
+                <g id="lightDevice">
+                    <!-- 조명 장치 박스 -->
+                    <rect x="280" y="260" width="100" height="80" rx="8" fill="#999" stroke="#333" stroke-width="3"/>
+                    <rect x="285" y="265" width="90" height="70" rx="5" fill="#aaa"/>
+                    
+                    <!-- 조명 패널 -->
+                    <rect x="295" y="275" width="70" height="50" rx="4" fill="#e0e0e0" stroke="#555" stroke-width="2"/>
+                    
+                    <!-- 전구 그리드 (3x3) -->
+                    <circle cx="310" cy="290" r="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+                    <circle cx="330" cy="290" r="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+                    <circle cx="350" cy="290" r="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+                    
+                    <circle cx="310" cy="307" r="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+                    <circle cx="330" cy="307" r="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+                    <circle cx="350" cy="307" r="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+                    
+                    <!-- 조명 장치 라벨 -->
+                    <text x="330" y="365" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">조명 장치</text>
+                    
+                    <!-- 열 표시 (ⓑ) -->
+                    <circle cx="420" cy="300" r="15" fill="white" stroke="#333" stroke-width="2"/>
+                    <text x="420" y="307" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">ⓑ</text>
+                </g>
+                
+                <!-- 빛에너지 (위로) -->
+                <g id="lightArrow">
+                    <line x1="330" y1="260" x2="330" y2="140" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+                    <text x="350" y="190" font-size="13" font-weight="bold" fill="#333">빛</text>
+                    <text x="350" y="205" font-size="13" font-weight="bold" fill="#333">에너지</text>
+                    
+                    <!-- 에너지 값 박스 -->
+                    <rect x="360" y="175" width="70" height="40" rx="5" fill="white" stroke="#666" stroke-width="2"/>
+                    <text id="lightValue" x="395" y="202" font-size="18" font-weight="bold" text-anchor="middle" fill="#000">10 J</text>
+                </g>
+                
+                <!-- 화살촉 정의 -->
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+                    </marker>
+                </defs>
+                
+                <!-- 빛 효과 (광선) -->
+                <g opacity="0.3">
+                    <line x1="295" y1="260" x2="280" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="310" y1="260" x2="300" y2="195" stroke="#ddd" stroke-width="2"/>
+                    <line x1="325" y1="260" x2="320" y2="190" stroke="#ddd" stroke-width="2"/>
+                    <line x1="340" y1="260" x2="340" y2="185" stroke="#ddd" stroke-width="2"/>
+                    <line x1="355" y1="260" x2="360" y2="190" stroke="#ddd" stroke-width="2"/>
+                </g>
+            </svg>
+        </div>
+        
+        <div class="question-section">
+            <div class="question-title">이에 대한 옳은 설명만을 &lt;보기&gt;에서 있는 대로 고른 것은? [3점]</div>
+            
+            <div class="bogie-box">
+                <div class="bogie-title">&lt; 보 기 &gt;</div>
+                <div class="bogie-item">ㄱ. 조명 장치의 에너지 효율은 0.1이다.</div>
+                <div class="bogie-item">ㄴ. ⓐ과 ⓑ에는 모두 열에너지가 포함된다.</div>
+                <div class="bogie-item">ㄷ. ⓐ과 ⓑ의 합은 <span id="sumValue">50</span> J이다.</div>
             </div>
         </div>
         
-        <div class="paper">
-            <div class="score-board">
-                <div class="score-item">
-                    <div class="score-label">정답</div>
-                    <div class="score-value" id="correctScore">0</div>
-                </div>
-                <div class="score-item">
-                    <div class="score-label">오답</div>
-                    <div class="score-value" style="color: #ff6b6b;" id="wrongScore">0</div>
-                </div>
-                <div class="score-item opponent-score" id="opponentScore">
-                    <div class="score-label">상대 점수</div>
-                    <div class="score-value" style="color: #51cf66;" id="opponentValue">0</div>
-                </div>
-            </div>
-
-            <div class="question-box" id="questionBox">
-                <!-- 문제가 여기에 표시됩니다 -->
-            </div>
+        <div class="options">
+            <button class="option-btn" onclick="selectOption('ㄱ')">① ㄱ</button>
+            <button class="option-btn" onclick="selectOption('ㄴ')">② ㄴ</button>
+            <button class="option-btn" onclick="selectOption('ㄱ, ㄷ')">③ ㄱ, ㄷ</button>
+            <button class="option-btn" onclick="selectOption('ㄴ, ㄷ')">④ ㄴ, ㄷ</button>
+            <button class="option-btn" onclick="selectOption('ㄱ, ㄴ, ㄷ')">⑤ ㄱ, ㄴ, ㄷ</button>
         </div>
-
-        <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
+        
+        <div class="selection-display">
+            <div class="selection-label">선택한 답:</div>
+            <div class="selection-value" id="selectedAnswer">-</div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn btn-new" onclick="generateNewProblem()">새 문제 🎲</button>
+            <button class="btn btn-reset" onclick="resetSelection()">초기화 🔄</button>
+            <button class="btn btn-check" onclick="checkAnswer()">정답 확인 ✨</button>
+        </div>
+        
+        <div class="result" id="result"></div>
     </div>
 
     <script>
-        let currentMode = 'single';
-        let correctCount = 0;
-        let wrongCount = 0;
-        let opponentScore = 0;
-        let isMatched = false;
-        let selectedChoice = null;
-        let isAnswered = false;
-        let currentAnswer = null;
-
-        const problemTemplates = [
-            {
-                type: 'comparison',
-                generate: () => {
-                    const energyA = Math.floor(Math.random() * 6 + 5) * 10;
-                    const efficiencyA = Math.floor(Math.random() * 3 + 6) * 10;
-                    const usefulA = energyA * efficiencyA / 100;
-                    
-                    const energyB = Math.floor(Math.random() * 6 + 5) * 10;
-                    const efficiencyB = Math.floor(Math.random() * 3 + 3) * 10;
-                    const usefulB = energyB * efficiencyB / 100;
-
-                    const variations = [
-                        {
-                            question: `전기 자동차 A, B에 공급한 전기 에너지와 바퀴를 움직이는 데 사용한 에너지는 다음과 같다.`,
-                            data: `• A: 공급 에너지 ${energyA} J, 유용한 에너지 ${usefulA} J<br>• B: 공급 에너지 ${energyB} J, 유용한 에너지 ${usefulB} J`,
-                            options: [
-                                { text: '에너지 효율은 B가 A보다 크다.', correct: efficiencyB > efficiencyA },
-                                { text: '공급한 전기 에너지가 같을 때 버려지는 열에너지는 A가 B보다 많다.', correct: efficiencyA < efficiencyB },
-                                { text: '바퀴를 움직이는 에너지가 같을 때 공급된 전기 에너지의 양은 A가 B보다 적다.', correct: efficiencyA > efficiencyB },
-                            ],
-                            explanation: `A의 효율: ${usefulA}/${energyA}×100=${efficiencyA}%, B의 효율: ${usefulB}/${energyB}×100=${efficiencyB}%<br>효율이 높을수록 같은 에너지로 더 많은 일을 할 수 있고, 버려지는 에너지가 적습니다.`
-                        },
-                        {
-                            question: `두 가전제품 A와 B의 에너지 사용 현황이다.`,
-                            data: `• A: 소비 전력 ${energyA} W, 출력 ${usefulA} W<br>• B: 소비 전력 ${energyB} W, 출력 ${usefulB} W`,
-                            options: [
-                                { text: 'A의 에너지 효율이 B보다 높다.', correct: efficiencyA > efficiencyB },
-                                { text: 'B가 A보다 더 많은 에너지를 낭비한다.', correct: (energyB - usefulB) > (energyA - usefulA) },
-                                { text: '같은 시간 작동 시 A가 B보다 전기를 더 많이 소비한다.', correct: energyA > energyB },
-                            ],
-                            explanation: `A의 효율: ${efficiencyA}%, B의 효율: ${efficiencyB}%<br>효율이 높은 제품일수록 같은 효과를 내는데 더 적은 에너지를 사용합니다.`
-                        }
-                    ];
-
-                    return variations[Math.floor(Math.random() * variations.length)];
-                }
-            },
-            {
-                type: 'calculation',
-                generate: () => {
-                    const supplied = Math.floor(Math.random() * 6 + 4) * 10;
-                    const useful = Math.floor(Math.random() * 4 + 2) * 10;
-                    const correctEfficiency = Math.round(useful / supplied * 100);
-
-                    const variations = [
-                        {
-                            question: `어떤 조명에 매초 ${supplied} J의 전기 에너지를 공급하였더니, ${useful} J의 빛에너지가 발생하였다. 이 조명의 에너지 효율은?`,
-                            options: [
-                                { text: `${correctEfficiency - 10}%`, correct: false },
-                                { text: `${correctEfficiency - 5}%`, correct: false },
-                                { text: `${correctEfficiency}%`, correct: true },
-                                { text: `${correctEfficiency + 5}%`, correct: false },
-                                { text: `${correctEfficiency + 10}%`, correct: false }
-                            ],
-                            explanation: `에너지 효율 = (유용한 에너지 / 공급한 에너지) × 100<br>= (${useful} / ${supplied}) × 100 = ${correctEfficiency}%`
-                        },
-                        {
-                            question: `열기관이 ${supplied} J의 에너지를 공급받아 ${useful} J의 일을 하였다. 이 열기관의 열효율은?`,
-                            options: [
-                                { text: `${correctEfficiency}%`, correct: true },
-                                { text: `${100 - correctEfficiency}%`, correct: false },
-                                { text: `${correctEfficiency + 10}%`, correct: false },
-                                { text: `${Math.round(supplied/useful)}%`, correct: false },
-                                { text: `${Math.round(useful/10)}%`, correct: false }
-                            ],
-                            explanation: `열효율 = (한 일 / 공급받은 에너지) × 100<br>= (${useful} / ${supplied}) × 100 = ${correctEfficiency}%`
-                        }
-                    ];
-
-                    return variations[Math.floor(Math.random() * variations.length)];
-                }
-            },
-            {
-                type: 'concept',
-                generate: () => {
-                    const concepts = [
-                        {
-                            question: '에너지 효율에 대한 설명으로 옳은 것을 모두 고르면?',
-                            options: [
-                                { text: '효율이 높을수록 같은 효과를 내는 데 더 적은 에너지를 사용한다.', correct: true },
-                                { text: '에너지 효율은 버려진 에너지의 비율이다.', correct: false },
-                                { text: '에너지 효율은 100%를 넘을 수 있다.', correct: false },
-                                { text: '효율이 낮을수록 버려지는 열에너지가 많다.', correct: true },
-                                { text: '에너지 효율 등급 5등급이 가장 효율이 좋다.', correct: false }
-                            ],
-                            explanation: '에너지 효율은 공급한 에너지 중 유용하게 사용된 비율이며, 100%를 초과할 수 없습니다. 효율이 높을수록 에너지를 효과적으로 사용하는 것입니다.'
-                        },
-                        {
-                            question: '에너지 전환과 보존에 대한 설명으로 옳은 것은?',
-                            options: [
-                                { text: '에너지는 전환되어도 총량이 보존된다.', correct: true },
-                                { text: '전환 시 일부 에너지가 사라진다.', correct: false },
-                                { text: '열에너지는 다시 100% 사용할 수 있다.', correct: false },
-                                { text: '에너지 보존 법칙 때문에 절약이 필요없다.', correct: false },
-                                { text: '에너지는 새롭게 만들어질 수 있다.', correct: false }
-                            ],
-                            explanation: '에너지 보존 법칙에 따라 에너지의 총량은 일정하지만, 전환 과정에서 유용하게 사용할 수 없는 형태(열)로 변환되므로 절약이 필요합니다.'
-                        }
-                    ];
-
-                    return concepts[Math.floor(Math.random() * concepts.length)];
-                }
-            }
-        ];
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (mode === 'match') {
-                document.getElementById('matchSection').classList.add('active');
-            } else {
-                document.getElementById('matchSection').classList.remove('active');
-                document.getElementById('opponentScore').classList.remove('active');
-                isMatched = false;
-            }
-        }
-
-        function startMatch() {
-            const statusEl = document.getElementById('matchStatus');
-            statusEl.textContent = '매칭 중...';
-            
-            setTimeout(() => {
-                isMatched = true;
-                opponentScore = 0;
-                statusEl.textContent = '매칭 완료! 대결이 시작되었습니다!';
-                document.getElementById('opponentScore').classList.add('active');
-                
-                // 상대방 점수 시뮬레이션
-                setInterval(() => {
-                    if (isMatched && Math.random() > 0.7) {
-                        opponentScore++;
-                        document.getElementById('opponentValue').textContent = opponentScore;
-                    }
-                }, 3000);
-            }, 1500);
-        }
-
+        let currentAnswer = '';
+        let selectedAnswer = '';
+        let chemical, electrical, light;
+        
         function generateNewProblem() {
-            isAnswered = false;
-            selectedChoice = null;
+            chemical = Math.floor(Math.random() * 10 + 1) * 10;
+            electrical = Math.floor(Math.random() * (chemical/10)) * 10;
+            if (electrical === 0) electrical = 10;
+            light = Math.floor(Math.random() * (electrical/10)) * 10;
+            if (light === 0) light = 10;
             
-            const template = problemTemplates[Math.floor(Math.random() * problemTemplates.length)];
-            const problem = template.generate();
+            document.getElementById('chemicalValue').textContent = chemical + ' J';
+            document.getElementById('electricalValue').textContent = electrical + ' J';
+            document.getElementById('lightValue').textContent = light + ' J';
             
-            let html = `
-                <div class="question-number">문제</div>
-                <div class="question-text">${problem.question}</div>
-            `;
-
-            if (problem.data) {
-                html += `<div class="data-box">${problem.data}</div>`;
+            const a = chemical - electrical;
+            const b = electrical - light;
+            const sum = a + b;
+            document.getElementById('sumValue').textContent = sum;
+            
+            const answers = [];
+            
+            const efficiency = light / electrical;
+            if (Math.abs(efficiency - 0.1) < 0.01) {
+                answers.push('ㄱ');
             }
-
-            const shuffledOptions = [...problem.options].sort(() => Math.random() - 0.5);
-            const correctIndex = shuffledOptions.findIndex(opt => opt.correct);
-            currentAnswer = correctIndex;
-
-            html += '<ul class="choices">';
-            shuffledOptions.forEach((option, index) => {
-                html += `<li class="choice" onclick="selectChoice(${index}, ${option.correct})">${index + 1}. ${option.text}</li>`;
-            });
-            html += '</ul>';
-
-            html += `<div class="explanation" id="explanation">
-                <div class="explanation-title">💡 해설</div>
-                <div>${problem.explanation}</div>
-            </div>`;
-
-            document.getElementById('questionBox').innerHTML = html;
+            
+            answers.push('ㄴ');
+            
+            if (sum === chemical - light) {
+                answers.push('ㄷ');
+            }
+            
+            currentAnswer = answers.join(', ');
+            
+            resetSelection();
+            document.getElementById('result').style.display = 'none';
         }
-
-        function selectChoice(index, isCorrect) {
-            if (isAnswered) {
-                // 이미 선택한 답을 다시 클릭하면 취소
-                if (selectedChoice === index) {
-                    document.querySelectorAll('.choice').forEach(choice => {
-                        choice.classList.remove('selected', 'correct', 'wrong', 'disabled');
-                    });
-                    document.getElementById('explanation').classList.remove('show');
-                    isAnswered = false;
-                    selectedChoice = null;
+        
+        function selectOption(option) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(option)) {
+                    if (btn.classList.contains('selected')) {
+                        btn.classList.remove('selected');
+                        selectedAnswer = '';
+                        document.getElementById('selectedAnswer').textContent = '-';
+                    } else {
+                        buttons.forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        selectedAnswer = option;
+                        document.getElementById('selectedAnswer').textContent = option;
+                    }
                 }
+            });
+        }
+        
+        function resetSelection() {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            selectedAnswer = '';
+            document.getElementById('selectedAnswer').textContent = '-';
+            document.getElementById('result').style.display = 'none';
+        }
+        
+        function checkAnswer() {
+            const resultDiv = document.getElementById('result');
+            
+            if (!selectedAnswer) {
+                resultDiv.textContent = '답을 선택해주세요!';
+                resultDiv.className = 'result incorrect';
                 return;
             }
-
-            selectedChoice = index;
-            isAnswered = true;
-
-            const choices = document.querySelectorAll('.choice');
-            choices.forEach((choice, i) => {
-                choice.classList.add('disabled');
-                if (i === index) {
-                    choice.classList.add('selected');
-                }
-            });
-
-            if (isCorrect) {
-                choices[index].classList.add('correct');
-                correctCount++;
-                document.getElementById('correctScore').textContent = correctCount;
-                createConfetti();
+            
+            if (selectedAnswer === currentAnswer) {
+                resultDiv.textContent = '🎉 정답입니다!';
+                resultDiv.className = 'result correct';
             } else {
-                choices[index].classList.add('wrong');
-                choices[currentAnswer].classList.add('correct');
-                wrongCount++;
-                document.getElementById('wrongScore').textContent = wrongCount;
-                document.getElementById('questionBox').classList.add('penalty-flash');
-                setTimeout(() => {
-                    document.getElementById('questionBox').classList.remove('penalty-flash');
-                }, 500);
-                document.getElementById('explanation').classList.add('show');
+                resultDiv.textContent = '💭 정답: ' + currentAnswer;
+                resultDiv.className = 'result incorrect';
             }
         }
-
-        function createConfetti() {
-            const colors = ['#ff6b6b', '#51cf66', '#ffd93d', '#6bcfff', '#a78bfa'];
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 0.3 + 's';
-                    document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 2000);
-                }, i * 30);
-            }
-        }
-
-        // 초기 문제 생성
+        
         generateNewProblem();
     </script>
 </body>

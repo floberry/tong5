@@ -2,8 +2,14 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>에너지 효율 시뮬레이션</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="에너지 효율 문제 시뮬레이션">
+    <meta name="keywords" content="에너지, 효율, 문제, 시뮬레이션">
+    <meta name="author" content="Energy Quiz">
+    <title>에너지 효율 오디션</title>
     <style>
         * {
             margin: 0;
@@ -12,714 +18,499 @@
         }
         
         body {
-            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
-            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+            padding: 15px;
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            max-width: 900px;
+            margin: 0 auto;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
             min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
         }
         
         .container {
-            background: white;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
+            background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 3px solid #888;
         }
         
         .header {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
             text-align: center;
-            border-bottom: 3px solid #000;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
-        .header h1 {
-            font-size: 22px;
+        
+        .title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #ddd;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .rank-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8e8e8 0%, #d4d4d4 100%);
+            border-radius: 10px;
+            border: 2px solid #999;
+        }
+        
+        .rank-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
             margin-bottom: 5px;
         }
-
-        .header .subtitle {
-            font-size: 13px;
-            color: #bdc3c7;
-        }
-
-        .problem-selector {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0;
-            border-bottom: 2px solid #000;
-        }
-
-        .problem-btn {
-            padding: 12px;
-            font-size: 14px;
+        
+        .rank-number {
+            font-size: 48px;
             font-weight: bold;
-            border: none;
-            border-right: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-            background: #f8f9fa;
-            color: #495057;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .problem-btn:hover {
-            background: #e9ecef;
-        }
-
-        .problem-btn.active {
-            background: #2c3e50;
-            color: white;
-            border-bottom: 3px solid #000;
-        }
-
-        .problem-btn:nth-child(5n) {
-            border-right: none;
+            color: #555;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
-        .content {
-            padding: 25px;
-        }
-
-        .problem-number {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #000;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #000;
-        }
-
-        .problem-text {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #212529;
+        h2 {
+            color: #333;
             margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
         }
         
-        .energy-display {
-            background: #f8f9fa;
+        .problem-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 17px;
+            background-color: #f9f9f9;
             padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            border-left: 4px solid #666;
         }
         
-        .energy-row {
+        .cars-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin: 8px 0;
-            background: white;
-            border-radius: 3px;
-            font-size: 14px;
-            border: 1px solid #dee2e6;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
         }
         
-        .energy-label {
+        .car {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .car-box {
+            background: linear-gradient(to bottom, #e8e8e8 0%, #d4d4d4 100%);
+            border: 3px solid #999;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .car-name {
+            font-size: 26px;
             font-weight: bold;
-            color: #000;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .energy-item {
+            margin: 8px 0;
+            font-size: 15px;
+            color: #555;
         }
         
         .energy-value {
             font-weight: bold;
-            color: #495057;
+            color: #000;
+        }
+        
+        .questions {
+            margin: 30px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+        }
+        
+        .question-item {
+            margin: 15px 0;
+            line-height: 1.6;
+            color: #333;
             font-size: 16px;
         }
         
-        .selection-area {
-            margin: 20px 0;
-        }
-        
-        .selection-title {
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #212529;
-            font-size: 14px;
-        }
-        
-        .button-group {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        .choice-buttons {
+            display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
         
-        .option-btn {
+        .choice-btn {
+            flex: 1;
+            min-width: 80px;
             padding: 15px;
             font-size: 18px;
             font-weight: bold;
-            border: 2px solid #495057;
-            background: white;
-            color: #495057;
-            border-radius: 5px;
+            background: linear-gradient(to bottom, #fff 0%, #e8e8e8 100%);
+            border: 2px solid #999;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .option-btn:hover {
-            background: #f8f9fa;
+        .choice-btn:hover {
+            background: linear-gradient(to bottom, #e8e8e8 0%, #d4d4d4 100%);
         }
         
-        .option-btn:active {
+        .choice-btn:active {
             transform: scale(0.95);
         }
         
-        .option-btn.selected {
-            background: #2c3e50;
+        .choice-btn.selected {
+            background: linear-gradient(to bottom, #666 0%, #4a4a4a 100%);
             color: white;
-            border-color: #000;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .checkbox-item {
-            padding: 15px;
-            background: white;
-            border: 2px solid #dee2e6;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            display: flex;
-            align-items: flex-start;
-            line-height: 1.6;
-            user-select: none;
-        }
-
-        .checkbox-item:hover {
-            background: #f8f9fa;
-            border-color: #adb5bd;
-        }
-
-        .checkbox-item.selected {
-            background: #2c3e50;
-            color: white;
-            border-color: #000;
-        }
-
-        .checkbox-icon {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #495057;
-            border-radius: 3px;
-            margin-right: 12px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            margin-top: 2px;
-        }
-
-        .checkbox-item.selected .checkbox-icon {
-            background: white;
-            border-color: white;
-        }
-
-        .checkbox-item.selected .checkbox-icon::after {
-            content: '✓';
-            color: #2c3e50;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .input-area {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .input-field {
-            flex: 1;
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #495057;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #000;
-        }
-
-        .unit {
-            font-weight: bold;
-            color: #495057;
+            border-color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         
         .answer-display {
-            background: #f8f9fa;
+            margin: 15px 0;
             padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: #495057;
-            border: 2px solid #dee2e6;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 18px;
             min-height: 50px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            color: #333;
         }
         
-        .control-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .buttons {
+            display: flex;
             gap: 10px;
             margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #dee2e6;
         }
         
-        .btn {
-            padding: 15px;
-            font-size: 16px;
+        button {
+            flex: 1;
+            padding: 18px;
+            font-size: 18px;
             font-weight: bold;
-            border: 2px solid;
-            border-radius: 5px;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
-        .btn-new {
-            background: white;
-            color: #495057;
-            border-color: #495057;
+        button:active {
+            transform: scale(0.95);
         }
         
-        .btn-new:hover {
-            background: #495057;
+        .new-problem-btn {
+            background: linear-gradient(to bottom, #666 0%, #4a4a4a 100%);
             color: white;
         }
         
-        .btn-new:active {
-            transform: scale(0.98);
+        .new-problem-btn:hover {
+            background: linear-gradient(to bottom, #555 0%, #333 100%);
         }
         
-        .btn-check {
-            background: #2c3e50;
+        .check-btn {
+            background: linear-gradient(to bottom, #888 0%, #666 100%);
             color: white;
-            border-color: #000;
         }
         
-        .btn-check:hover {
-            background: #1a252f;
+        .check-btn:hover {
+            background: linear-gradient(to bottom, #777 0%, #555 100%);
         }
         
-        .btn-check:active {
-            transform: scale(0.98);
+        .result-container {
+            margin-top: 30px;
+            display: none;
         }
         
-        .result {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 5px;
+        .result-animation {
             text-align: center;
-            font-size: 15px;
-            font-weight: bold;
-            border: 2px solid;
+            padding: 30px;
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 3px solid #666;
         }
         
-        .correct {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-color: #4caf50;
+        .result-stage {
+            margin: 20px 0;
         }
         
-        .incorrect {
-            background: #ffebee;
-            color: #c62828;
-            border-color: #f44336;
-        }
-
-        .diagram {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 15px 0;
-            text-align: center;
-        }
-
-        .heat-engine {
-            width: 100%;
-            max-width: 250px;
-            margin: 0 auto;
-        }
-
-        .flow-box {
-            background: white;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 3px;
-            font-size: 14px;
-            border: 1px solid #dee2e6;
-        }
-
-        .arrow {
+        .stage-text {
             font-size: 24px;
-            color: #495057;
-            margin: 5px 0;
-        }
-
-        .engine-box {
-            background: #2c3e50;
-            color: white;
+            color: #ddd;
+            margin-bottom: 15px;
             font-weight: bold;
+        }
+        
+        .rank-change {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        }
+        
+        .rank-1st {
+            color: #FFD700;
+            animation: goldGlow 1.5s ease-in-out infinite;
+        }
+        
+        .rank-eliminated {
+            color: #888;
+            text-decoration: line-through;
+        }
+        
+        @keyframes goldGlow {
+            0%, 100% { text-shadow: 0 0 20px #FFD700, 3px 3px 6px rgba(0,0,0,0.5); }
+            50% { text-shadow: 0 0 40px #FFD700, 3px 3px 6px rgba(0,0,0,0.5); }
+        }
+        
+        .final-message {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .final-message.success {
+            color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #FFD700;
+        }
+        
+        .final-message.fail {
+            color: #888;
+            background: rgba(136, 136, 136, 0.1);
+            border: 2px solid #888;
+        }
+        
+        .wrong-answer-text {
+            color: #aaa;
+            font-size: 20px;
+            margin-top: 15px;
+        }
+        
+        .correct-answer-text {
+            color: #ddd;
+            font-size: 18px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>⚡ 에너지 효율 평가</h1>
-            <div class="subtitle">통합과학2 - 에너지 전환과 열효율</div>
+            <div class="title">🎤 에너지 효율 오디션 🎤</div>
+            <div class="subtitle">ENERGY EFFICIENCY AUDITION</div>
         </div>
         
-        <div class="problem-selector" id="problemSelector"></div>
-
-        <div class="content">
-            <div class="problem-number" id="problemNumber"></div>
-            <div id="problemContent"></div>
-            
-            <div class="control-buttons">
-                <button class="btn btn-new" onclick="generateNewProblem()">🔄 새 문제</button>
-                <button class="btn btn-check" onclick="checkAnswer()">✓ 정답 확인</button>
+        <div class="rank-display">
+            <div class="rank-text">현재 순위</div>
+            <div class="rank-number">2등</div>
+        </div>
+        
+        <h2>8. 최종 문제 - 1등 진출 도전!</h2>
+        
+        <p class="problem-text">
+            그림 (가), (나)는 서로 다른 두 가전제품 A, B의 에너지 변환을 나타낸 것이다. A는 전기히터, B는 LED 조명이다. A, B에 공급된 전기 에너지는 각각 목적 에너지(열, 빛)와 손실 에너지로 전환되며, 에너지 전환 효율은 각각 ε<sub>A</sub>, ε<sub>B</sub>이다.
+        </p>
+        
+        <div class="cars-container">
+            <div class="car">
+                <div class="car-box">
+                    <div class="car-name">A (전기히터)</div>
+                    <p class="energy-item">공급된 전기 에너지<br><span class="energy-value" id="supplyA">30</span>E<sub>0</sub></p>
+                    <p class="energy-item">목적 에너지(열)<br><span class="energy-value" id="usefulA">27</span>E<sub>0</sub></p>
+                </div>
+                <div>(가)</div>
             </div>
             
-            <div id="result"></div>
+            <div class="car">
+                <div class="car-box">
+                    <div class="car-name">B (LED 조명)</div>
+                    <p class="energy-item">공급된 전기 에너지<br><span class="energy-value" id="supplyB">20</span>E<sub>0</sub></p>
+                    <p class="energy-item">목적 에너지(빛)<br><span class="energy-value" id="usefulB">16</span>E<sub>0</sub></p>
+                </div>
+                <div>(나)</div>
+            </div>
+        </div>
+        
+        <div class="questions">
+            <p class="question-item">ㄱ. ε<sub>A</sub> &gt; ε<sub>B</sub>이다.</p>
+            <p class="question-item">ㄴ. A의 손실 에너지는 <span id="lossA">3</span>E<sub>0</sub>이다.</p>
+            <p class="question-item">ㄷ. B에서 손실 에너지는 목적 에너지보다 작다.</p>
+        </div>
+        
+        <p style="margin: 20px 0; color: #333; font-weight: bold; text-align: center;">이 중 옳은 것만을 있는 대로 고른 것은?</p>
+        
+        <div class="choice-buttons">
+            <button class="choice-btn" onclick="selectChoice('ㄱ')">ㄱ</button>
+            <button class="choice-btn" onclick="selectChoice('ㄴ')">ㄴ</button>
+            <button class="choice-btn" onclick="selectChoice('ㄷ')">ㄷ</button>
+            <button class="choice-btn" onclick="selectChoice('ㄱ, ㄴ')">ㄱ, ㄴ</button>
+            <button class="choice-btn" onclick="selectChoice('ㄴ, ㄷ')">ㄴ, ㄷ</button>
+        </div>
+        
+        <div class="answer-display" id="answerDisplay">선택한 답: </div>
+        
+        <div class="buttons">
+            <button class="new-problem-btn" onclick="generateNewProblem()">새 문제</button>
+            <button class="check-btn" onclick="checkAnswer()">순위 발표</button>
+        </div>
+        
+        <div class="result-container" id="resultContainer">
+            <div class="result-animation">
+                <div class="result-stage">
+                    <div class="stage-text">현재 순위: 2등</div>
+                    <div class="stage-text">최종 결과는...</div>
+                    <div class="rank-change" id="rankChange">2등</div>
+                    <div class="final-message" id="finalMessage"></div>
+                    <div class="wrong-answer-text" id="wrongText"></div>
+                    <div class="correct-answer-text" id="correctText"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentProblem = 1;
-        let selectedOrder = [];
-        let selectedItems = [];
-        let userAnswer = '';
-        let correctAnswer = null;
-        let problemData = {};
-
-        const problems = [
-            {
-                id: 1,
-                type: 'checkbox',
-                question: '다음 중 에너지 전환이 일어나는 경우를 모두 고르시오.',
-                options: [
-                    { text: '화학 에너지 → 운동 에너지 (학생이 운동할 때)', key: 'A' },
-                    { text: '화학 에너지 → 열 에너지 (음식을 조리할 때)', key: 'B' },
-                    { text: '전기 에너지 → 소리 에너지 (스피커 작동)', key: 'C' },
-                    { text: '에너지는 전환되지 않는다', key: 'D' }
-                ],
-                correctKeys: ['A', 'B', 'C']
-            },
-            {
-                id: 2,
-                type: 'checkbox',
-                question: '열효율에 대한 설명으로 옳은 것을 모두 고르시오.',
-                options: [
-                    { text: '열효율 = (한 일 / 공급된 열) × 100%', key: 'A' },
-                    { text: '열기관은 열에너지를 일로 바꾸는 장치이다', key: 'B' },
-                    { text: '나무를 태워 재가 되면 에너지가 사라진다', key: 'C' },
-                    { text: '열효율은 항상 100%이다', key: 'D' }
-                ],
-                correctKeys: ['A', 'B']
-            },
-            {
-                id: 3,
-                type: 'calculate',
-                question: '열기관에 공급된 열에너지가 Q₁이고, 외부에 한 일이 W일 때, 발생한 열 Q₂는 얼마인가?',
-                unit: 'kJ',
-                calculate: (data) => data.Q1 - data.W
-            },
-            {
-                id: 4,
-                type: 'calculate',
-                question: '열기관의 열효율을 구하시오. (소수점 첫째자리까지)',
-                unit: '%',
-                calculate: (data) => Math.round((data.W / data.Q1) * 1000) / 10
-            },
-            {
-                id: 5,
-                type: 'checkbox',
-                question: '자동차 엔진에서 공급된 연료 에너지 100J 중 운동 에너지로 전환된 것이 24J일 때, 다음 중 옳은 설명을 모두 고르시오.',
-                options: [
-                    { text: '자동차의 열효율은 24%이다', key: 'A' },
-                    { text: '손실된 에너지가 운동 에너지보다 많다', key: 'B' },
-                    { text: '공급된 에너지와 전환된 에너지의 합은 같다', key: 'C' },
-                    { text: '에너지 보존 법칙이 성립한다', key: 'D' }
-                ],
-                correctKeys: ['A', 'B', 'D']
-            },
-            {
-                id: 6,
-                type: 'order',
-                question: '다음 열기관의 열효율이 높은 순서대로 배열하시오.',
-                items: ['A', 'B', 'C']
-            },
-            {
-                id: 7,
-                type: 'checkbox',
-                question: '에너지 전환과 보존에 대한 설명으로 옳은 것을 모두 고르시오.',
-                options: [
-                    { text: '에너지는 다른 형태로 전환될 수 있다', key: 'A' },
-                    { text: '에너지 전환 시 총량은 보존된다', key: 'B' },
-                    { text: '열에너지는 100% 일로 전환 가능하다', key: 'C' },
-                    { text: '열효율이 높을수록 에너지 손실이 적다', key: 'D' }
-                ],
-                correctKeys: ['A', 'B', 'D']
-            },
-            {
-                id: 8,
-                type: 'calculate',
-                question: '화력발전소에서 연료가 연소하여 발생한 열에너지가 Q₁이고, 발전기에서 손실된 열이 Q₂일 때, 전기 에너지로 전환된 일 W는?',
-                unit: 'kJ',
-                calculate: (data) => data.Q1 - data.Q2
-            },
-            {
-                id: 9,
-                type: 'order',
-                question: '다음 에너지 전환 효율이 높은 순서대로 배열하시오. (효율 = 출력/입력 × 100%)',
-                items: ['A', 'B', 'C']
-            },
-            {
-                id: 10,
-                type: 'checkbox',
-                question: '열기관의 효율을 높이기 위한 방법으로 옳은 것을 모두 고르시오.',
-                options: [
-                    { text: '열 손실을 최소화한다', key: 'A' },
-                    { text: '마찰을 줄여 손실 에너지를 감소시킨다', key: 'B' },
-                    { text: '공급 에너지를 줄인다', key: 'C' },
-                    { text: '단열을 강화하여 열 손실을 방지한다', key: 'D' }
-                ],
-                correctKeys: ['A', 'B', 'D']
-            }
-        ];
-
-        function init() {
-            const selector = document.getElementById('problemSelector');
-            for (let i = 1; i <= 10; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'problem-btn';
-                btn.textContent = i;
-                btn.onclick = () => selectProblem(i);
-                if (i === 1) btn.classList.add('active');
-                selector.appendChild(btn);
-            }
-            selectProblem(1);
-        }
-
-        function selectProblem(num) {
-            currentProblem = num;
-            document.querySelectorAll('.problem-btn').forEach((btn, idx) => {
-                btn.classList.toggle('active', idx + 1 === num);
-            });
-            generateNewProblem();
-        }
-
-        function generateRandomEnergy() {
-            return (Math.floor(Math.random() * 10) + 1) * 10;
-        }
+        let currentAnswer = '';
+        let selectedChoice = '';
+        let correctAnswers = [];
 
         function generateNewProblem() {
-            selectedOrder = [];
-            selectedItems = [];
-            userAnswer = '';
-            document.getElementById('result').innerHTML = '';
+            const supplyA = (Math.floor(Math.random() * 10) + 1) * 10;
+            const maxUsefulA = Math.floor(supplyA / 10) - 1;
+            const usefulA = (Math.floor(Math.random() * maxUsefulA) + 1) * 10;
+            const lossA = supplyA - usefulA;
             
-            const problem = problems[currentProblem - 1];
-            document.getElementById('problemNumber').textContent = `문제 ${currentProblem}.`;
+            const supplyB = (Math.floor(Math.random() * 10) + 1) * 10;
+            const maxUsefulB = Math.floor(supplyB / 10) - 1;
+            const usefulB = (Math.floor(Math.random() * maxUsefulB) + 1) * 10;
+            const lossB = supplyB - usefulB;
             
-            const content = document.getElementById('problemContent');
+            document.getElementById('supplyA').textContent = supplyA;
+            document.getElementById('usefulA').textContent = usefulA;
+            document.getElementById('supplyB').textContent = supplyB;
+            document.getElementById('usefulB').textContent = usefulB;
+            document.getElementById('lossA').textContent = lossA;
             
-            let html = `<div class="problem-text">${problem.question}</div>`;
-
-            if (problem.type === 'checkbox') {
-                html += '<div class="selection-area">';
-                html += '<div class="checkbox-group" id="checkboxGroup">';
-                problem.options.forEach((opt, idx) => {
-                    html += `<div class="checkbox-item" data-key="${opt.key}" onclick="toggleCheckbox('${opt.key}')">
-                        <div class="checkbox-icon"></div>
-                        <span>${opt.text}</span>
-                    </div>`;
-                });
-                html += '</div></div>';
-            } else if (problem.type === 'order') {
-                const energies = [];
-                for (let i = 0; i < 3; i++) {
-                    let supplied = generateRandomEnergy();
-                    let work = generateRandomEnergy();
-                    while (work >= supplied) {
-                        work = generateRandomEnergy();
-                    }
-                    energies.push({
-                        supplied: supplied,
-                        work: work,
-                        efficiency: (work / supplied)
-                    });
-                }
-
-                problemData = { energies };
-
-                html += '<div class="energy-display">';
-                html += `<div class="energy-row"><span class="energy-label">A 열기관</span><span>공급: <span class="energy-value">${energies[0].supplied}</span> kJ / 일: <span class="energy-value">${energies[0].work}</span> kJ</span></div>`;
-                html += `<div class="energy-row"><span class="energy-label">B 열기관</span><span>공급: <span class="energy-value">${energies[1].supplied}</span> kJ / 일: <span class="energy-value">${energies[1].work}</span> kJ</span></div>`;
-                html += `<div class="energy-row"><span class="energy-label">C 열기관</span><span>공급: <span class="energy-value">${energies[2].supplied}</span> kJ / 일: <span class="energy-value">${energies[2].work}</span> kJ</span></div>`;
-                html += '</div>';
-
-                html += '<div class="selection-area">';
-                html += '<div class="selection-title">▼ 클릭하여 순서대로 선택하세요</div>';
-                html += '<div class="button-group">';
-                html += '<button class="option-btn" onclick="selectOption(\'A\', event)">A</button>';
-                html += '<button class="option-btn" onclick="selectOption(\'B\', event)">B</button>';
-                html += '<button class="option-btn" onclick="selectOption(\'C\', event)">C</button>';
-                html += '</div>';
-                html += '<div class="answer-display" id="answerDisplay">선택한 순서가 여기에 표시됩니다</div>';
-                html += '</div>';
-
-                const machines = [
-                    { name: 'A', efficiency: energies[0].efficiency },
-                    { name: 'B', efficiency: energies[1].efficiency },
-                    { name: 'C', efficiency: energies[2].efficiency }
-                ];
-                machines.sort((a, b) => b.efficiency - a.efficiency);
-                correctAnswer = machines.map(m => m.name);
-            } else if (problem.type === 'calculate') {
-                let Q1 = generateRandomEnergy();
-                let W = generateRandomEnergy();
-                while (W >= Q1) {
-                    W = generateRandomEnergy();
-                }
-                let Q2 = Q1 - W;
-
-                problemData = { Q1, W, Q2 };
-                correctAnswer = problem.calculate(problemData);
-
-                html += '<div class="diagram">';
-                html += '<div class="heat-engine">';
-                html += `<div class="flow-box">고온 열원<br>Q₁ = <strong>${Q1} kJ</strong></div>`;
-                html += '<div class="arrow">↓</div>';
-                html += '<div class="flow-box engine-box">열기관</div>';
-                html += '<div class="arrow">↓</div>';
-                if (currentProblem === 3 || currentProblem === 8) {
-                    html += `<div class="flow-box">한 일<br>W = <strong>${W} kJ</strong></div>`;
-                } else {
-                    html += `<div class="flow-box">저온 열원<br>Q₂ = <strong>${Q2} kJ</strong></div>`;
-                    html += `<div style="font-size: 12px; margin-top: 10px; color: #495057;">한 일: W = <strong>${W} kJ</strong></div>`;
-                }
-                html += '</div></div>';
-
-                html += '<div class="selection-area">';
-                html += '<div class="input-area">';
-                html += `<input type="number" class="input-field" id="userInput" placeholder="답을 입력하세요" step="0.1">`;
-                html += `<span class="unit">${problem.unit}</span>`;
-                html += '</div></div>';
+            const efficiencyA = (usefulA / supplyA) * 100;
+            const efficiencyB = (usefulB / supplyB) * 100;
+            
+            correctAnswers = [];
+            
+            if (efficiencyA > efficiencyB) {
+                correctAnswers.push('ㄱ');
             }
-
-            content.innerHTML = html;
-        }
-
-        function toggleCheckbox(key) {
-            const item = document.querySelector(`.checkbox-item[data-key="${key}"]`);
             
-            if (selectedItems.includes(key)) {
-                selectedItems = selectedItems.filter(k => k !== key);
-                item.classList.remove('selected');
-            } else {
-                selectedItems.push(key);
-                item.classList.add('selected');
+            if (lossA === parseInt(document.getElementById('lossA').textContent)) {
+                correctAnswers.push('ㄴ');
             }
-        }
-
-        function selectOption(option, event) {
-            const btn = event.target;
             
-            if (btn.classList.contains('selected')) {
+            if (lossB < usefulB) {
+                correctAnswers.push('ㄷ');
+            }
+            
+            currentAnswer = correctAnswers.join(', ');
+            
+            selectedChoice = '';
+            document.getElementById('answerDisplay').textContent = '선택한 답: ';
+            document.getElementById('resultContainer').style.display = 'none';
+            
+            document.querySelectorAll('.choice-btn').forEach(function(btn) {
                 btn.classList.remove('selected');
-                selectedOrder = selectedOrder.filter(o => o !== option);
-            } else {
-                if (selectedOrder.length < 3) {
-                    selectedOrder.push(option);
-                    btn.classList.add('selected');
-                }
-            }
-            
-            updateAnswerDisplay();
+            });
         }
 
-        function updateAnswerDisplay() {
-            const display = document.getElementById('answerDisplay');
-            if (selectedOrder.length === 0) {
-                display.textContent = '선택한 순서가 여기에 표시됩니다';
-            } else {
-                display.textContent = selectedOrder.join(' > ');
-            }
+        function selectChoice(choice) {
+            const btns = document.querySelectorAll('.choice-btn');
+            btns.forEach(function(btn) {
+                if (btn.textContent === choice) {
+                    if (btn.classList.contains('selected')) {
+                        btn.classList.remove('selected');
+                        selectedChoice = '';
+                        document.getElementById('answerDisplay').textContent = '선택한 답: ';
+                    } else {
+                        btns.forEach(function(b) {
+                            b.classList.remove('selected');
+                        });
+                        btn.classList.add('selected');
+                        selectedChoice = choice;
+                        document.getElementById('answerDisplay').textContent = '선택한 답: ' + choice;
+                    }
+                }
+            });
+            document.getElementById('resultContainer').style.display = 'none';
         }
 
         function checkAnswer() {
-            const problem = problems[currentProblem - 1];
-            const resultDiv = document.getElementById('result');
-            let isCorrect = false;
-
-            if (problem.type === 'checkbox') {
-                if (selectedItems.length === 0) {
-                    resultDiv.innerHTML = '<div class="result incorrect">선택지를 선택해주세요!</div>';
-                    return;
-                }
-                const correct = problem.correctKeys.sort().join(',');
-                const selected = selectedItems.sort().join(',');
-                isCorrect = correct === selected;
-                
-                if (isCorrect) {
-                    resultDiv.innerHTML = '<div class="result correct">✓ 정답입니다!</div>';
-                } else {
-                    const correctText = problem.options
-                        .filter(opt => problem.correctKeys.includes(opt.key))
-                        .map(opt => opt.text)
-                        .join('<br>• ');
-                    resultDiv.innerHTML = `<div class="result incorrect">✗ 틀렸습니다.<br><br>정답:<br>• ${correctText}</div>`;
-                }
-            } else if (problem.type === 'order') {
-                if (selectedOrder.length !== 3) {
-                    resultDiv.innerHTML = '<div class="result incorrect">3개를 모두 선택해주세요!</div>';
-                    return;
-                }
-                isCorrect = selectedOrder.every((val, idx) => val === correctAnswer[idx]);
-                
-                if (isCorrect) {
-                    resultDiv.innerHTML = '<div class="result correct">✓ 정답입니다!</div>';
-                } else {
-                    resultDiv.innerHTML = `<div class="result incorrect">✗ 틀렸습니다.<br>정답: ${correctAnswer.join(' > ')}</div>`;
-                }
-            } else if (problem.type === 'calculate') {
-                const input = document.getElementById('userInput');
-                if (!input.value) {
-                    resultDiv.innerHTML = '<div class="result incorrect">답을 입력해주세요!</div>';
-                    return;
-                }
-                const userValue = parseFloat(input.value);
-                isCorrect = Math.abs(userValue - correctAnswer) < 0.1;
-                
-                if (isCorrect) {
-                    resultDiv.innerHTML = '<div class="result correct">✓ 정답입니다!</div>';
-                } else {
-                    resultDiv.innerHTML = `<div class="result incorrect">✗ 틀렸습니다.<br>정답: ${correctAnswer} ${problem.unit}</div>`;
-                }
+            if (!selectedChoice) {
+                alert('답을 선택해주세요!');
+                return;
             }
+            
+            const resultContainer = document.getElementById('resultContainer');
+            const rankChange = document.getElementById('rankChange');
+            const finalMessage = document.getElementById('finalMessage');
+            const wrongText = document.getElementById('wrongText');
+            const correctText = document.getElementById('correctText');
+            
+            resultContainer.style.display = 'block';
+            rankChange.textContent = '2등';
+            rankChange.className = 'rank-change';
+            finalMessage.textContent = '';
+            finalMessage.className = 'final-message';
+            wrongText.textContent = '';
+            correctText.textContent = '';
+            
+            setTimeout(function() {
+                if (selectedChoice === currentAnswer) {
+                    rankChange.textContent = '1등';
+                    rankChange.className = 'rank-change rank-1st';
+                    finalMessage.textContent = '🎉 축하합니다! 1등 등극! 🎉';
+                    finalMessage.className = 'final-message success';
+                } else {
+                    rankChange.textContent = '탈락';
+                    rankChange.className = 'rank-change rank-eliminated';
+                    finalMessage.textContent = '💔 탈락하셨습니다 💔';
+                    finalMessage.className = 'final-message fail';
+                    wrongText.textContent = '틀렸습니다.';
+                    correctText.textContent = '정답: ' + currentAnswer;
+                }
+            }, 1500);
         }
 
-        init();
+        generateNewProblem();
     </script>
 </body>
 </html>

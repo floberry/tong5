@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>에너지 효율 비교 시뮬레이션</title>
+    <title>자동차 에너지 효율 시뮬레이션</title>
     <style>
         * {
             margin: 0;
@@ -13,572 +13,689 @@
         
         body {
             font-family: 'Malgun Gothic', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b00 50%, #1a0000 100%);
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,.1) 2px,
+                rgba(0,0,0,.1) 4px
+            );
+            pointer-events: none;
         }
         
         .container {
-            background: white;
+            background: #2a2a2a;
             border-radius: 20px;
-            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,0,0,0.1);
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            border: 2px solid #4a0000;
+            position: relative;
+            z-index: 1;
+            max-height: 90vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        
+        .container::-webkit-scrollbar-thumb {
+            background: #ff4444;
+            border-radius: 10px;
+        }
+        
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #ff6666;
+        }
+        
+        .intro-screen, .problem-screen, .result-screen {
+            display: none;
+        }
+        
+        .intro-screen.active, .problem-screen.active, .result-screen.active {
+            display: block;
         }
         
         h1 {
-            color: #667eea;
+            color: #ff4444;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             font-size: 24px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .new-problem-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 25px;
-            transition: transform 0.2s;
-        }
-        
-        .new-problem-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .cars-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .car-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            border: 3px solid #dee2e6;
-        }
-        
-        .car-type {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .car-icon {
-            font-size: 32px;
-        }
-        
-        .car-label {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .energy-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .energy-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: white;
-            border-radius: 8px;
-        }
-        
-        .energy-label {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .energy-value {
-            font-weight: bold;
-            color: #333;
-            font-size: 16px;
-        }
-        
-        .calculation-section {
-            background: #fff9e6;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .calculation-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 16px;
-            text-align: center;
-        }
-        
-        .calculation-item {
-            background: white;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .calculation-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        .calculation-input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-size: 16px;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .calculation-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .answer-section {
-            background: #f0f4ff;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .answer-label {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 16px;
-            text-align: center;
-        }
-        
-        .answer-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .car-btn {
-            padding: 15px;
-            background: white;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .car-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .car-btn.selected {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-        
-        .order-display {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: #667eea;
-            min-height: 50px;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .button-group {
-            display: flex;
             gap: 10px;
         }
         
-        .reset-btn, .check-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
+        .car-icon {
+            display: inline-block;
+            animation: carMove 2s ease-in-out infinite;
+        }
+        
+        @keyframes carMove {
+            0%, 100% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+        }
+        
+        .intro-text {
+            background: rgba(139, 0, 0, 0.2);
+            border-left: 4px solid #ff4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.6;
             font-size: 16px;
+            color: #ffcccc;
+            box-shadow: 0 0 20px rgba(255,0,0,0.1);
+        }
+        
+        .intro-illustration {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scene {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 180px;
+            position: relative;
+            padding: 0 10px;
+        }
+        
+        .zombie {
+            font-size: 50px;
+            animation: zombieWalk 1s infinite;
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+        
+        @keyframes zombieWalk {
+            0%, 100% { transform: translateX(0) rotate(-5deg); }
+            50% { transform: translateX(-5px) rotate(5deg); }
+        }
+        
+        .person {
+            font-size: 40px;
+            animation: personRun 0.5s infinite;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+        }
+        
+        @keyframes personRun {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        .cars {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+        }
+        
+        .car {
+            font-size: 30px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+        
+        .speech-bubble {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            color: #d32f2f;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid rgba(255,255,255,0.95);
+        }
+        
+        .problem-text {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #ddd;
+            border: 1px solid #444;
+        }
+        
+        .diagram-container {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+        
+        .diagram-title {
+            color: #ff8888;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .flow-box {
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #ff4444;
+            padding: 15px 30px;
+            border-radius: 10px;
+            color: #ffcccc;
+            font-weight: bold;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .flow-arrow {
+            color: #ff4444;
+            font-size: 30px;
+            line-height: 1;
+        }
+        
+        .flow-storage {
+            background: rgba(255, 68, 68, 0.1);
+            border: 3px dashed #ff4444;
+            padding: 20px;
+            border-radius: 50%;
+            color: #ffcccc;
+            font-weight: bold;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-middle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            position: relative;
+            left: 70px;
+        }
+        
+        .flow-side {
+            background: rgba(68, 255, 68, 0.2);
+            border: 2px solid #44ff44;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #ccffcc;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .flow-arrow-right {
+            color: #44ff44;
+            font-size: 25px;
+            line-height: 1;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            border: 2px solid #666;
+            border-radius: 8px;
+            margin: 20px 0;
+            background: #1a1a1a;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .choice-btn {
+            background: #1a1a1a;
+            border: 2px solid #ff4444;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            color: #ff4444;
+            box-shadow: 0 0 10px rgba(255,0,0,0.2);
         }
         
-        .reset-btn {
-            background: #ff6b6b;
-            color: white;
+        .choice-btn:hover {
+            background: rgba(255, 68, 68, 0.1);
+            box-shadow: 0 0 20px rgba(255,0,0,0.4);
         }
         
-        .reset-btn:active {
-            transform: scale(0.98);
+        .choice-btn.selected {
+            background: #ff4444;
+            color: #1a1a1a;
+            box-shadow: 0 0 30px rgba(255,0,0,0.6);
         }
         
-        .check-btn {
-            background: #51cf66;
-            color: white;
-        }
-        
-        .check-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .result {
-            margin-top: 15px;
-            padding: 15px;
+        .btn {
+            background: #8b0000;
+            color: #ffcccc;
+            border: 2px solid #ff4444;
+            padding: 15px 30px;
             border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
             font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
         }
         
-        .result.correct {
-            background: #d4edda;
-            color: #155724;
+        .btn:hover {
+            background: #a50000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(255,0,0,0.5);
         }
         
-        .result.incorrect {
-            background: #f8d7da;
-            color: #721c24;
+        .result-box {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .result-box.correct {
+            background: rgba(0, 100, 0, 0.3);
+            color: #66ff66;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0,255,0,0.3);
+        }
+        
+        .result-box.wrong {
+            background: rgba(139, 0, 0, 0.3);
+            color: #ff6666;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
         }
         
         .explanation {
-            margin-top: 15px;
+            background: rgba(0,0,0,0.3);
             padding: 15px;
-            background: #fff3cd;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             line-height: 1.6;
-            color: #856404;
+            font-size: 14px;
+            color: #ddd;
+            border: 1px solid #444;
+        }
+        
+        .explanation strong {
+            color: #ff8888;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ 에너지 효율 비교</h1>
-        <div class="subtitle">
-            일반 자동차와 전기 자동차의 에너지 효율을 계산하고,<br>
-            효율이 높은 순서대로 선택하세요.
-        </div>
-        
-        <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
-        
-        <div class="cars-container">
-            <div class="car-card">
-                <div class="car-type">
-                    <span class="car-icon">🚗</span>
-                    <span class="car-label">일반 자동차 A</span>
-                </div>
-                <div class="energy-info">
-                    <div class="energy-row">
-                        <span class="energy-label">공급 에너지</span>
-                        <span class="energy-value" id="supplyA">1000 kJ</span>
-                    </div>
-                    <div class="energy-row">
-                        <span class="energy-label">사용 에너지</span>
-                        <span class="energy-value" id="usedA">200 kJ</span>
+        <!-- 시작 화면 -->
+        <div class="intro-screen active">
+            <h1>🧟 좀비 사태 발생!</h1>
+            
+            <div class="intro-illustration">
+                <div class="scene">
+                    <div class="zombie">🧟</div>
+                    <div class="person">🏃</div>
+                    <div class="speech-bubble">살려줘!</div>
+                    <div class="cars">
+                        <div class="car">🚗</div>
+                        <div class="car">🚙</div>
+                        <div class="car">🚕</div>
+                        <div class="car">🚐</div>
                     </div>
                 </div>
             </div>
             
-            <div class="car-card">
-                <div class="car-type">
-                    <span class="car-icon">🚙</span>
-                    <span class="car-label">일반 자동차 B</span>
-                </div>
-                <div class="energy-info">
-                    <div class="energy-row">
-                        <span class="energy-label">공급 에너지</span>
-                        <span class="energy-value" id="supplyB">1000 kJ</span>
+            <div class="intro-text">
+                <p>좀비 사태가 발생했다! 최대한 적은 에너지로 오래 달릴 수 있는 자동차를 타야 한다. 자동차 A~D 중 에너지 효율이 가장 높은 자동차를 골라 도망치자!</p>
+            </div>
+            <button class="btn" onclick="startProblem()">OK</button>
+        </div>
+        
+        <!-- 문제 화면 -->
+        <div class="problem-screen">
+            <h1><span class="car-icon">🚗</span> 자동차를 선택하세요</h1>
+            <div class="problem-text">
+                그림 (가)는 에너지의 흐름을 나타낸 것이고, 그림 (나)는 자동차 A~D에서 공급된 에너지와 버려진 에너지를 나타낸 것이다. 이때, 에너지 효율이 가장 높은 자동차는?
+            </div>
+            
+            <div class="diagram-container">
+                <div class="diagram-title">그림 (가)</div>
+                <div class="flow-diagram">
+                    <div class="flow-box">공급된 에너지</div>
+                    <div class="flow-arrow">▼</div>
+                    <div class="flow-middle">
+                        <div class="flow-storage">에너지 장치</div>
+                        <div class="flow-arrow-right">▶</div>
+                        <div class="flow-side">유용한<br>에너지(일)</div>
                     </div>
-                    <div class="energy-row">
-                        <span class="energy-label">사용 에너지</span>
-                        <span class="energy-value" id="usedB">250 kJ</span>
-                    </div>
+                    <div class="flow-arrow">▼</div>
+                    <div class="flow-box">버려진 에너지</div>
                 </div>
             </div>
             
-            <div class="car-card">
-                <div class="car-type">
-                    <span class="car-icon">⚡</span>
-                    <span class="car-label">전기 자동차 C</span>
-                </div>
-                <div class="energy-info">
-                    <div class="energy-row">
-                        <span class="energy-label">공급 에너지</span>
-                        <span class="energy-value" id="supplyC">1000 kJ</span>
-                    </div>
-                    <div class="energy-row">
-                        <span class="energy-label">사용 에너지</span>
-                        <span class="energy-value" id="usedC">750 kJ</span>
-                    </div>
+            <div class="diagram-container">
+                <div class="diagram-title">그림 (나)</div>
+                <div class="chart-container">
+                    <canvas id="chart"></canvas>
                 </div>
             </div>
+            
+            <div class="choices">
+                <button class="choice-btn" onclick="selectChoice('A')">자동차 A</button>
+                <button class="choice-btn" onclick="selectChoice('B')">자동차 B</button>
+                <button class="choice-btn" onclick="selectChoice('C')">자동차 C</button>
+                <button class="choice-btn" onclick="selectChoice('D')">자동차 D</button>
+            </div>
+            
+            <button class="btn" id="checkBtn" style="display:none;" onclick="checkAnswer()">정답 확인하기</button>
         </div>
         
-        <div class="calculation-section">
-            <div class="calculation-title">📝 에너지 효율을 계산하세요 (에너지 효율 = 사용/공급 × 100)</div>
-            <div class="calculation-item">
-                <div class="calculation-label">자동차 A의 효율 (%)</div>
-                <input type="number" class="calculation-input" id="efficiencyInputA" placeholder="예: 20">
-            </div>
-            <div class="calculation-item">
-                <div class="calculation-label">자동차 B의 효율 (%)</div>
-                <input type="number" class="calculation-input" id="efficiencyInputB" placeholder="예: 25">
-            </div>
-            <div class="calculation-item">
-                <div class="calculation-label">자동차 C의 효율 (%)</div>
-                <input type="number" class="calculation-input" id="efficiencyInputC" placeholder="예: 75">
-            </div>
+        <!-- 결과 화면 -->
+        <div class="result-screen">
+            <div class="result-box" id="resultBox"></div>
+            <div class="explanation" id="explanation"></div>
+            <button class="btn" onclick="restart()">다시하기</button>
         </div>
-        
-        <div class="answer-section">
-            <div class="answer-label">📊 에너지 효율이 높은 순서를 선택하세요</div>
-            <div class="answer-buttons">
-                <button class="car-btn" onclick="selectCar('A')">A</button>
-                <button class="car-btn" onclick="selectCar('B')">B</button>
-                <button class="car-btn" onclick="selectCar('C')">C</button>
-            </div>
-            <div class="order-display" id="orderDisplay">버튼을 클릭하세요</div>
-        </div>
-        
-        <div class="button-group">
-            <button class="reset-btn" onclick="resetSelection()">🔄 다시 선택</button>
-            <button class="check-btn" onclick="checkAnswer()">✓ 정답 확인</button>
-        </div>
-        
-        <div id="result"></div>
     </div>
 
     <script>
-        let selectedOrder = [];
-        let currentData = {};
+        let selectedAnswer = null;
+        let correctAnswer = null;
+        let carData = {};
         
-        function generateNewProblem() {
-            // 일반 자동차 효율: 15-30%
-            const efficiencyA = Math.floor(Math.random() * 16) + 15; // 15-30
-            const efficiencyB = Math.floor(Math.random() * 16) + 15; // 15-30
+        function generateProblem() {
+            const cars = ['A', 'B', 'C', 'D'];
             
-            // 전기 자동차 효율: 70-85%
-            const efficiencyC = Math.floor(Math.random() * 16) + 70; // 70-85
+            // 다양한 데이터셋 생성 (매번 다른 값)
+            const possibleData = [
+                {supply: 10, emission: 2},  // 효율: 80%
+                {supply: 8, emission: 2},   // 효율: 75%
+                {supply: 10, emission: 4},  // 효율: 60%
+                {supply: 8, emission: 4},   // 효율: 50%
+                {supply: 6, emission: 2},   // 효율: 66.7%
+                {supply: 6, emission: 4},   // 효율: 33.3%
+                {supply: 10, emission: 6},  // 효율: 40%
+                {supply: 8, emission: 6},   // 효율: 25%
+                {supply: 4, emission: 2},   // 효율: 50%
+                {supply: 10, emission: 8}   // 효율: 20%
+            ];
             
-            const supply = 1000; // 고정값
+            // 랜덤하게 4개 선택
+            const shuffled = possibleData.sort(() => Math.random() - 0.5);
+            const selectedData = shuffled.slice(0, 4);
             
-            currentData = {
-                A: { supply: supply, efficiency: efficiencyA, used: supply * efficiencyA / 100 },
-                B: { supply: supply, efficiency: efficiencyB, used: supply * efficiencyB / 100 },
-                C: { supply: supply, efficiency: efficiencyC, used: supply * efficiencyC / 100 }
-            };
+            // 각 자동차에 할당
+            carData = {};
+            for (let i = 0; i < cars.length; i++) {
+                const car = cars[i];
+                carData[car] = {
+                    supply: selectedData[i].supply,
+                    emission: selectedData[i].emission,
+                    efficiency: (1 - (selectedData[i].emission / selectedData[i].supply)) * 100
+                };
+            }
             
-            // UI 업데이트
-            ['A', 'B', 'C'].forEach(car => {
-                document.getElementById('supply' + car).textContent = currentData[car].supply + ' kJ';
-                document.getElementById('used' + car).textContent = currentData[car].used + ' kJ';
-            });
-            
-            // 입력 필드 초기화
-            document.getElementById('efficiencyInputA').value = '';
-            document.getElementById('efficiencyInputB').value = '';
-            document.getElementById('efficiencyInputC').value = '';
-            
-            resetSelection();
-        }
-        
-        function selectCar(car) {
-            const buttons = document.querySelectorAll('.car-btn');
-            const clickedButton = Array.from(buttons).find(btn => btn.textContent === car);
-            
-            if (selectedOrder.includes(car)) {
-                // 이미 선택된 경우 선택 해제
-                selectedOrder = selectedOrder.filter(c => c !== car);
-                clickedButton.classList.remove('selected');
-            } else {
-                if (selectedOrder.length >= 3) {
-                    alert('최대 3개까지만 선택할 수 있습니다!');
-                    return;
+            // 정답 찾기 (효율이 가장 높은 것)
+            let maxEfficiency = 0;
+            correctAnswer = null;
+            for (let car of cars) {
+                if (carData[car].efficiency > maxEfficiency) {
+                    maxEfficiency = carData[car].efficiency;
+                    correctAnswer = car;
                 }
-                selectedOrder.push(car);
-                clickedButton.classList.add('selected');
             }
             
-            updateOrderDisplay();
-        }
-        
-        function updateOrderDisplay() {
-            const display = document.getElementById('orderDisplay');
-            if (selectedOrder.length === 0) {
-                display.textContent = '버튼을 클릭하세요';
-            } else {
-                display.textContent = selectedOrder.join(' > ');
+            // 동점 방지 - 만약 같은 효율이 있으면 다시 생성
+            const efficiencies = cars.map(car => carData[car].efficiency);
+            const uniqueEfficiencies = [...new Set(efficiencies)];
+            if (efficiencies.length !== uniqueEfficiencies.length) {
+                // 재귀적으로 다시 생성
+                generateProblem();
             }
         }
         
-        function resetSelection() {
-            selectedOrder = [];
-            const buttons = document.querySelectorAll('.car-btn');
-            buttons.forEach(btn => btn.classList.remove('selected'));
-            updateOrderDisplay();
-            document.getElementById('result').innerHTML = '';
+        function drawChart() {
+            const canvas = document.getElementById('chart');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // 축 그리기
+            const margin = 40;
+            const chartWidth = width - margin * 2;
+            const chartHeight = height - margin * 2;
+            
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin, height - margin);
+            ctx.lineTo(width - margin, height - margin);
+            ctx.stroke();
+            
+            // 축 라벨
+            ctx.fillStyle = '#aaa';
+            ctx.font = '12px Malgun Gothic';
+            ctx.textAlign = 'center';
+            ctx.fillText('공급된 에너지', width / 2, height - 5);
+            
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('버려진 에너지', 0, 0);
+            ctx.restore();
+            
+            // 눈금 그리기
+            const maxValue = 10;
+            ctx.font = '10px Malgun Gothic';
+            ctx.fillStyle = '#888';
+            
+            for (let i = 0; i <= maxValue; i += 2) {
+                const x = margin + (i / maxValue) * chartWidth;
+                const y = height - margin - (i / maxValue) * chartHeight;
+                
+                // X축 눈금
+                ctx.textAlign = 'center';
+                ctx.fillText(i + 'Q', x, height - margin + 15);
+                
+                // Y축 눈금
+                ctx.textAlign = 'right';
+                ctx.fillText(i + 'Q', margin - 5, y + 3);
+                
+                // 격자선
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 2]);
+                ctx.beginPath();
+                ctx.moveTo(margin, y);
+                ctx.lineTo(width - margin, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, margin);
+                ctx.lineTo(x, height - margin);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            // 데이터 점 그리기
+            const colors = {A: '#ff4444', B: '#44ff44', C: '#4444ff', D: '#ffaa00'};
+            
+            for (let car in carData) {
+                const x = margin + (carData[car].supply / maxValue) * chartWidth;
+                const y = height - margin - (carData[car].emission / maxValue) * chartHeight;
+                
+                // 점에 발광 효과
+                ctx.shadowColor = colors[car];
+                ctx.shadowBlur = 15;
+                ctx.fillStyle = colors[car];
+                ctx.beginPath();
+                ctx.arc(x, y, 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 14px Malgun Gothic';
+                ctx.textAlign = 'center';
+                ctx.fillText(car, x + 15, y - 10);
+            }
+        }
+        
+        function startProblem() {
+            document.querySelector('.intro-screen').classList.remove('active');
+            document.querySelector('.problem-screen').classList.add('active');
+            generateProblem();
+            drawChart();
+        }
+        
+        function selectChoice(choice) {
+            const buttons = document.querySelectorAll('.choice-btn');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            if (selectedAnswer === choice) {
+                // 같은 버튼 다시 클릭 시 선택 취소
+                selectedAnswer = null;
+                buttons.forEach(btn => btn.classList.remove('selected'));
+                checkBtn.style.display = 'none';
+            } else {
+                // 새로운 선택
+                selectedAnswer = choice;
+                buttons.forEach(btn => btn.classList.remove('selected'));
+                event.target.classList.add('selected');
+                checkBtn.style.display = 'block';
+            }
         }
         
         function checkAnswer() {
-            // 효율 계산 확인
-            const inputA = parseFloat(document.getElementById('efficiencyInputA').value);
-            const inputB = parseFloat(document.getElementById('efficiencyInputB').value);
-            const inputC = parseFloat(document.getElementById('efficiencyInputC').value);
+            const isCorrect = selectedAnswer === correctAnswer;
             
-            const hasInputs = inputA || inputB || inputC;
-            const hasOrder = selectedOrder.length > 0;
+            document.querySelector('.problem-screen').classList.remove('active');
+            document.querySelector('.result-screen').classList.add('active');
             
-            // 아무것도 입력/선택하지 않은 경우 정답만 보여주기
-            if (!hasInputs && !hasOrder) {
-                showCorrectAnswer();
-                return;
-            }
+            const resultBox = document.getElementById('resultBox');
+            const explanation = document.getElementById('explanation');
             
-            if (!inputA || !inputB || !inputC) {
-                alert('모든 자동차의 에너지 효율을 계산해서 입력해주세요!');
-                return;
-            }
-            
-            if (selectedOrder.length !== 3) {
-                alert('에너지 효율이 높은 순서대로 세 개를 모두 선택해주세요!');
-                return;
-            }
-            
-            // 정답 계산
-            const sorted = ['A', 'B', 'C'].sort((a, b) => 
-                currentData[b].efficiency - currentData[a].efficiency
-            );
-            
-            // 효율 계산이 맞는지 확인 (오차 범위 1% 허용)
-            const efficiencyCorrectA = Math.abs(inputA - currentData.A.efficiency) <= 1;
-            const efficiencyCorrectB = Math.abs(inputB - currentData.B.efficiency) <= 1;
-            const efficiencyCorrectC = Math.abs(inputC - currentData.C.efficiency) <= 1;
-            
-            const allEfficiencyCorrect = efficiencyCorrectA && efficiencyCorrectB && efficiencyCorrectC;
-            
-            // 순서가 맞는지 확인
-            const orderCorrect = JSON.stringify(selectedOrder) === JSON.stringify(sorted);
-            
-            const resultDiv = document.getElementById('result');
-            
-            if (allEfficiencyCorrect && orderCorrect) {
-                resultDiv.innerHTML = `
-                    <div class="result correct">
-                        ✓ 정답입니다! 완벽해요!
-                    </div>
-                    <div class="explanation">
-                        <strong>💡 정답</strong><br>
-                        • 자동차 A: ${currentData.A.efficiency}%<br>
-                        • 자동차 B: ${currentData.B.efficiency}%<br>
-                        • 자동차 C: ${currentData.C.efficiency}%<br>
-                        • 순서: ${sorted.join(' > ')}<br><br>
-                        전기 자동차는 일반 자동차보다 에너지 효율이 훨씬 높습니다. 
-                        일반 자동차는 연료 연소 과정에서 많은 열에너지가 손실되기 때문입니다.
-                    </div>
-                `;
-            } else if (!allEfficiencyCorrect && orderCorrect) {
-                resultDiv.innerHTML = `
-                    <div class="result incorrect">
-                        ⚠️ 순서는 맞지만 효율 계산이 틀렸습니다!
-                    </div>
-                    <div class="explanation">
-                        <strong>정답</strong><br>
-                        • 자동차 A: ${currentData.A.efficiency}% (입력: ${inputA}%)${!efficiencyCorrectA ? ' ✗' : ' ✓'}<br>
-                        • 자동차 B: ${currentData.B.efficiency}% (입력: ${inputB}%)${!efficiencyCorrectB ? ' ✗' : ' ✓'}<br>
-                        • 자동차 C: ${currentData.C.efficiency}% (입력: ${inputC}%)${!efficiencyCorrectC ? ' ✗' : ' ✓'}<br><br>
-                        에너지 효율 = (사용 에너지 / 공급 에너지) × 100%
-                    </div>
-                `;
-            } else if (allEfficiencyCorrect && !orderCorrect) {
-                resultDiv.innerHTML = `
-                    <div class="result incorrect">
-                        ⚠️ 효율 계산은 맞지만 순서가 틀렸습니다!
-                    </div>
-                    <div class="explanation">
-                        <strong>효율 계산</strong> ✓<br>
-                        • 자동차 A: ${currentData.A.efficiency}%<br>
-                        • 자동차 B: ${currentData.B.efficiency}%<br>
-                        • 자동차 C: ${currentData.C.efficiency}%<br><br>
-                        <strong>정답 순서:</strong> ${sorted.join(' > ')}<br>
-                        <strong>입력한 순서:</strong> ${selectedOrder.join(' > ')}
-                    </div>
-                `;
+            if (isCorrect) {
+                resultBox.className = 'result-box correct';
+                resultBox.textContent = '🎉 정답! 좀비를 피해 무사히 도망쳤다!';
             } else {
-                resultDiv.innerHTML = `
-                    <div class="result incorrect">
-                        ✗ 틀렸습니다. 다시 시도해보세요!
-                    </div>
-                    <div class="explanation">
-                        <strong>정답</strong><br>
-                        • 자동차 A: ${currentData.A.efficiency}% (입력: ${inputA}%)${!efficiencyCorrectA ? ' ✗' : ' ✓'}<br>
-                        • 자동차 B: ${currentData.B.efficiency}% (입력: ${inputB}%)${!efficiencyCorrectB ? ' ✗' : ' ✓'}<br>
-                        • 자동차 C: ${currentData.C.efficiency}% (입력: ${inputC}%)${!efficiencyCorrectC ? ' ✗' : ' ✓'}<br>
-                        • 정답 순서: ${sorted.join(' > ')}<br>
-                        • 입력한 순서: ${selectedOrder.join(' > ')}<br><br>
-                        에너지 효율 = (사용 에너지 / 공급 에너지) × 100%
-                    </div>
-                `;
+                resultBox.className = 'result-box wrong';
+                resultBox.textContent = '😱 오답! 도망에 실패해서 좀비가 되었다!';
             }
-        }
-        
-        function showCorrectAnswer() {
-            const sorted = ['A', 'B', 'C'].sort((a, b) => 
-                currentData[b].efficiency - currentData[a].efficiency
-            );
             
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `
-                <div class="result correct">
-                    📌 정답 보기
-                </div>
-                <div class="explanation">
-                    <strong>💡 정답</strong><br>
-                    에너지 효율 = (사용 에너지 / 공급 에너지) × 100%<br><br>
-                    • 자동차 A: ${currentData.A.used} ÷ ${currentData.A.supply} × 100 = ${currentData.A.efficiency}%<br>
-                    • 자동차 B: ${currentData.B.used} ÷ ${currentData.B.supply} × 100 = ${currentData.B.efficiency}%<br>
-                    • 자동차 C: ${currentData.C.used} ÷ ${currentData.C.supply} × 100 = ${currentData.C.efficiency}%<br><br>
-                    <strong>효율이 높은 순서: ${sorted.join(' > ')}</strong><br><br>
-                    전기 자동차는 일반 자동차보다 에너지 효율이 훨씬 높습니다. 
-                    일반 자동차는 연료 연소 과정에서 많은 열에너지가 손실되기 때문입니다.
-                </div>
-            `;
+            // 풀이 설명
+            let explanationText = '<strong>【풀이】</strong><br><br>';
+            explanationText += '에너지 효율 = 1 - (버려진 에너지 / 공급된 에너지)<br><br>';
+            
+            for (let car of ['A', 'B', 'C', 'D']) {
+                const efficiencyPercent = carData[car].efficiency.toFixed(1);
+                explanationText += `<strong>자동차 ${car}:</strong> 1 - (${carData[car].emission}Q / ${carData[car].supply}Q) = 1 - ${(carData[car].emission / carData[car].supply).toFixed(2)} = <strong>${(carData[car].efficiency / 100).toFixed(2)} (${efficiencyPercent}%)</strong><br>`;
+            }
+            
+            explanationText += `<br>따라서 에너지 효율이 가장 높은 자동차는 <strong>${correctAnswer} (${carData[correctAnswer].efficiency.toFixed(1)}%)</strong>입니다.`;
+            
+            explanation.innerHTML = explanationText;
         }
         
-        // 초기 문제 생성
-        generateNewProblem();
+        function restart() {
+            selectedAnswer = null;
+            document.querySelector('.result-screen').classList.remove('active');
+            document.querySelector('.intro-screen').classList.add('active');
+            
+            // 버튼 초기화
+            document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('checkBtn').style.display = 'none';
+        }
+        
+        // 초기화
+        window.addEventListener('resize', () => {
+            if (document.querySelector('.problem-screen').classList.contains('active')) {
+                drawChart();
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 퀴즈</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .character {
+            text-align: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .stage-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .question-box {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .problem {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        
+        .problem strong {
+            color: #764ba2;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .options {
+            margin-top: 20px;
+        }
+        
+        .option-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .option-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .option-item.selected {
+            background: #e8eaff;
+            border-color: #667eea;
+        }
+        
+        .option-item.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option-item.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .option-item.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .option-item.selected .radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .option-item.selected .checkbox::after {
+            content: '✓';
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .check-btn {
+            background: #667eea;
+            color: white;
+        }
+        
+        .check-btn:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .new-btn {
+            background: #764ba2;
+            color: white;
+        }
+        
+        .new-btn:hover {
+            background: #633d8a;
+            transform: translateY(-2px);
+        }
+        
+        .next-btn {
+            background: #28a745;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .next-btn:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        
+        .result h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 퀴즈</h1>
+        <p class="subtitle">2단계 문제를 모두 풀어보세요!</p>
+        
+        <div class="character" id="character">😺</div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="stage-indicator" id="stageIndicator">1단계: 에너지 효율 계산하기</div>
+        
+        <!-- 1단계: 에너지 효율 계산 -->
+        <div id="stage1">
+            <div class="question-box">
+                <div class="problem" id="problem1"></div>
+            </div>
+            
+            <div class="options">
+                <p style="font-weight: bold; margin-bottom: 10px; color: #333;">에너지 효율은?</p>
+                <div id="options1"></div>
+            </div>
+            
+            <div class="button-group">
+                <button class="check-btn" onclick="checkStage1()">정답 확인</button>
+                <button class="new-btn" onclick="generateNewProblem()">새 문제</button>
+            </div>
+            
+            <div class="result" id="result1"></div>
+        </div>
+        
+        <!-- 2단계: 효율 비교하기 -->
+        <div id="stage2" class="hide">
+            <div class="question-box">
+                <div class="problem" id="problem2"></div>
+            </div>
+            
+            <div class="options">
+                <p style="font-weight: bold; margin-bottom: 10px; color: #333;">다음 중 틀린 비교를 모두 고르세요</p>
+                <div id="options2"></div>
+            </div>
+            
+            <div class="button-group">
+                <button class="check-btn" onclick="checkStage2()">정답 확인</button>
+                <button class="new-btn" onclick="generateNewProblem()">새 문제</button>
+            </div>
+            
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentProblem = {};
+        let selectedOptions = new Set();
+        let stage1Answer = null;
+        let currentStage = 1;
+        
+        const devices = [
+            { name: '자동차', emoji: '🚗' },
+            { name: '전구', emoji: '💡' },
+            { name: '난방기', emoji: '🔥' },
+            { name: '선풍기', emoji: '🌀' },
+            { name: '냉장고', emoji: '🧊' },
+            { name: '세탁기', emoji: '🧺' },
+            { name: '에어컨', emoji: '❄️' },
+            { name: '전자레인지', emoji: '📱' }
+        ];
+        
+        function updateCharacter(stage) {
+            const character = document.getElementById('character');
+            if (stage === 1) {
+                character.textContent = '😺';
+            } else if (stage === 2) {
+                character.textContent = '👻';
+            }
+        }
+        
+        function updateProgress(stage) {
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = (stage === 1 ? '50%' : '100%');
+        }
+        
+        function generateNewProblem() {
+            currentStage = 1;
+            selectedOptions.clear();
+            stage1Answer = null;
+            
+            updateCharacter(1);
+            updateProgress(1);
+            
+            // 1단계 문제 생성
+            const device1 = devices[Math.floor(Math.random() * devices.length)];
+            const totalEnergy1 = Math.floor(Math.random() * 50 + 30); // 30~80
+            const wastedEnergy1 = Math.floor(totalEnergy1 * (Math.random() * 0.5 + 0.3)); // 30~80%
+            const usefulEnergy1 = totalEnergy1 - wastedEnergy1;
+            const correctEfficiency1 = Math.round((usefulEnergy1 / totalEnergy1) * 100);
+            
+            currentProblem.stage1 = {
+                device: device1,
+                total: totalEnergy1,
+                wasted: wastedEnergy1,
+                useful: usefulEnergy1,
+                efficiency: correctEfficiency1
+            };
+            
+            document.getElementById('problem1').innerHTML = `
+                <strong>${device1.emoji} ${device1.name}에 관한 문제</strong><br><br>
+                어느 ${device1.name}에서 에너지 <span class="highlight">${totalEnergy1}J</span>을 공급받았습니다.<br>
+                여기서 <span class="highlight">${wastedEnergy1}J</span>이 열에너지로 방출되었고,<br>
+                <span class="highlight">${usefulEnergy1}J</span>은 유용하게 사용되었습니다.<br><br>
+                이 ${device1.name}의 에너지 효율은 얼마인가요?
+            `;
+            
+            // 오답 생성
+            const wrongAnswers = new Set();
+            wrongAnswers.add(Math.round((wastedEnergy1 / totalEnergy1) * 100)); // 헷갈릴 수 있는 오답
+            
+            while (wrongAnswers.size < 3) {
+                const wrong = correctEfficiency1 + Math.floor(Math.random() * 30 - 15);
+                if (wrong > 0 && wrong < 100 && wrong !== correctEfficiency1) {
+                    wrongAnswers.add(wrong);
+                }
+            }
+            
+            const allAnswers = [correctEfficiency1, ...Array.from(wrongAnswers)].sort(() => Math.random() - 0.5);
+            
+            const options1HTML = allAnswers.map(eff => `
+                <div class="option-item" data-value="${eff}">
+                    <div class="radio"></div>
+                    <span>${eff}%</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('options1').innerHTML = options1HTML;
+            
+            // 1단계 이벤트 리스너
+            document.querySelectorAll('#options1 .option-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('#options1 .option-item').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    stage1Answer = parseInt(this.dataset.value);
+                });
+            });
+            
+            // 2단계 문제 미리 생성
+            generateStage2Problem();
+            
+            document.getElementById('stage1').classList.remove('hide');
+            document.getElementById('stage2').classList.add('hide');
+            document.getElementById('stageIndicator').textContent = '1단계: 에너지 효율 계산하기';
+            document.getElementById('result1').classList.remove('show');
+            document.getElementById('result2').classList.remove('show');
+        }
+        
+        function generateStage2Problem() {
+            // 3개의 장치 생성
+            const selectedDevices = [];
+            const usedIndices = new Set();
+            
+            while (selectedDevices.length < 3) {
+                const idx = Math.floor(Math.random() * devices.length);
+                if (!usedIndices.has(idx)) {
+                    usedIndices.add(idx);
+                    selectedDevices.push(devices[idx]);
+                }
+            }
+            
+            currentProblem.stage2 = {
+                devices: [
+                    {
+                        device: selectedDevices[0],
+                        total: Math.floor(Math.random() * 30 + 40),
+                        efficiency: Math.floor(Math.random() * 30 + 20) // 20~50%
+                    },
+                    {
+                        device: selectedDevices[1],
+                        total: Math.floor(Math.random() * 30 + 40),
+                        efficiency: Math.floor(Math.random() * 30 + 20)
+                    },
+                    {
+                        device: selectedDevices[2],
+                        total: Math.floor(Math.random() * 30 + 40),
+                        efficiency: Math.floor(Math.random() * 30 + 20)
+                    }
+                ]
+            };
+            
+            // 효율이 모두 다르도록 조정
+            const effs = currentProblem.stage2.devices.map(d => d.efficiency);
+            while (new Set(effs).size !== 3) {
+                currentProblem.stage2.devices[2].efficiency = Math.floor(Math.random() * 30 + 20);
+                effs[2] = currentProblem.stage2.devices[2].efficiency;
+            }
+        }
+        
+        function checkStage1() {
+            if (stage1Answer === null) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+            
+            const correctAnswer = currentProblem.stage1.efficiency;
+            const isCorrect = stage1Answer === correctAnswer;
+            
+            const resultDiv = document.getElementById('result1');
+            resultDiv.classList.add('show');
+            
+            document.querySelectorAll('#options1 .option-item').forEach(item => {
+                item.classList.add('disabled');
+                const value = parseInt(item.dataset.value);
+                if (value === correctAnswer) {
+                    item.classList.add('correct');
+                } else if (value === stage1Answer && !isCorrect) {
+                    item.classList.add('incorrect');
+                }
+            });
+            
+            if (isCorrect) {
+                resultDiv.className = 'result show success';
+                resultDiv.innerHTML = `
+                    <h3>🎉 정답입니다!</h3>
+                    <div class="explanation">
+                        <strong>풀이 과정:</strong><br><br>
+                        <div class="formula">
+                            에너지 효율 = (유용한 에너지 / 공급받은 에너지) × 100%
+                        </div>
+                        <div class="formula">
+                            = (${currentProblem.stage1.useful} / ${currentProblem.stage1.total}) × 100%<br>
+                            = ${correctAnswer}%
+                        </div>
+                        <br>
+                        ${currentProblem.stage1.device.name}은 공급받은 에너지 중 ${correctAnswer}%만 유용하게 사용하고,<br>
+                        나머지 ${100 - correctAnswer}%는 주로 열에너지로 낭비됩니다.
+                    </div>
+                    <button class="next-btn" onclick="goToStage2()">2단계로 GO! 👻</button>
+                `;
+            } else {
+                resultDiv.className = 'result show error';
+                resultDiv.innerHTML = `
+                    <h3>❌ 틀렸어요!</h3>
+                    <div class="explanation">
+                        <strong>올바른 풀이:</strong><br><br>
+                        <div class="formula">
+                            에너지 효율 = (유용한 에너지 / 공급받은 에너지) × 100%
+                        </div>
+                        <div class="formula">
+                            = (${currentProblem.stage1.useful} / ${currentProblem.stage1.total}) × 100%<br>
+                            = ${correctAnswer}%
+                        </div>
+                        <br>
+                        <strong style="color: #dc3545;">주의!</strong><br>
+                        낭비된 에너지(${currentProblem.stage1.wasted}J)가 아니라<br>
+                        유용하게 사용된 에너지(${currentProblem.stage1.useful}J)를 사용해야 합니다!
+                    </div>
+                `;
+            }
+        }
+        
+        function goToStage2() {
+            currentStage = 2;
+            selectedOptions.clear();
+            
+            updateCharacter(2);
+            updateProgress(2);
+            
+            document.getElementById('stage1').classList.add('hide');
+            document.getElementById('stage2').classList.remove('hide');
+            document.getElementById('stageIndicator').textContent = '2단계: 효율 비교하기';
+            
+            const devices = currentProblem.stage2.devices;
+            
+            document.getElementById('problem2').innerHTML = `
+                <strong>세 가지 장치의 에너지 효율 비교</strong><br><br>
+                ${devices[0].device.emoji} <strong>장치 A</strong>: 에너지 ${devices[0].total}J 공급, 효율 ${devices[0].efficiency}%<br>
+                ${devices[1].device.emoji} <strong>장치 B</strong>: 에너지 ${devices[1].total}J 공급, 효율 ${devices[1].efficiency}%<br>
+                ${devices[2].device.emoji} <strong>장치 C</strong>: 에너지 ${devices[2].total}J 공급, 효율 ${devices[2].efficiency}%
+            `;
+            
+            // 비교 선택지 생성
+            const comparisons = [
+                'A > B > C', 'A > C > B',
+                'B > A > C', 'B > C > A',
+                'C > A > B', 'C > B > A'
+            ];
+            
+            const options2HTML = comparisons.map(comp => `
+                <div class="option-item" data-value="${comp}">
+                    <div class="checkbox"></div>
+                    <span>${comp}</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('options2').innerHTML = options2HTML;
+            
+            // 2단계 이벤트 리스너
+            document.querySelectorAll('#options2 .option-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const value = this.dataset.value;
+                    if (selectedOptions.has(value)) {
+                        selectedOptions.delete(value);
+                        this.classList.remove('selected');
+                    } else {
+                        selectedOptions.add(value);
+                        this.classList.add('selected');
+                    }
+                });
+            });
+        }
+        
+        function getCorrectComparison() {
+            const effs = currentProblem.stage2.devices.map(d => d.efficiency);
+            const effA = effs[0];
+            const effB = effs[1];
+            const effC = effs[2];
+            
+            if (effA > effB && effB > effC) return 'A > B > C';
+            if (effA > effC && effC > effB) return 'A > C > B';
+            if (effB > effA && effA > effC) return 'B > A > C';
+            if (effB > effC && effC > effA) return 'B > C > A';
+            if (effC > effA && effA > effB) return 'C > A > B';
+            if (effC > effB && effB > effA) return 'C > B > A';
+        }
+        
+        function checkStage2() {
+            if (selectedOptions.size === 0) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+            
+            const correctAnswer = getCorrectComparison();
+            const wrongAnswers = new Set();
+            
+            ['A > B > C', 'A > C > B', 'B > A > C', 'B > C > A', 'C > A > B', 'C > B > A'].forEach(comp => {
+                if (comp !== correctAnswer) {
+                    wrongAnswers.add(comp);
+                }
+            });
+            
+            let isCorrect = true;
+            
+            // 선택한 답이 모두 틀린 것인지 확인
+            selectedOptions.forEach(selected => {
+                if (!wrongAnswers.has(selected)) {
+                    isCorrect = false;
+                }
+            });
+            
+            // 틀린 것을 모두 선택했는지 확인
+            if (selectedOptions.size !== wrongAnswers.size) {
+                isCorrect = false;
+            }
+            
+            const resultDiv = document.getElementById('result2');
+            resultDiv.classList.add('show');
+            
+            document.querySelectorAll('#options2 .option-item').forEach(item => {
+                item.classList.add('disabled');
+                const value = item.dataset.value;
+                if (value === correctAnswer) {
+                    item.classList.add('correct');
+                } else if (wrongAnswers.has(value) && selectedOptions.has(value)) {
+                    item.classList.add('correct');
+                } else if (selectedOptions.has(value)) {
+                    item.classList.add('incorrect');
+                } else if (wrongAnswers.has(value)) {
+                    item.classList.add('incorrect');
+                }
+            });
+            
+            const devices = currentProblem.stage2.devices;
+            
+            if (isCorrect) {
+                resultDiv.className = 'result show success';
+                resultDiv.innerHTML = `
+                    <h3>🎉🎉 완벽합니다! 2단계 클리어!</h3>
+                    <div class="explanation">
+                        <strong>정답:</strong> ${correctAnswer}<br><br>
+                        효율 비교:<br>
+                        A (${devices[0].efficiency}%) ${devices[0].efficiency > devices[1].efficiency ? '>' : '<'} 
+                        B (${devices[1].efficiency}%) ${devices[1].efficiency > devices[2].efficiency ? '>' : '<'} 
+                        C (${devices[2].efficiency}%)<br><br>
+                        <strong>핵심 포인트:</strong><br>
+                        효율이 높을수록 같은 에너지로 더 많은 일을 할 수 있어요!
+                    </div>
+                `;
+            } else {
+                resultDiv.className = 'result show error';
+                resultDiv.innerHTML = `
+                    <h3>❌ 아쉽네요!</h3>
+                    <div class="explanation">
+                        <strong>정답:</strong> ${correctAnswer}<br><br>
+                        각 장치의 효율:<br>
+                        장치 A: ${devices[0].efficiency}%<br>
+                        장치 B: ${devices[1].efficiency}%<br>
+                        장치 C: ${devices[2].efficiency}%<br><br>
+                        효율을 숫자로 직접 비교해서 틀린 것을 <strong>모두</strong> 선택해야 해요!
+                    </div>
+                `;
+            }
+        }
+        
+        generateNewProblem();
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>에너지 효율 비교 시뮬레이션</title>
+    <title>자동차 에너지 효율 시뮬레이션</title>
     <style>
         * {
             margin: 0;
@@ -15,143 +15,437 @@
             font-family: 'Malgun Gothic', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .container {
             max-width: 500px;
-            margin: 0 auto;
+            width: 100%;
             background: white;
             border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
         
-        h1 {
-            color: #667eea;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-        
-        .device {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 15px;
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 20px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 3px solid transparent;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
         }
         
-        .device:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
         
-        .device.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #e0e7ff 0%, #cfd9ff 100%);
+        .problem-number {
+            font-size: 14px;
+            opacity: 0.9;
         }
         
-        .device-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
+        .car-container {
+            position: relative;
+            height: 450px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
         }
         
-        .device-data {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 15px;
+        .clouds {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            height: 50px;
+        }
+        
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.7;
+            animation: float 20s linear infinite;
+        }
+        
+        .cloud1 {
+            width: 60px;
+            height: 20px;
+            top: 10px;
+            left: -60px;
+        }
+        
+        .cloud2 {
+            width: 80px;
+            height: 25px;
+            top: 30px;
+            left: -80px;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+        
+        .road {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: #555;
+            border-top: 4px solid #999;
+        }
+        
+        .road-lines {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 4px;
+            background: repeating-linear-gradient(
+                to right,
+                #FFD700 0px,
+                #FFD700 30px,
+                transparent 30px,
+                transparent 60px
+            );
+            animation: roadMove 1s linear infinite;
+        }
+        
+        @keyframes roadMove {
+            from { background-position: 0 0; }
+            to { background-position: 60px 0; }
+        }
+        
+        .car {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 110px;
+            animation: carDrive 2s ease-in-out infinite;
+        }
+        
+        @keyframes carDrive {
+            0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+            25% { transform: translateX(-50%) translateY(-3px) rotate(-0.5deg); }
+            75% { transform: translateX(-50%) translateY(-3px) rotate(0.5deg); }
+        }
+        
+        .car-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .car-main {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 65px;
+            background: #FFD700;
+            border-radius: 18px 18px 10px 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .car-top {
+            position: absolute;
+            bottom: 48px;
+            left: 25%;
+            width: 50%;
+            height: 48px;
+            background: #FFA500;
+            border-radius: 18px 18px 0 0;
+        }
+        
+        .window {
+            position: absolute;
+            top: 4px;
+            left: 10%;
+            width: 35%;
+            height: 28px;
+            background: rgba(135, 206, 235, 0.6);
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+        
+        .window.right {
+            left: 55%;
+        }
+        
+        .headlight {
+            position: absolute;
+            bottom: 20px;
+            right: 12px;
+            width: 10px;
+            height: 10px;
+            background: #FFF;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #FFF;
+        }
+        
+        .taillight {
+            position: absolute;
+            bottom: 20px;
+            left: 12px;
+            width: 10px;
+            height: 10px;
+            background: #FF0000;
+            border-radius: 50%;
+        }
+        
+        .wheel {
+            position: absolute;
+            bottom: -10px;
+            width: 35px;
+            height: 35px;
+            background: #333;
+            border-radius: 50%;
+            border: 5px solid #666;
+            animation: rotate 0.4s linear infinite;
+        }
+        
+        .wheel::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 15px;
+            height: 15px;
+            background: #999;
+            border-radius: 50%;
+        }
+        
+        .wheel.front {
+            right: 30px;
+        }
+        
+        .wheel.back {
+            left: 30px;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .energy-labels {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
         
         .label {
-            color: #555;
-        }
-        
-        .value {
+            position: absolute;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.25);
+            font-size: 13px;
             font-weight: bold;
-            color: #333;
-        }
-        
-        .efficiency {
-            background: #fff;
-            padding: 10px;
-            border-radius: 10px;
+            animation: labelFloat 3s ease-in-out infinite;
+            z-index: 10;
             text-align: center;
-            margin-top: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #764ba2;
+            line-height: 1.6;
         }
         
-        .selection-order {
-            background: #f0f4ff;
+        .label::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        @keyframes labelFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .label.chemical {
+            bottom: 272px;
+            left: 72px;
+            color: #e74c3c;
+            background: linear-gradient(135deg, #fff 0%, #ffe6e6 100%);
+            border: 2px solid #e74c3c;
+        }
+        
+        .label.chemical::after {
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 10px 0 10px;
+            border-color: #e74c3c transparent transparent transparent;
+        }
+        
+        .label.heat {
+            bottom: 173px;
+            left: 10px;
+            color: #e67e22;
+            background: linear-gradient(135deg, #fff 0%, #ffe8dc 100%);
+            border: 2px solid #e67e22;
+            animation-delay: -1s;
+        }
+        
+        .label.heat::after {
+            top: 50%;
+            right: -12px;
+            transform: translateY(-50%);
+            border-width: 10px 0 10px 12px;
+            border-color: transparent transparent transparent #e67e22;
+        }
+        
+        .label.kinetic {
+            bottom: 173px;
+            right: 10px;
+            color: #3498db;
+            background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
+            border: 2px solid #3498db;
+            animation-delay: -2s;
+        }
+        
+        .label.kinetic::after {
+            top: 50%;
+            left: -12px;
+            transform: translateY(-50%);
+            border-width: 10px 12px 10px 0;
+            border-color: transparent #3498db transparent transparent;
+        }
+        
+        .label.sound {
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #9b59b6;
+            background: linear-gradient(135deg, #fff 0%, #f3e5f5 100%);
+            border: 2px solid #9b59b6;
+            animation-delay: -0.5s;
+        }
+        
+        .label.sound::after {
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 10px 0 10px;
+            border-color: #9b59b6 transparent transparent transparent;
+        }
+        
+        .question {
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 15px;
             margin: 20px 0;
+            border-left: 5px solid #667eea;
         }
         
-        .selection-title {
+        .question h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
             font-size: 16px;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 15px;
-            text-align: center;
+            line-height: 1.6;
         }
         
-        .selection-display {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .selection-item {
+        .statements {
             background: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .statement {
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+            color: #34495e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .statement:last-child {
+            border-bottom: none;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
             font-weight: bold;
-            color: #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            font-size: 16px;
         }
         
-        .selection-item.empty {
-            color: #ccc;
-            border: 2px dashed #ddd;
+        .option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
         }
         
-        .button-group {
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .option.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+        
+        .option.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .buttons {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         button {
             flex: 1;
             padding: 15px;
+            border: none;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
-            border: none;
-            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+        }
+        
+        .check-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .check-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .check-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .new-problem-btn {
@@ -161,224 +455,337 @@
         
         .new-problem-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .reset-btn {
-            background: #e0e0e0;
-            color: #666;
-        }
-        
-        .reset-btn:hover {
-            background: #d0d0d0;
-        }
-        
-        .check-btn {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            margin-top: 10px;
-        }
-        
-        .check-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
-        }
-        
-        .check-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
         
         .result {
             margin-top: 20px;
             padding: 20px;
             border-radius: 15px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
+            display: none;
+            animation: slideIn 0.5s;
+            position: relative;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .result.correct {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #2d5f3d;
+            background: #d4edda;
+            border: 2px solid #2ecc71;
         }
         
         .result.incorrect {
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            color: #8b3a3a;
+            background: #f8d7da;
+            border: 2px solid #e74c3c;
         }
         
-        .instruction {
-            background: #fff8e1;
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .result.correct .result-title {
+            color: #2ecc71;
+        }
+        
+        .result.incorrect .result-title {
+            color: #e74c3c;
+        }
+        
+        .race-badge {
+            display: inline-block;
+            font-size: 48px;
+            margin-bottom: 10px;
+            animation: bounce-badge 0.6s ease-in-out;
+        }
+        
+        @keyframes bounce-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .explanation {
+            background: white;
             padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            line-height: 1.8;
             font-size: 14px;
-            color: #555;
-            line-height: 1.6;
         }
         
-        .instruction strong {
-            color: #f5576c;
+        .explanation-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .explanation p {
+            margin: 8px 0;
+            color: #34495e;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ 에너지 효율 비교</h1>
-        <div class="subtitle">통합과학 - 에너지 효율 연습</div>
-        
-        <div class="instruction">
-            <strong>문제:</strong> 세 장치의 에너지 효율을 계산하고, <strong>효율이 높은 순서대로</strong> 장치를 클릭하여 정렬하세요.
+        <div class="header">
+            <h1>🚗 자동차 에너지 효율</h1>
+            <div class="problem-number">통합과학2 - 에너지 변환</div>
         </div>
         
-        <div id="devices"></div>
-        
-        <div class="selection-order">
-            <div class="selection-title">선택 순서 (높은 효율 → 낮은 효율)</div>
-            <div class="selection-display">
-                <div class="selection-item empty" id="pos1">?</div>
-                <div class="selection-item empty" id="pos2">?</div>
-                <div class="selection-item empty" id="pos3">?</div>
+        <div class="car-container">
+            <div class="clouds">
+                <div class="cloud cloud1"></div>
+                <div class="cloud cloud2"></div>
             </div>
-            <div class="button-group">
-                <button class="reset-btn" onclick="resetSelection()">선택 초기화</button>
-                <button class="check-btn" id="checkBtn" onclick="checkAnswer()" disabled>정답 확인</button>
+            
+            <div class="car">
+                <div class="car-body">
+                    <div class="car-top">
+                        <div class="window"></div>
+                        <div class="window right"></div>
+                    </div>
+                    <div class="car-main">
+                        <div class="headlight"></div>
+                        <div class="taillight"></div>
+                    </div>
+                    <div class="wheel back"></div>
+                    <div class="wheel front"></div>
+                </div>
+            </div>
+            
+            <div class="energy-labels">
+                <div class="label chemical">⚡ 화학 에너지<br><span id="chemical">100</span>%</div>
+                <div class="label heat">🔥 열에너지<br><span id="heat">75</span>%</div>
+                <div class="label kinetic">🚗 바퀴의 운동 에너지<br><span id="kinetic">20</span>%</div>
+                <div class="label sound">🔊 엔진의 소리 에너지<br><span id="sound">5</span>%</div>
+            </div>
+            
+            <div class="road">
+                <div class="road-lines"></div>
             </div>
         </div>
         
-        <div id="result"></div>
+        <div class="question">
+            <h3>그림은 자동차에 공급된 에너지와 전환된 에너지의 비율을 나타낸 것이다.</h3>
+            <h3 style="margin-top: 15px;">이에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?</h3>
+            
+            <div class="statements">
+                <div class="statement">ㄱ. 자동차의 에너지 효율은 <span id="efficiency">20</span>%이다.</div>
+                <div class="statement">ㄴ. 버려지는 에너지의 비율은 <span id="waste">80</span>%이다.</div>
+                <div class="statement">ㄷ. 자동차에 공급된 화학 에너지는 최종적으로 모두 열에너지로 전환된다.</div>
+            </div>
+        </div>
         
-        <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
+        <div class="options" id="options">
+            <div class="option" data-answer="ㄱ">① ㄱ</div>
+            <div class="option" data-answer="ㄴ">② ㄴ</div>
+            <div class="option" data-answer="ㄱ, ㄷ">③ ㄱ, ㄷ</div>
+            <div class="option" data-answer="ㄴ, ㄷ">④ ㄴ, ㄷ</div>
+            <div class="option" data-answer="ㄱ, ㄴ, ㄷ">⑤ ㄱ, ㄴ, ㄷ</div>
+        </div>
+        
+        <div class="buttons">
+            <button class="check-btn" id="checkBtn" onclick="checkAnswer()" disabled>✓ 정답 확인</button>
+            <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
+        </div>
+        
+        <div class="result" id="result"></div>
     </div>
-
+    
     <script>
-        let devices = [];
-        let selectedOrder = [];
-        let correctOrder = [];
-
+        let selectedAnswer = null;
+        let correctAnswer = null;
+        let currentKinetic = 20;
+        let currentSound = 5;
+        
         function generateNewProblem() {
-            devices = [];
-            selectedOrder = [];
-            document.getElementById('result').innerHTML = '';
+            // 운동 에너지: 15~25%, 소리 에너지: 3~7%
+            currentKinetic = Math.floor(Math.random() * 11) + 15; // 15~25
+            currentSound = Math.floor(Math.random() * 5) + 3; // 3~7
+            const heat = 100 - currentKinetic - currentSound;
+            const waste = heat + currentSound;
             
-            const deviceNames = ['A', 'B', 'C'];
+            // 값 업데이트
+            document.getElementById('kinetic').textContent = currentKinetic;
+            document.getElementById('sound').textContent = currentSound;
+            document.getElementById('heat').textContent = heat;
+            document.getElementById('efficiency').textContent = currentKinetic;
+            document.getElementById('waste').textContent = waste;
             
-            for (let i = 0; i < 3; i++) {
-                const suppliedEnergy = Math.floor(Math.random() * 401) + 100; // 100-500 J
-                const efficiency = Math.floor(Math.random() * 51) + 20; // 20-70%
-                const usefulEnergy = Math.round(suppliedEnergy * efficiency / 100);
+            // 정답 결정
+            correctAnswer = "ㄱ, ㄴ, ㄷ";
+            
+            // 초기화
+            selectedAnswer = null;
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('checkBtn').disabled = true;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+        }
+        
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                if (document.getElementById('result').style.display === 'block') return;
                 
-                devices.push({
-                    name: deviceNames[i],
-                    supplied: suppliedEnergy,
-                    useful: usefulEnergy,
-                    efficiency: efficiency
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
                 });
-            }
-            
-            // 정답 순서 계산 (효율 높은 순)
-            correctOrder = devices
-                .map((d, idx) => ({...d, originalIndex: idx}))
-                .sort((a, b) => b.efficiency - a.efficiency)
-                .map(d => d.name);
-            
-            renderDevices();
-            resetSelection();
-        }
-
-        function renderDevices() {
-            const container = document.getElementById('devices');
-            container.innerHTML = '';
-            
-            devices.forEach((device, index) => {
-                const div = document.createElement('div');
-                div.className = 'device';
-                div.onclick = () => selectDevice(device.name);
                 
-                div.innerHTML = `
-                    <div class="device-name">장치 ${device.name}</div>
-                    <div class="device-data">
-                        <span class="label">공급된 에너지:</span>
-                        <span class="value">${device.supplied} J</span>
-                    </div>
-                    <div class="device-data">
-                        <span class="label">유용한 에너지:</span>
-                        <span class="value">${device.useful} J</span>
-                    </div>
-                    <div class="efficiency">
-                        에너지 효율: ${device.efficiency}%
-                    </div>
-                `;
-                
-                container.appendChild(div);
+                this.classList.add('selected');
+                selectedAnswer = this.dataset.answer;
+                document.getElementById('checkBtn').disabled = false;
             });
-        }
-
-        function selectDevice(name) {
-            // 이미 선택된 장치를 다시 클릭하면 선택 취소
-            if (selectedOrder.includes(name)) {
-                selectedOrder = selectedOrder.filter(item => item !== name);
-                updateSelection();
-                return;
-            }
-            
-            if (selectedOrder.length >= 3) {
-                return; // 3개 모두 선택됨
-            }
-            
-            selectedOrder.push(name);
-            updateSelection();
-        }
-
-        function updateSelection() {
-            // 장치 강조 표시 업데이트
-            const deviceDivs = document.querySelectorAll('.device');
-            deviceDivs.forEach((div, index) => {
-                const deviceName = devices[index].name;
-                if (selectedOrder.includes(deviceName)) {
-                    div.classList.add('selected');
-                } else {
-                    div.classList.remove('selected');
-                }
-            });
-            
-            // 선택 순서 표시 업데이트
-            for (let i = 0; i < 3; i++) {
-                const posDiv = document.getElementById(`pos${i + 1}`);
-                if (i < selectedOrder.length) {
-                    posDiv.textContent = selectedOrder[i];
-                    posDiv.classList.remove('empty');
-                } else {
-                    posDiv.textContent = '?';
-                    posDiv.classList.add('empty');
-                }
-            }
-            
-            // 정답 확인 버튼 활성화
-            document.getElementById('checkBtn').disabled = selectedOrder.length < 3;
-        }
-
-        function resetSelection() {
-            selectedOrder = [];
-            updateSelection();
-            document.getElementById('result').innerHTML = '';
-        }
-
+        });
+        
         function checkAnswer() {
+            if (!selectedAnswer) return;
+            
             const resultDiv = document.getElementById('result');
-            const isCorrect = JSON.stringify(selectedOrder) === JSON.stringify(correctOrder);
+            const isCorrect = selectedAnswer === correctAnswer;
+            
+            document.querySelectorAll('.option').forEach(opt => {
+                if (opt.dataset.answer === correctAnswer) {
+                    opt.classList.add('correct');
+                } else if (opt.classList.contains('selected')) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            const waste = 100 - currentKinetic;
             
             if (isCorrect) {
                 resultDiv.className = 'result correct';
-                resultDiv.innerHTML = '🎉 정답입니다!<br>에너지 효율이 높은 순서대로 잘 정렬했습니다.';
+                resultDiv.innerHTML = `
+                    <div class="race-badge">🏁</div>
+                    <div class="result-title">🎉 경주 성공! 🎉</div>
+                    <div class="explanation">
+                        <div class="explanation-title">📖 상세 해설</div>
+                        
+                        <p style="margin-bottom: 15px;"><strong>【 정답: ⑤ ㄱ, ㄴ, ㄷ 】</strong></p>
+                        
+                        <p style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 15px 0;">
+                            <strong>💡 에너지 효율이란?</strong><br>
+                            공급된 에너지 중에서 우리가 실제로 <strong>목적에 맞게 유용하게 사용한 에너지</strong>의 비율을 말합니다. 
+                            자동차의 경우, 목적은 '달리는 것'이므로 바퀴의 운동 에너지만 유용한 에너지입니다.
+                        </p>
+                        
+                        <p><strong>ㄱ. 자동차의 에너지 효율은 ${currentKinetic}%이다. ✓</strong></p>
+                        <p style="padding-left: 20px; color: #555; margin-bottom: 12px;">
+                            • 에너지 효율 = (유용한 에너지 / 공급된 에너지) × 100<br>
+                            • 자동차에서 유용한 에너지 = 바퀴의 운동 에너지 = ${currentKinetic}%<br>
+                            • 따라서 에너지 효율 = (${currentKinetic}/100) × 100 = <strong>${currentKinetic}%</strong><br>
+                            • 이는 공급된 화학 에너지의 ${currentKinetic}%만 달리는 데 사용되고, 나머지 ${waste}%는 버려진다는 의미입니다.
+                        </p>
+                        
+                        <p><strong>ㄴ. 버려지는 에너지의 비율은 ${waste}%이다. ✓</strong></p>
+                        <p style="padding-left: 20px; color: #555; margin-bottom: 12px;">
+                            • 버려지는 에너지 = 공급된 에너지 - 유용한 에너지<br>
+                            • 버려지는 에너지 = 열에너지(${100-currentKinetic-currentSound}%) + 소리 에너지(${currentSound}%)<br>
+                            • 버려지는 에너지 = ${100-currentKinetic-currentSound} + ${currentSound} = <strong>${waste}%</strong><br>
+                            • 또는 간단히: 100% - ${currentKinetic}% = ${waste}%
+                        </p>
+                        
+                        <p><strong>ㄷ. 자동차에 공급된 화학 에너지는 최종적으로 모두 열에너지로 전환된다. ✓</strong></p>
+                        <p style="padding-left: 20px; color: #555; margin-bottom: 12px;">
+                            • 화학 에너지(100%) → 운동 에너지(${currentKinetic}%) + 열에너지(${100-currentKinetic-currentSound}%) + 소리 에너지(${currentSound}%)<br>
+                            • <strong>운동 에너지의 최종 운명:</strong> 바퀴가 회전하며 도로와의 마찰, 공기 저항으로 인해 결국 열에너지로 전환됩니다.<br>
+                            • <strong>소리 에너지의 최종 운명:</strong> 소리는 공기 분자를 진동시키고, 이 진동 에너지도 결국 열에너지로 전환됩니다.<br>
+                            • <strong>열역학 제2법칙:</strong> 모든 에너지는 최종적으로 열에너지 형태로 흩어지는 경향이 있습니다.
+                        </p>
+                        
+                        <p style="background: #e8f5e9; padding: 12px; border-radius: 8px; border-left: 4px solid #2ecc71; margin-top: 15px;">
+                            <strong>🎯 핵심 정리</strong><br>
+                            1️⃣ 에너지 효율 = 유용한 에너지 비율 (자동차는 운동 에너지만)<br>
+                            2️⃣ 버려지는 에너지 = 100% - 에너지 효율<br>
+                            3️⃣ 모든 에너지는 최종적으로 열에너지로 전환됨 (엔트로피 증가)
+                        </p>
+                    </div>
+                `;
             } else {
                 resultDiv.className = 'result incorrect';
-                resultDiv.innerHTML = `❌ 틀렸습니다.<br>정답: ${correctOrder.join(' → ')}<br>다시 도전해보세요!`;
+                resultDiv.innerHTML = `
+                    <div class="race-badge">💥</div>
+                    <div class="result-title">😢 경주 실패!</div>
+                    <div class="explanation">
+                        <div class="explanation-title">📖 상세 해설</div>
+                        
+                        <p style="margin-bottom: 15px;"><strong>【 정답: ⑤ ㄱ, ㄴ, ㄷ 】</strong></p>
+                        
+                        <p style="background: #fff3cd; padding: 12px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+                            <strong>⚠️ 흔한 오개념</strong><br>
+                            많은 학생들이 "ㄷ"을 틀린 것으로 생각합니다. 왜냐하면 "운동 에너지도 있는데 어떻게 모두 열에너지가 되지?"라고 생각하기 때문입니다. 
+                            하지만 "최종적으로"라는 말이 중요합니다!
+                        </p>
+                        
+                        <p><strong>ㄱ. 자동차의 에너지 효율은 ${currentKinetic}%이다. ✓</strong></p>
+                        <p style="padding-left: 20px; color: #555; margin-bottom: 12px;">
+                            • <strong>에너지 효율의 정의:</strong> 목적에 맞게 사용된 에너지의 비율<br>
+                            • 자동차의 목적 = 달리는 것 → 바퀴의 운동 에너지만 유용<br>
+                            • 열에너지와 소리 에너지는 원하지 않았던 에너지 = 버려지는 에너지<br>
+                            • 에너지 효율 = ${currentKinetic}% ✓
+                        </p>
+                        
+                        <p><strong>ㄴ. 버려지는 에너지의 비율은 ${waste}%이다. ✓</strong></p>
+                        <p style="padding-left: 20px; color: #555; margin-bottom: 12px;">
+                            • 버려지는 에너지 = 열에너지 + 소리 에너지<br>
+                            • = ${100-currentKinetic-currentSound}% + ${currentSound}% = ${waste}%<br>
+                            • 또는: 100% - 에너지 효율(${currentKinetic}%) = ${waste}% ✓
+                        </p>
+                        
+                        <p><strong>ㄷ. 자동차에 공급된 화학 에너지는 최종적으로 모두 열에너지로 전환된다. ✓</strong></p>
+                        <p style="padding-left: 20px; color: #555; margin-bottom: 12px;">
+                            <strong>시간에 따른 에너지 변화를 봅시다:</strong><br><br>
+                            
+                            <strong>⏰ 시작 시점:</strong><br>
+                            화학 에너지(100%) → 운동(${currentKinetic}%) + 열(${100-currentKinetic-currentSound}%) + 소리(${currentSound}%)<br><br>
+                            
+                            <strong>⏰ 자동차가 달리는 동안:</strong><br>
+                            • 운동 에너지 → 도로 마찰로 열 발생 🔥<br>
+                            • 운동 에너지 → 공기 저항으로 열 발생 💨<br>
+                            • 소리 에너지 → 공기를 진동시킨 후 열로 변환 🔊<br><br>
+                            
+                            <strong>⏰ 최종 (자동차가 멈춘 후):</strong><br>
+                            모든 에너지 = 열에너지 100% 🔥<br><br>
+                            
+                            이것이 <strong>열역학 제2법칙</strong>입니다. 모든 에너지는 결국 가장 무질서한 형태인 열에너지로 흩어집니다.
+                        </p>
+                        
+                        <p style="background: #ffebee; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                            <strong>❌ 자주 하는 실수:</strong><br>
+                            • "운동 에너지가 ${currentKinetic}%나 있는데 어떻게 모두 열이 되지?" ← <strong>"최종적으로"</strong>를 놓침<br>
+                            • "소리는 소리지 열이 아니지?" ← 소리도 시간이 지나면 열로 변환됨<br>
+                            • "에너지 효율 = 100 - 열에너지" ← 틀림! 열과 소리 모두 버려지는 에너지
+                        </p>
+                        
+                        <p style="background: #e8f5e9; padding: 12px; border-radius: 8px; border-left: 4px solid #2ecc71; margin-top: 15px;">
+                            <strong>🎯 핵심 정리</strong><br>
+                            1️⃣ 에너지 효율 = 목적에 맞는 에너지만 (운동 에너지 ${currentKinetic}%)<br>
+                            2️⃣ 버려지는 에너지 = 열 + 소리 = ${waste}%<br>
+                            3️⃣ <strong>"최종적으로"</strong> 모든 에너지는 열에너지가 됨 (중요!)
+                        </p>
+                    </div>
+                `;
             }
+            
+            resultDiv.style.display = 'block';
+            document.getElementById('checkBtn').disabled = true;
         }
-
+        
         // 초기 문제 생성
         generateNewProblem();
     </script>

@@ -13,685 +13,366 @@
         
         body {
             font-family: 'Malgun Gothic', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffecd2 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .container {
-            max-width: 500px;
-            margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 25px;
+            padding: 30px 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            border: 4px solid #ff69b4;
         }
         
         h1 {
-            color: #667eea;
-            font-size: 24px;
+            color: #ff1493;
+            font-size: 26px;
             margin-bottom: 10px;
             text-align: center;
+            text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.2);
         }
         
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.3);
-        }
-        
-        .stat-item {
+        .subtitle {
+            color: #ff69b4;
+            font-size: 14px;
             text-align: center;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            color: #666;
-            margin-bottom: 3px;
-        }
-        
-        .stat-value {
-            font-size: 20px;
+            margin-bottom: 25px;
             font-weight: bold;
-            color: #d63031;
         }
         
-        .timer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #f8f9ff;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .timer-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #667eea;
-            min-width: 60px;
-            text-align: center;
-        }
-        
-        .timer-value.warning {
-            color: #e17055;
-            animation: pulse 0.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .problem-section {
-            background: #f8f9ff;
+        .problem-box {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe6f0 100%);
+            border-radius: 20px;
             padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border: 3px dashed #ff69b4;
+            position: relative;
+        }
+        
+        .problem-box::before {
+            content: '🎪';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 30px;
+            background: white;
+            padding: 0 10px;
+        }
+        
+        .problem-title {
+            font-weight: bold;
+            color: #ff1493;
+            margin-bottom: 15px;
+            font-size: 16px;
         }
         
         .problem-text {
+            font-size: 16px;
             line-height: 1.8;
-            margin-bottom: 15px;
-            font-size: 15px;
+            color: #333;
         }
         
-        .car-race {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-        }
-        
-        .car-container {
+        .icon {
+            font-size: 50px;
             text-align: center;
-            flex: 1;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
         }
         
-        .car {
-            font-size: 40px;
-            margin: 10px 0;
-            transition: transform 0.3s;
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
-        .car.racing {
-            animation: race 2s ease-in-out;
+        .answer-section {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6cc 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 3px solid #ffa500;
         }
         
-        @keyframes race {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(20px) scale(1.2); }
-            100% { transform: translateX(0); }
+        .answer-label {
+            font-weight: bold;
+            color: #ff8c00;
+            margin-bottom: 10px;
+            font-size: 15px;
+            text-align: center;
         }
         
-        .energy-bar {
-            width: 100%;
-            height: 25px;
-            background: #e0e0e0;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 5px 0;
-        }
-        
-        .energy-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00b894, #00cec9);
-            transition: width 1s ease-out;
+        .input-group {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
-        .energy-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 3px;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .data-table th, .data-table td {
+        input[type="number"] {
+            flex: 1;
             padding: 12px;
+            font-size: 18px;
+            border: 3px solid #ff69b4;
+            border-radius: 15px;
             text-align: center;
-            border: 1px solid #ddd;
-        }
-        
-        .data-table th {
-            background: #667eea;
-            color: white;
             font-weight: bold;
-        }
-        
-        .choices {
-            margin: 20px 0;
-        }
-        
-        .choice-item {
             background: white;
-            border: 2px solid #e0e0e0;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 15px;
         }
         
-        .choice-item:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-            transform: translateX(5px);
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ff1493;
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.3);
         }
         
-        .choice-item.selected {
-            border-color: #667eea;
-            background: #667eea;
-            color: white;
+        .unit {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff1493;
         }
         
-        .buttons {
+        .button-group {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
         
         button {
             flex: 1;
             padding: 15px;
-            border: none;
-            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
+            border: none;
+            border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        .new-problem-btn {
-            background: #667eea;
+        .btn-submit {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
             color: white;
         }
         
-        .new-problem-btn:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
+        .btn-submit:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(255, 107, 157, 0.4);
         }
         
-        .submit-btn {
-            background: #10b981;
+        .btn-new {
+            background: linear-gradient(135deg, #ffa94d 0%, #ff8243 100%);
             color: white;
         }
         
-        .submit-btn:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-        
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
+        .btn-new:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(255, 169, 77, 0.4);
         }
         
         .result {
-            margin-top: 20px;
+            background: white;
+            border-radius: 20px;
             padding: 20px;
-            border-radius: 10px;
+            text-align: center;
             display: none;
-            animation: slideIn 0.5s ease-out;
+            border: 4px solid;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s;
         }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .result.correct {
-            background: #d1fae5;
-            border: 2px solid #10b981;
-            display: block;
+            border-color: #32cd32;
+            background: linear-gradient(135deg, #f0fff0 0%, #e6ffe6 100%);
         }
         
         .result.incorrect {
-            background: #fee2e2;
-            border: 2px solid #ef4444;
-            display: block;
+            border-color: #ff6b9d;
+            background: linear-gradient(135deg, #fff5f8 0%, #ffe6f0 100%);
         }
         
-        .result-title {
-            font-size: 18px;
-            font-weight: bold;
+        .result-icon {
+            font-size: 60px;
             margin-bottom: 10px;
+            animation: pop 0.5s;
         }
         
-        .result.correct .result-title {
-            color: #059669;
+        @keyframes pop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
         
-        .result.incorrect .result-title {
-            color: #dc2626;
+        .result-text {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
         
-        .explanation {
-            line-height: 1.6;
+        .result.correct .result-text {
+            color: #32cd32;
+        }
+        
+        .result.incorrect .result-text {
+            color: #ff1493;
+        }
+        
+        .result-detail {
+            font-size: 15px;
+            color: #333;
             margin-top: 10px;
-            font-size: 14px;
-        }
-        
-        .calculation {
+            line-height: 1.8;
             background: white;
             padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .decoration {
+            text-align: center;
+            font-size: 30px;
             margin: 10px 0;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 13px;
-        }
-        
-        .firework {
-            position: fixed;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            animation: firework 1s ease-out forwards;
-            pointer-events: none;
-        }
-        
-        @keyframes firework {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
-        }
-        
-        .combo-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 30px 50px;
-            border-radius: 20px;
-            font-size: 36px;
-            font-weight: bold;
-            box-shadow: 0 10px 40px rgba(245, 87, 108, 0.5);
-            animation: comboAnim 1s ease-out;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        
-        @keyframes comboAnim {
-            0% { transform: translate(-50%, -50%) scale(0); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(0); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ 에너지 효율 레이싱 챌린지</h1>
+        <h1>🎨 에너지 효율 계산 놀이터 🎪</h1>
+        <p class="subtitle">✨ 통합과학2 - 에너지 효율 문제 ✨</p>
         
-        <div class="stats-bar">
-            <div class="stat-item">
-                <div class="stat-label">연속 정답</div>
-                <div class="stat-value" id="comboCount">0 🔥</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">총 점수</div>
-                <div class="stat-value" id="totalScore">0 ⭐</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">레벨</div>
-                <div class="stat-value" id="levelDisplay">1 🏆</div>
-            </div>
+        <div class="problem-box">
+            <div class="problem-title">🎯 문제 11번 유형</div>
+            <p class="problem-text" id="problemText">
+                어떤 조명에 매초 60 J의 전기 에너지를 공급하였더니, 18 J의 빛에너지가 발생하고 42 J의 열에너지가 발생하였다. 이 조명 기구의 에너지 효율은?
+            </p>
+            
+            <div class="icon">🎠</div>
         </div>
         
-        <div class="timer">
-            <span>⏱️ 남은 시간:</span>
-            <span class="timer-value" id="timerDisplay">50</span>
-        </div>
-        
-        <div class="problem-section">
-            <div class="problem-text">
-                다음은 전기 자동차 A, B에 공급한 전기 에너지와 바퀴를 움직이는 데 사용한 에너지를 나타낸 것이다.
+        <div class="answer-section">
+            <div class="answer-label">🎁 답을 입력하세요 🎁</div>
+            <div class="input-group">
+                <input type="number" id="answerInput" placeholder="답 입력" min="0" max="100">
+                <span class="unit">%</span>
             </div>
             
-            <div class="car-race">
-                <div class="car-container">
-                    <div class="car" id="carA">🚗</div>
-                    <div>자동차 A</div>
-                    <div class="energy-bar">
-                        <div class="energy-fill" id="energyBarA" style="width: 0%"></div>
-                    </div>
-                    <div class="energy-label" id="energyLabelA"></div>
-                </div>
-                <div class="car-container">
-                    <div class="car" id="carB">🚙</div>
-                    <div>자동차 B</div>
-                    <div class="energy-bar">
-                        <div class="energy-fill" id="energyBarB" style="width: 0%"></div>
-                    </div>
-                    <div class="energy-label" id="energyLabelB"></div>
-                </div>
-            </div>
-            
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>자동차</th>
-                        <th>공급 에너지(J)</th>
-                        <th>사용 에너지(J)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>A</td>
-                        <td id="energyA"></td>
-                        <td id="usedA"></td>
-                    </tr>
-                    <tr>
-                        <td>B</td>
-                        <td id="energyB"></td>
-                        <td id="usedB"></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="problem-text">
-                <strong>&lt; 보기 &gt;</strong><br>
-                <span id="option1"></span><br>
-                <span id="option2"></span><br>
-                <span id="option3"></span>
+            <div class="button-group">
+                <button class="btn-submit" onclick="checkAnswer()">✨ 정답 확인</button>
+                <button class="btn-new" onclick="generateNewProblem()">🎪 새 문제</button>
             </div>
         </div>
         
-        <div class="choices" id="choicesContainer"></div>
-        
-        <div class="buttons">
-            <button class="new-problem-btn" onclick="newProblem()">🔄 새문제</button>
-            <button class="submit-btn" id="submitBtn" onclick="checkAnswer()" disabled>정답 확인</button>
+        <div id="result" class="result">
+            <div class="result-icon"></div>
+            <div class="result-text"></div>
+            <div class="result-detail"></div>
         </div>
         
-        <div class="result" id="result"></div>
+        <div class="decoration">🎈 🎨 🎪 🎠 🎡 🎢</div>
     </div>
     
     <script>
-        let currentAnswer = null;
-        let selectedChoice = null;
-        let problemData = {};
-        let gameStats = { combo: 0, score: 0, level: 1, total: 0 };
-        let timerInterval = null;
-        let timeLeft = 50;
+        let currentAnswer = 0;
+        let currentInput = 0;
+        let currentUseful = 0;
+        let currentWasted = 0;
         
-        function randomVal(min, max, step) {
-            return min + Math.floor(Math.random() * ((max - min) / step + 1)) * step;
-        }
+        const icons = ['🎠', '🎡', '🎢', '🎨', '🎪', '🧸', '🎁', '🎈', '🎯', '🎲'];
         
-        function startTimer() {
-            clearInterval(timerInterval);
-            timeLeft = 50;
-            document.getElementById('timerDisplay').textContent = timeLeft;
+        function generateNewProblem() {
+            // 효율: 10%~50% 사이 (10% 단위로 변경하여 확실하게 정수가 되도록)
+            const efficiency = (Math.floor(Math.random() * 5) + 1) * 10;
             
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timerDisplay').textContent = timeLeft;
-                
-                if (timeLeft <= 10) {
-                    document.getElementById('timerDisplay').classList.add('warning');
-                } else {
-                    document.getElementById('timerDisplay').classList.remove('warning');
-                }
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    gameStats.combo = 0;
-                    updateStats();
-                    alert('⏰ 시간 초과! 콤보 초기화!');
-                    newProblem();
-                }
-            }, 1000);
-        }
-        
-        function createFireworks(x, y) {
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7'];
-            for (let i = 0; i < 15; i++) {
-                const fw = document.createElement('div');
-                fw.className = 'firework';
-                fw.style.left = x + 'px';
-                fw.style.top = y + 'px';
-                fw.style.background = colors[Math.floor(Math.random() * colors.length)];
-                
-                const angle = (Math.PI * 2 * i) / 15;
-                const dist = 100 + Math.random() * 50;
-                fw.style.setProperty('--x', Math.cos(angle) * dist + 'px');
-                fw.style.setProperty('--y', Math.sin(angle) * dist + 'px');
-                
-                document.body.appendChild(fw);
-                setTimeout(() => fw.remove(), 1000);
-            }
-        }
-        
-        function showCombo(combo) {
-            const popup = document.createElement('div');
-            popup.className = 'combo-popup';
-            popup.textContent = combo + ' COMBO! 🔥';
-            document.body.appendChild(popup);
-            setTimeout(() => popup.remove(), 1000);
-        }
-        
-        function updateStats() {
-            document.getElementById('comboCount').textContent = gameStats.combo + ' 🔥';
-            document.getElementById('totalScore').textContent = gameStats.score + ' ⭐';
-            document.getElementById('levelDisplay').textContent = gameStats.level + ' 🏆';
-        }
-        
-        function animateCars() {
-            document.getElementById('carA').classList.add('racing');
-            document.getElementById('carB').classList.add('racing');
-            setTimeout(() => {
-                document.getElementById('carA').classList.remove('racing');
-                document.getElementById('carB').classList.remove('racing');
-            }, 2000);
-        }
-        
-        function newProblem() {
-            startTimer();
-            animateCars();
+            // 공급 에너지: 50~100 사이의 10의 배수
+            currentInput = (Math.floor(Math.random() * 6) + 5) * 10;
             
-            const energyA = randomVal(50, 100, 5);
-            const energyB = randomVal(50, 100, 5);
-            const effA = randomVal(30, 80, 5) / 100;
-            const effB = randomVal(30, 80, 5) / 100;
-            const usedA = Math.round(energyA * effA / 5) * 5;
-            const usedB = Math.round(energyB * effB / 5) * 5;
+            // 유용한 에너지 계산 (효율에 맞게 정확히 계산 - 항상 정수)
+            currentUseful = (currentInput * efficiency) / 100;
             
-            problemData = { energyA, energyB, usedA, usedB };
+            // 버려지는 에너지
+            currentWasted = currentInput - currentUseful;
             
-            document.getElementById('energyA').textContent = energyA;
-            document.getElementById('energyB').textContent = energyB;
-            document.getElementById('usedA').textContent = usedA;
-            document.getElementById('usedB').textContent = usedB;
+            // 정답 저장
+            currentAnswer = efficiency;
             
-            setTimeout(() => {
-                const pA = (usedA / energyA * 100).toFixed(0);
-                const pB = (usedB / energyB * 100).toFixed(0);
-                
-                document.getElementById('energyBarA').style.width = pA + '%';
-                document.getElementById('energyBarA').textContent = '';
-                document.getElementById('energyLabelA').textContent = '효율: ?%';
-                
-                document.getElementById('energyBarB').style.width = pB + '%';
-                document.getElementById('energyBarB').textContent = '';
-                document.getElementById('energyLabelB').textContent = '효율: ?%';
-                
-                problemData.effA = pA;
-                problemData.effB = pB;
-            }, 100);
+            // 랜덤 아이콘 선택
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            document.querySelector('.icon').textContent = randomIcon;
             
-            const ratioA = usedA / energyA;
-            const ratioB = usedB / energyB;
-            const s1 = ratioB > ratioA;
-            const s2 = (energyA - usedA) > (energyB - usedB);
-            const s3 = ratioA > ratioB;
+            // 문제 텍스트 업데이트
+            document.getElementById('problemText').innerHTML = 
+                `어떤 조명에 매초 <span style="color: #ff1493; font-weight: bold;">${currentInput}</span> J의 전기 에너지를 공급하였더니, <span style="color: #ffa500; font-weight: bold;">${currentUseful}</span> J의 빛에너지가 발생하고 <span style="color: #ff6b9d; font-weight: bold;">${currentWasted}</span> J의 열에너지가 발생하였다. 이 조명 기구의 에너지 효율은?`;
             
-            const opts = [
-                { text: '에너지 효율은 B가 A보다 크다.', isTrue: s1 },
-                { text: '에너지 효율은 A가 B보다 크다.', isTrue: !s1 },
-                { text: '공급한 전기 에너지가 같을 때 버려지는 열에너지는 A가 B보다 많다.', isTrue: s2 },
-                { text: '공급한 전기 에너지가 같을 때 버려지는 열에너지는 B가 A보다 많다.', isTrue: !s2 },
-                { text: '바퀴를 움직이는 에너지가 같을 때 공급된 전기 에너지의 양은 A가 B보다 적다.', isTrue: s3 },
-                { text: '바퀴를 움직이는 에너지가 같을 때 공급된 전기 에너지의 양은 B가 A보다 적다.', isTrue: !s3 }
-            ];
-            
-            const trueOpts = opts.filter(o => o.isTrue);
-            const falseOpts = opts.filter(o => !o.isTrue);
-            
-            const shuffle = arr => arr.sort(() => Math.random() - 0.5);
-            
-            let selected = [];
-            if (Math.random() > 0.5 && trueOpts.length >= 2) {
-                selected = [trueOpts[0], trueOpts[1], falseOpts[0]];
-            } else {
-                selected = [trueOpts[0], falseOpts[0], falseOpts[1]];
-            }
-            selected = shuffle(selected);
-            
-            document.getElementById('option1').textContent = 'ㄱ. ' + selected[0].text;
-            document.getElementById('option2').textContent = 'ㄴ. ' + selected[1].text;
-            document.getElementById('option3').textContent = 'ㄷ. ' + selected[2].text;
-            
-            const trueKeys = [];
-            if (selected[0].isTrue) trueKeys.push('ㄱ');
-            if (selected[1].isTrue) trueKeys.push('ㄴ');
-            if (selected[2].isTrue) trueKeys.push('ㄷ');
-            
-            problemData.selected = selected;
-            problemData.trueKeys = trueKeys.join(', ');
-            
-            const combos = [
-                ['ㄱ', 'ㄴ', 'ㄷ', 'ㄱ, ㄴ', 'ㄴ, ㄷ'],
-                ['ㄱ', 'ㄴ', 'ㄷ', 'ㄱ, ㄷ', 'ㄴ, ㄷ'],
-                ['ㄱ', 'ㄴ', 'ㄷ', 'ㄱ, ㄴ', 'ㄱ, ㄷ'],
-                ['ㄱ', 'ㄴ', 'ㄱ, ㄴ', 'ㄱ, ㄴ, ㄷ', 'ㄴ, ㄷ'],
-                ['ㄱ', 'ㄷ', 'ㄴ, ㄷ', 'ㄱ, ㄷ', 'ㄱ, ㄴ, ㄷ'],
-                ['ㄴ', 'ㄷ', 'ㄱ, ㄴ', 'ㄱ, ㄷ', 'ㄱ, ㄴ, ㄷ']
-            ];
-            
-            const combo = combos[Math.floor(Math.random() * combos.length)];
-            problemData.combo = combo;
-            
-            const html = combo.map((c, i) => 
-                '<div class="choice-item" data-answer="' + (i + 1) + '">' + 
-                ['①', '②', '③', '④', '⑤'][i] + ' ' + c + '</div>'
-            ).join('');
-            
-            document.getElementById('choicesContainer').innerHTML = html;
-            
-            currentAnswer = combo.indexOf(problemData.trueKeys) + 1;
-            if (currentAnswer === 0) currentAnswer = 1;
-            
-            selectedChoice = null;
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('result').style.display = 'none';
-            
-            document.querySelectorAll('.choice-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const ans = parseInt(this.dataset.answer);
-                    if (selectedChoice === ans) {
-                        this.classList.remove('selected');
-                        selectedChoice = null;
-                        document.getElementById('submitBtn').disabled = true;
-                    } else {
-                        document.querySelectorAll('.choice-item').forEach(i => i.classList.remove('selected'));
-                        this.classList.add('selected');
-                        selectedChoice = ans;
-                        document.getElementById('submitBtn').disabled = false;
-                    }
-                    document.getElementById('result').style.display = 'none';
-                });
-            });
+            // 입력창 및 결과 초기화
+            document.getElementById('answerInput').value = '';
+            document.getElementById('result').className = 'result';
         }
         
         function checkAnswer() {
-            clearInterval(timerInterval);
-            const result = document.getElementById('result');
-            const correct = selectedChoice === currentAnswer;
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const resultDiv = document.getElementById('result');
+            const resultIcon = resultDiv.querySelector('.result-icon');
+            const resultText = resultDiv.querySelector('.result-text');
+            const resultDetail = resultDiv.querySelector('.result-detail');
             
-            result.className = 'result ' + (correct ? 'correct' : 'incorrect');
-            
-            if (correct) {
-                gameStats.combo++;
-                gameStats.total++;
-                const pts = 100 + (gameStats.combo - 1) * 50 + timeLeft * 2;
-                gameStats.score += pts;
-                gameStats.level = Math.floor(gameStats.total / 3) + 1;
-                updateStats();
-                
-                document.getElementById('energyBarA').textContent = problemData.effA + '%';
-                document.getElementById('energyLabelA').textContent = '효율: ' + problemData.effA + '%';
-                document.getElementById('energyBarB').textContent = problemData.effB + '%';
-                document.getElementById('energyLabelB').textContent = '효율: ' + problemData.effB + '%';
-                
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(() => createFireworks(
-                        Math.random() * window.innerWidth,
-                        Math.random() * window.innerHeight
-                    ), i * 200);
-                }
-                
-                if (gameStats.combo >= 3) showCombo(gameStats.combo);
-                
-                result.innerHTML = '<div class="result-title">✅ 정답입니다! 🎉</div>' +
-                    '<div class="explanation">획득: <strong>+' + pts + '점</strong> ⭐<br>' +
-                    '<div class="calculation">A 효율: ' + problemData.effA + '% | B 효율: ' + problemData.effB + '%</div>' +
-                    (gameStats.combo >= 3 ? '<strong style="color:#e17055">🔥 ' + gameStats.combo + ' COMBO!</strong><br>' : '') +
-                    '훌륭합니다! 💪</div>';
-            } else {
-                gameStats.combo = 0;
-                updateStats();
-                
-                document.getElementById('energyBarA').textContent = problemData.effA + '%';
-                document.getElementById('energyLabelA').textContent = '효율: ' + problemData.effA + '%';
-                document.getElementById('energyBarB').textContent = problemData.effB + '%';
-                document.getElementById('energyLabelB').textContent = '효율: ' + problemData.effB + '%';
-                
-                const ans = problemData.combo[currentAnswer - 1];
-                const wasteA = problemData.energyA - problemData.usedA;
-                const wasteB = problemData.energyB - problemData.usedB;
-                
-                result.innerHTML = '<div class="result-title">❌ 틀렸습니다</div>' +
-                    '<div class="explanation">콤보 초기화 😢<br><br>' +
-                    '<strong>정답: ' + ans + '</strong><br><br>' +
-                    '<div class="calculation">' +
-                    'A 효율: (' + problemData.usedA + ' ÷ ' + problemData.energyA + ') × 100 = ' + problemData.effA + '%<br>' +
-                    'B 효율: (' + problemData.usedB + ' ÷ ' + problemData.energyB + ') × 100 = ' + problemData.effB + '%<br>' +
-                    'A 버림: ' + wasteA + 'J | B 버림: ' + wasteB + 'J' +
-                    '</div><br>' +
-                    '<strong>각 보기:</strong><br>' +
-                    'ㄱ. ' + (problemData.selected[0].isTrue ? '✅ 참' : '❌ 거짓') + '<br>' +
-                    'ㄴ. ' + (problemData.selected[1].isTrue ? '✅ 참' : '❌ 거짓') + '<br>' +
-                    'ㄷ. ' + (problemData.selected[2].isTrue ? '✅ 참' : '❌ 거짓') + '</div>';
+            if (isNaN(userAnswer)) {
+                alert('답을 입력해주세요! 🎈');
+                return;
             }
             
-            result.style.display = 'block';
+            if (userAnswer === currentAnswer) {
+                resultDiv.className = 'result show correct';
+                resultIcon.textContent = '🎉';
+                resultText.textContent = '정답입니다!';
+                resultDetail.innerHTML = `
+                    <strong>🌟 풀이과정 🌟</strong><br><br>
+                    에너지 효율 = (유용한 에너지 ÷ 공급된 에너지) × 100<br><br>
+                    = (${currentUseful} J ÷ ${currentInput} J) × 100<br><br>
+                    = ${currentAnswer}%<br><br>
+                    <strong style="color: #32cd32;">✨ 훌륭해요! ✨</strong>
+                `;
+            } else {
+                resultDiv.className = 'result show incorrect';
+                resultIcon.textContent = '🎪';
+                resultText.textContent = '틀렸습니다!';
+                resultDetail.innerHTML = `
+                    <strong>💡 풀이과정 💡</strong><br><br>
+                    에너지 효율 = (유용한 에너지 ÷ 공급된 에너지) × 100<br><br>
+                    = (${currentUseful} J ÷ ${currentInput} J) × 100<br><br>
+                    = ${currentAnswer}%<br><br>
+                    <strong style="color: #ff1493;">🎨 다시 도전해보세요! 🎨</strong>
+                `;
+            }
         }
         
-        newProblem();
+        // Enter 키로 정답 확인
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // 페이지 로드 시 첫 문제 생성
+        generateNewProblem();
     </script>
 </body>
 </html>

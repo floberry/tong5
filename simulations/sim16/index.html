@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>친환경 에너지 타운 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(to bottom, #4dd0e1 0%, #26c6da 30%, #00acc1 60%, #4caf50 100%);
+            padding: 10px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            padding: 15px;
+        }
+        
+        h1 {
+            color: #00796b;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #00695c;
+            font-size: 0.85em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .diagram-container {
+            background: linear-gradient(to bottom, #81d4fa 0%, #4fc3f7 40%, #90ee90 70%, #66bb6a 100%);
+            border-radius: 10px;
+            padding: 15px 10px 20px 10px;
+            margin-bottom: 15px;
+            position: relative;
+            min-height: 420px;
+            overflow: hidden;
+        }
+        
+        .sun {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 35% 35%, #fff9c4, #ffd700 40%, #ff8c00);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255,193,7,0.9);
+            cursor: pointer;
+            z-index: 10;
+            animation: sunPulse 4s infinite;
+        }
+        
+        @keyframes sunPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255,193,7,0.9); }
+            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255,193,7,1); }
+        }
+        
+        .sun-ray {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(255,215,0,0.8), transparent);
+            animation: rayMove 2.5s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes rayMove {
+            0% { height: 0; opacity: 1; }
+            100% { height: 150px; opacity: 0; }
+        }
+        
+        .cloud {
+            position: absolute;
+            opacity: 0.7;
+        }
+        
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+        }
+        
+        .cloud1 {
+            top: 35px;
+            left: 20px;
+            animation: cloudFloat1 20s infinite;
+        }
+        
+        @keyframes cloudFloat1 {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(40px); }
+        }
+        
+        .cloud1::before {
+            width: 35px;
+            height: 35px;
+            top: -8px;
+            left: 8px;
+        }
+        
+        .cloud1::after {
+            width: 45px;
+            height: 28px;
+            top: 0;
+            left: 25px;
+        }
+        
+        .cloud2 {
+            top: 50px;
+            right: 120px;
+            animation: cloudFloat2 25s infinite;
+        }
+        
+        @keyframes cloudFloat2 {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-30px); }
+        }
+        
+        .cloud1::before {
+            width: 35px;
+            height: 35px;
+            top: -8px;
+            left: 8px;
+        }
+        
+        .cloud1::after {
+            width: 45px;
+            height: 28px;
+            top: 0;
+            left: 25px;
+        }
+        
+        .cloud2 {
+            top: 50px;
+            right: 120px;
+        }
+        
+        .cloud2::before {
+            width: 30px;
+            height: 30px;
+            top: -5px;
+            left: 5px;
+        }
+        
+        .cloud2::after {
+            width: 40px;
+            height: 25px;
+            top: 0;
+            left: 20px;
+        }
+        
+        .tree {
+            position: absolute;
+            bottom: 15px;
+        }
+        
+        .tree-trunk {
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(to right, #6d4c41, #5d4037);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+        
+        .tree-leaves {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid #2e7d32;
+            margin: -32px auto 0;
+        }
+        
+        .tree1 { left: 15px; }
+        .tree2 { right: 15px; }
+        
+        .wind-turbine {
+            position: absolute;
+            cursor: pointer;
+            z-index: 5;
+        }
+        
+        .wind-turbine1 {
+            bottom: 210px;
+            left: 25px;
+        }
+        
+        .wind-turbine2 {
+            bottom: 205px;
+            left: 80px;
+        }
+        
+        .turbine-pole {
+            width: 6px;
+            height: 75px;
+            background: linear-gradient(to right, #78909c, #546e7a, #455a64);
+            margin: 0 auto;
+            border-radius: 3px;
+        }
+        
+        .turbine-blades {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            margin: -38px auto 0;
+            animation: rotate 3s linear infinite;
+        }
+        
+        .turbine-blades.active {
+            animation-duration: 0.8s;
+        }
+        
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+        
+        .wind-particle {
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
+            animation: windFlow 4s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes windFlow {
+            0% { transform: translateX(-50px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(150px); opacity: 0; }
+        }
+        
+        .blade {
+            position: absolute;
+            width: 5px;
+            height: 24px;
+            background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+            left: 50%;
+            top: 50%;
+            transform-origin: center;
+            border-radius: 3px;
+        }
+        
+        .blade:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg); }
+        .blade:nth-child(2) { transform: translate(-50%, -50%) rotate(120deg); }
+        .blade:nth-child(3) { transform: translate(-50%, -50%) rotate(240deg); }
+        
+        .ground-solar {
+            position: absolute;
+            bottom: 205px;
+            right: 85px;
+            cursor: pointer;
+            z-index: 6;
+        }
+        
+        .solar-array {
+            width: 70px;
+            height: 35px;
+            background: linear-gradient(135deg, #1565c0 0%, #1976d2 50%, #42a5f5 100%);
+            border: 3px solid #0d47a1;
+            border-radius: 3px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 2px;
+            padding: 2px;
+        }
+        
+        .solar-cell {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+            border-radius: 1px;
+        }
+        
+        .electric-car {
+            position: absolute;
+            bottom: 200px;
+            right: 25px;
+            cursor: pointer;
+            z-index: 6;
+        }
+        
+        .car-body {
+            width: 50px;
+            height: 22px;
+            background: linear-gradient(to bottom, #4caf50, #388e3c);
+            border-radius: 10px 10px 3px 3px;
+            position: relative;
+        }
+        
+        .car-roof {
+            width: 30px;
+            height: 12px;
+            background: linear-gradient(to bottom, #66bb6a, #4caf50);
+            border-radius: 8px 8px 0 0;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+        
+        .car-window {
+            width: 12px;
+            height: 8px;
+            background: linear-gradient(135deg, #81d4fa, #4fc3f7);
+            position: absolute;
+            top: 2px;
+            border-radius: 2px;
+        }
+        
+        .car-window1 { left: 3px; }
+        .car-window2 { right: 3px; }
+        
+        .car-wheel {
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #424242, #212121);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -3px;
+            border: 2px solid #616161;
+        }
+        
+        .car-wheel1 { left: 5px; }
+        .car-wheel2 { right: 5px; }
+        
+        .charging-icon {
+            position: absolute;
+            top: -25px;
+            right: 5px;
+            color: #ffd700;
+            font-size: 18px;
+        }
+        
+        .house {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            cursor: pointer;
+            z-index: 7;
+        }
+        
+        .roof {
+            width: 0;
+            height: 0;
+            border-left: 90px solid transparent;
+            border-right: 90px solid transparent;
+            border-bottom: 55px solid #8d6e63;
+            position: relative;
+        }
+        
+        .roof-solar {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 55px;
+            height: 28px;
+            background: linear-gradient(135deg, #1565c0, #42a5f5);
+            border: 2px solid #0d47a1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1px;
+            border-radius: 2px;
+        }
+        
+        .body {
+            width: 180px;
+            height: 105px;
+            background: linear-gradient(to bottom, #fff9c4 0%, #ffeb3b 100%);
+            border: 3px solid #f57f17;
+            position: relative;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .appliance {
+            position: absolute;
+            border-radius: 2px;
+        }
+        
+        .refrigerator {
+            width: 24px;
+            height: 35px;
+            background: linear-gradient(to right, #eceff1, #cfd8dc);
+            border: 2px solid #78909c;
+            left: 25px;
+            bottom: 8px;
+        }
+        
+        .light {
+            width: 14px;
+            height: 14px;
+            background: #fff9c4;
+            border-radius: 50%;
+            border: 2px solid #fbc02d;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px rgba(255,235,59,0.8);
+        }
+        
+        .heater {
+            width: 18px;
+            height: 24px;
+            background: linear-gradient(to bottom, #ff6f00, #e65100);
+            border: 2px solid #bf360c;
+            right: 25px;
+            bottom: 8px;
+            border-radius: 3px;
+        }
+        
+        .window {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #81d4fa, #29b6f6);
+            border: 2px solid #01579b;
+            top: 30px;
+            border-radius: 3px;
+        }
+        
+        .window::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #01579b;
+        }
+        
+        .window::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #01579b;
+        }
+        
+        .window1 { left: 30px; }
+        .window2 { right: 30px; }
+        
+        .door {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 45px;
+            background: linear-gradient(to right, #795548, #5d4037);
+            border: 2px solid #3e2723;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .biomass {
+            position: absolute;
+            bottom: 15px;
+            left: 230px;
+            cursor: pointer;
+            z-index: 5;
+        }
+        
+        .biomass-container {
+            width: 35px;
+            height: 45px;
+            background: linear-gradient(to bottom, #8d6e63, #6d4c41);
+            border: 2px solid #4e342e;
+            border-radius: 5px 5px 2px 2px;
+            position: relative;
+        }
+        
+        .biomass-smoke {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, rgba(158,158,158,0.6), transparent);
+            border-radius: 50%;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: smokeRise 3s infinite;
+        }
+        
+        @keyframes smokeRise {
+            0% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+        
+        .biomass-lid {
+            width: 38px;
+            height: 8px;
+            background: linear-gradient(to bottom, #a1887f, #8d6e63);
+            border-radius: 3px;
+            position: absolute;
+            top: -6px;
+            left: -3px;
+            border: 2px solid #5d4037;
+        }
+        
+        .biomass-leaf {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 8px solid #4caf50;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .energy-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .menu-btn {
+            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+            border: 2px solid #00897b;
+            border-radius: 8px;
+            padding: 10px 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #004d40;
+        }
+        
+        .menu-btn:hover {
+            background: linear-gradient(135deg, #b2dfdb, #80cbc4);
+            transform: translateY(-2px);
+        }
+        
+        .menu-btn.active {
+            background: linear-gradient(135deg, #00897b, #00acc1);
+            border-color: #006064;
+            color: white;
+        }
+        
+        .info-panel {
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #0097a7;
+            min-height: 80px;
+            transition: all 0.3s;
+        }
+        
+        .info-panel.solution-mode {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-color: #ff6f00;
+            min-height: 120px;
+        }
+        
+        .info-title {
+            font-weight: bold;
+            color: #006064;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .info-title.solution {
+            color: #e65100;
+        }
+        
+        .info-content {
+            font-size: 0.85em;
+            line-height: 1.6;
+            color: #00838f;
+            white-space: pre-line;
+        }
+        
+        .info-content.solution {
+            color: #f57c00;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .question-box {
+            background: linear-gradient(135deg, #fff9c4, #fff59d);
+            border: 2px solid #f57f17;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            min-height: 100px;
+        }
+        
+        .question-title {
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .answer-btn {
+            background: white;
+            border: 3px solid #00897b;
+            border-radius: 8px;
+            padding: 12px 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #00695c;
+            font-weight: bold;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .answer-btn:hover {
+            background: #e0f2f1;
+            transform: translateY(-2px);
+        }
+        
+        .answer-btn.selected {
+            background: #fff9c4;
+            border-color: #fbc02d;
+            color: #f57f17;
+        }
+        
+        .answer-btn.correct {
+            background: #00897b;
+            color: white;
+            border-color: #004d40;
+        }
+        
+        .answer-btn.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #c62828;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00897b, #00acc1);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .new-problem-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #26c6da, #00acc1);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .result {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            display: none;
+            line-height: 1.5;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .result.incorrect {
+            background: #ffcdd2;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏡 친환경 에너지 타운 🌿</h1>
+        <p class="subtitle">신재생 에너지의 효율을 계산하며 배워보세요</p>
+        
+        <div class="diagram-container" id="diagram">
+            <div class="sun" id="sun">
+                <div class="sun-ray" style="left: 28px; top: 60px; animation-delay: 0s;"></div>
+                <div class="sun-ray" style="left: 30px; top: 60px; animation-delay: 0.5s;"></div>
+                <div class="sun-ray" style="left: 32px; top: 60px; animation-delay: 1s;"></div>
+            </div>
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            
+            <div class="wind-particle" style="top: 100px; left: 0; animation-delay: 0s;"></div>
+            <div class="wind-particle" style="top: 120px; left: 0; animation-delay: 1.5s;"></div>
+            <div class="wind-particle" style="top: 140px; left: 0; animation-delay: 3s;"></div>
+            
+            <div class="tree tree1">
+                <div class="tree-leaves"></div>
+                <div class="tree-trunk"></div>
+            </div>
+            <div class="tree tree2">
+                <div class="tree-leaves"></div>
+                <div class="tree-trunk"></div>
+            </div>
+            
+            <div class="wind-turbine wind-turbine1">
+                <div class="turbine-blades">
+                    <div class="blade"></div>
+                    <div class="blade"></div>
+                    <div class="blade"></div>
+                </div>
+                <div class="turbine-pole"></div>
+            </div>
+            
+            <div class="wind-turbine wind-turbine2">
+                <div class="turbine-blades">
+                    <div class="blade"></div>
+                    <div class="blade"></div>
+                    <div class="blade"></div>
+                </div>
+                <div class="turbine-pole"></div>
+            </div>
+            
+            <div class="ground-solar">
+                <div class="solar-array">
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                    <div class="solar-cell"></div>
+                </div>
+            </div>
+            
+            <div class="electric-car car-animate" id="electricCar">
+                <div class="charging-icon">⚡</div>
+                <div class="charging-cable"></div>
+                <div class="car-roof">
+                    <div class="car-window car-window1"></div>
+                    <div class="car-window car-window2"></div>
+                </div>
+                <div class="car-body">
+                    <div class="car-wheel car-wheel1"></div>
+                    <div class="car-wheel car-wheel2"></div>
+                </div>
+            </div>
+            
+            <div class="biomass">
+                <div class="biomass-smoke"></div>
+                <div class="biomass-container">
+                    <div class="biomass-lid"></div>
+                    <div class="biomass-leaf"></div>
+                </div>
+            </div>
+            
+            <div class="house">
+                <div class="roof">
+                    <div class="roof-solar">
+                        <div class="solar-cell"></div>
+                        <div class="solar-cell"></div>
+                        <div class="solar-cell"></div>
+                        <div class="solar-cell"></div>
+                        <div class="solar-cell"></div>
+                        <div class="solar-cell"></div>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="appliance light"></div>
+                    <div class="appliance refrigerator"></div>
+                    <div class="appliance heater"></div>
+                    <div class="window window1"></div>
+                    <div class="window window2"></div>
+                    <div class="door"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="energy-menu">
+            <button class="menu-btn" onclick="selectEnergy('solar')">☀️ 태양광</button>
+            <button class="menu-btn" onclick="selectEnergy('wind')">🌬️ 풍력</button>
+            <button class="menu-btn" onclick="selectEnergy('biomass')">🌾 바이오</button>
+        </div>
+        
+        <div class="info-panel">
+            <div class="info-title">💡 에너지원을 선택하세요</div>
+            <div class="info-content">위의 버튼을 클릭하여 각 신재생 에너지원의 효율 계산 문제를 풀어보세요!</div>
+        </div>
+        
+        <div class="question-box">
+            <div class="question-title" id="questionText">에너지원을 선택하면 문제가 나타납니다.</div>
+        </div>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="answers" id="answers"></div>
+        
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()" disabled>✓ 답안 제출</button>
+        <button class="new-problem-btn" onclick="newProblem()">🔄 새 문제 (같은 에너지원)</button>
+    </div>
+    
+    <script>
+        const energyProblems = {
+            solar: [
+                {
+                    generate: () => {
+                        const sunEnergy = [1000, 2000][Math.floor(Math.random() * 2)];
+                        const efficiency = [20, 25][Math.floor(Math.random() * 2)];
+                        const electricEnergy = sunEnergy * efficiency / 100;
+                        
+                        return {
+                            question: `태양광 패널에 입사된 태양 에너지가 ${sunEnergy}W이고, 에너지 효율이 ${efficiency}%일 때, 생산되는 전기 에너지는?`,
+                            correct: electricEnergy,
+                            unit: 'W',
+                            concept: '태양광 발전은 태양의 빛 에너지를 반도체를 이용해 전기 에너지로 직접 변환합니다.',
+                            solution: `📝 풀이 과정\n\n전기 에너지 = 태양 에너지 × 효율\n= ${sunEnergy}W × ${efficiency}%\n= ${sunEnergy} × ${efficiency / 100}\n= ${electricEnergy}W`
+                        };
+                    }
+                },
+                {
+                    generate: () => {
+                        const sunEnergy = [800, 1200][Math.floor(Math.random() * 2)];
+                        const electricEnergy = sunEnergy === 800 ? 160 : 240;
+                        const efficiency = Math.round((electricEnergy / sunEnergy) * 100);
+                        
+                        return {
+                            question: `태양광 패널에 ${sunEnergy}W의 태양 에너지가 입사되어 ${electricEnergy}W의 전기가 생산되었을 때, 에너지 효율은?`,
+                            correct: efficiency,
+                            unit: '%',
+                            concept: '에너지 효율이 높을수록 같은 햇빛으로 더 많은 전기를 생산할 수 있습니다.',
+                            solution: `📝 풀이 과정\n\n에너지 효율 = (전기 에너지 ÷ 태양 에너지) × 100\n= (${electricEnergy} ÷ ${sunEnergy}) × 100\n= ${electricEnergy / sunEnergy} × 100\n= ${efficiency}%`
+                        };
+                    }
+                }
+            ],
+            wind: [
+                {
+                    generate: () => {
+                        const windEnergy = [500, 1000][Math.floor(Math.random() * 2)];
+                        const efficiency = [40, 50][Math.floor(Math.random() * 2)];
+                        const electricEnergy = windEnergy * efficiency / 100;
+                        
+                        return {
+                            question: `풍력 터빈이 받은 바람 에너지가 ${windEnergy}W이고, 에너지 효율이 ${efficiency}%일 때, 생산되는 전기 에너지는?`,
+                            correct: electricEnergy,
+                            unit: 'W',
+                            concept: '풍력 발전은 바람의 운동 에너지를 터빈을 통해 전기 에너지로 변환합니다.',
+                            solution: `📝 풀이 과정\n\n전기 에너지 = 바람 에너지 × 효율\n= ${windEnergy}W × ${efficiency}%\n= ${windEnergy} × ${efficiency / 100}\n= ${electricEnergy}W`
+                        };
+                    }
+                },
+                {
+                    generate: () => {
+                        const windEnergy = [600, 800][Math.floor(Math.random() * 2)];
+                        const electricEnergy = windEnergy === 600 ? 240 : 400;
+                        const efficiency = Math.round((electricEnergy / windEnergy) * 100);
+                        
+                        return {
+                            question: `풍력 터빈이 ${windEnergy}W의 바람 에너지를 받아 ${electricEnergy}W의 전기를 생산했을 때, 에너지 효율은?`,
+                            correct: efficiency,
+                            unit: '%',
+                            concept: '풍력 터빈의 효율은 일반적으로 40~50% 정도입니다.',
+                            solution: `📝 풀이 과정\n\n에너지 효율 = (전기 에너지 ÷ 바람 에너지) × 100\n= (${electricEnergy} ÷ ${windEnergy}) × 100\n= ${electricEnergy / windEnergy} × 100\n= ${efficiency}%`
+                        };
+                    }
+                }
+            ],
+            biomass: [
+                {
+                    generate: () => {
+                        const bioEnergy = [1000, 2000][Math.floor(Math.random() * 2)];
+                        const efficiency = [60, 70][Math.floor(Math.random() * 2)];
+                        const heatEnergy = bioEnergy * efficiency / 100;
+                        
+                        return {
+                            question: `바이오매스 ${bioEnergy}Wh를 연소하여 에너지 효율이 ${efficiency}%일 때, 얻는 열 에너지는?`,
+                            correct: heatEnergy,
+                            unit: 'Wh',
+                            concept: '바이오매스는 나무, 농업 폐기물 등 생물자원을 연소하여 열 에너지를 얻습니다.',
+                            solution: `📝 풀이 과정\n\n열 에너지 = 바이오매스 × 효율\n= ${bioEnergy}Wh × ${efficiency}%\n= ${bioEnergy} × ${efficiency / 100}\n= ${heatEnergy}Wh`
+                        };
+                    }
+                },
+                {
+                    generate: () => {
+                        const bioEnergy = [1200, 1500][Math.floor(Math.random() * 2)];
+                        const heatEnergy = bioEnergy === 1200 ? 720 : 1050;
+                        const efficiency = Math.round((heatEnergy / bioEnergy) * 100);
+                        
+                        return {
+                            question: `바이오매스 ${bioEnergy}Wh를 연소하여 ${heatEnergy}Wh의 열을 얻었을 때, 에너지 효율은?`,
+                            correct: efficiency,
+                            unit: '%',
+                            concept: '바이오매스는 탄소 중립적이어서 온실가스 배출이 적은 신재생 에너지입니다.',
+                            solution: `📝 풀이 과정\n\n에너지 효율 = (열 에너지 ÷ 바이오매스) × 100\n= (${heatEnergy} ÷ ${bioEnergy}) × 100\n= ${heatEnergy / bioEnergy} × 100\n= ${efficiency}%`
+                        };
+                    }
+                }
+            ]
+        };
+        
+        let currentEnergy = null;
+        let currentProblem = null;
+        let selectedAnswer = null;
+        let answered = false;
+        
+        function createEnergyParticle(startX, startY, endX, endY, color = '#ffd700') {
+            console.log('Creating particle:', startX, startY, '->', endX, endY, color);
+            
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            particle.style.width = '10px';
+            particle.style.height = '10px';
+            particle.style.borderRadius = '50%';
+            particle.style.backgroundColor = color;
+            particle.style.boxShadow = `0 0 15px ${color}`;
+            particle.style.zIndex = '100';
+            particle.style.pointerEvents = 'none';
+            
+            const container = document.getElementById('diagram');
+            if (!container) {
+                console.log('ERROR: Container not found');
+                return;
+            }
+            
+            container.appendChild(particle);
+            console.log('Particle added to container');
+            
+            setTimeout(() => {
+                particle.style.transition = 'all 1.5s ease-in-out';
+                particle.style.left = endX + 'px';
+                particle.style.top = endY + 'px';
+                particle.style.opacity = '0.3';
+            }, 50);
+            
+            setTimeout(() => {
+                if (particle && particle.parentNode) {
+                    particle.remove();
+                    console.log('Particle removed');
+                }
+            }, 2000);
+        }
+        
+        function animateEnergyFlow(type) {
+            console.log('Animating energy flow for:', type);
+            
+            const house = document.querySelector('.house');
+            if (!house) {
+                console.log('House not found');
+                return;
+            }
+            
+            const houseX = house.offsetLeft + 90;
+            const houseY = house.offsetTop + 52;
+            
+            console.log('House position:', houseX, houseY);
+            
+            if (type === 'solar') {
+                const solar = document.querySelector('.ground-solar');
+                const car = document.querySelector('.electric-car');
+                
+                if (!solar || !car) {
+                    console.log('Solar or car not found');
+                    return;
+                }
+                
+                const solarX = solar.offsetLeft + 35;
+                const solarY = solar.offsetTop + 20;
+                const carX = car.offsetLeft + 25;
+                const carY = car.offsetTop + 15;
+                
+                console.log('Solar position:', solarX, solarY);
+                console.log('Car position:', carX, carY);
+                
+                // 태양광 → 집
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        createEnergyParticle(solarX, solarY, houseX, houseY, '#ffd700');
+                    }, i * 200);
+                }
+                
+                // 태양광 → 자동차
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createEnergyParticle(solarX, solarY, carX, carY, '#4caf50');
+                    }, i * 250 + 100);
+                }
+                
+                // 태양광 패널 반짝임
+                document.querySelectorAll('.solar-cell').forEach(cell => {
+                    cell.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,215,0,0.3))';
+                    setTimeout(() => {
+                        cell.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))';
+                    }, 1500);
+                });
+                
+            } else if (type === 'wind') {
+                const turbine1 = document.querySelector('.wind-turbine1');
+                const turbine2 = document.querySelector('.wind-turbine2');
+                
+                if (!turbine1 || !turbine2) {
+                    console.log('Turbines not found');
+                    return;
+                }
+                
+                const turbine1X = turbine1.offsetLeft + 25;
+                const turbine1Y = turbine1.offsetTop + 40;
+                const turbine2X = turbine2.offsetLeft + 25;
+                const turbine2Y = turbine2.offsetTop + 40;
+                
+                console.log('Turbine1 position:', turbine1X, turbine1Y);
+                console.log('Turbine2 position:', turbine2X, turbine2Y);
+                
+                // 터빈 가속
+                document.querySelectorAll('.turbine-blades').forEach(blades => {
+                    blades.classList.add('active');
+                });
+                
+                // 풍력 → 집
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        createEnergyParticle(turbine1X, turbine1Y, houseX, houseY, '#ffffff');
+                        createEnergyParticle(turbine2X, turbine2Y, houseX, houseY, '#f0f0f0');
+                    }, i * 200);
+                }
+                
+            } else if (type === 'biomass') {
+                const bio = document.querySelector('.biomass');
+                
+                if (!bio) {
+                    console.log('Biomass not found');
+                    return;
+                }
+                
+                const bioX = bio.offsetLeft + 17;
+                const bioY = bio.offsetTop + 22;
+                
+                console.log('Biomass position:', bioX, bioY);
+                
+                // 바이오매스 → 집
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        createEnergyParticle(bioX, bioY, houseX, houseY, '#ff6f00');
+                    }, i * 200);
+                }
+            }
+        }
+        
+        function selectEnergy(type) {
+            currentEnergy = type;
+            answered = false;
+            selectedAnswer = null;
+            
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('answers').innerHTML = '';
+            document.getElementById('submitBtn').disabled = true;
+            
+            // 터빈 속도 리셋
+            document.querySelectorAll('.turbine-blades').forEach(blades => {
+                blades.classList.remove('active');
+            });
+            
+            const energyInfo = {
+                solar: {
+                    title: '☀️ 태양광 발전',
+                    content: '태양의 빛 에너지를 반도체(실리콘)를 이용해 전기 에너지로 직접 변환하는 기술입니다.'
+                },
+                wind: {
+                    title: '🌬️ 풍력 발전',
+                    content: '바람의 운동 에너지를 터빈을 통해 전기 에너지로 변환하는 기술입니다.'
+                },
+                biomass: {
+                    title: '🌾 바이오매스 에너지',
+                    content: '나무, 농업 폐기물 등 생물자원을 연소하여 열 에너지나 전기를 생산합니다.'
+                }
+            };
+            
+            document.querySelector('.info-title').textContent = energyInfo[type].title;
+            document.querySelector('.info-content').textContent = energyInfo[type].content;
+            
+            // 애니메이션 실행
+            setTimeout(() => animateEnergyFlow(type), 100);
+            
+            newProblem();
+        }
+        
+        function newProblem() {
+            if (!currentEnergy) {
+                alert('먼저 에너지원을 선택해주세요!');
+                return;
+            }
+            
+            answered = false;
+            selectedAnswer = null;
+            document.getElementById('result').classList.remove('show', 'correct', 'incorrect');
+            document.getElementById('submitBtn').disabled = true;
+            
+            // 터빈 속도 리셋
+            document.querySelectorAll('.turbine-blades').forEach(blades => {
+                blades.classList.remove('active');
+            });
+            
+            // 정보 패널 리셋
+            const infoPanel = document.querySelector('.info-panel');
+            const infoTitle = document.querySelector('.info-title');
+            const infoContent = document.querySelector('.info-content');
+            
+            infoPanel.classList.remove('solution-mode');
+            infoTitle.classList.remove('solution');
+            infoContent.classList.remove('solution');
+            
+            const energyInfo = {
+                solar: '태양의 빛 에너지를 반도체(실리콘)를 이용해 전기 에너지로 직접 변환하는 기술입니다.',
+                wind: '바람의 운동 에너지를 터빈을 통해 전기 에너지로 변환하는 기술입니다.',
+                biomass: '나무, 농업 폐기물 등 생물자원을 연소하여 열 에너지나 전기를 생산합니다.'
+            };
+            document.querySelector('.info-content').textContent = energyInfo[currentEnergy];
+            
+            const problems = energyProblems[currentEnergy];
+            const problemTemplate = problems[Math.floor(Math.random() * problems.length)];
+            currentProblem = problemTemplate.generate();
+            
+            document.getElementById('questionText').textContent = currentProblem.question;
+            
+            const correct = currentProblem.correct;
+            let options = [
+                correct,
+                Math.round(correct * 0.5),
+                Math.round(correct * 1.5),
+                Math.round(correct * 0.8)
+            ];
+            
+            options = [...new Set(options)];
+            if (options.length < 4) {
+                options.push(Math.round(correct * 1.2));
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            options = options.slice(0, 4);
+            
+            const answersHtml = options.map((opt, idx) => 
+                `<button class="answer-btn" onclick="selectAnswer(${opt}, ${idx})">${opt}${currentProblem.unit}</button>`
+            ).join('');
+            
+            document.getElementById('answers').innerHTML = answersHtml;
+            
+            // 에너지 흐름 애니메이션 실행
+            setTimeout(() => animateEnergyFlow(currentEnergy), 100);
+        }
+        
+        function selectAnswer(value, index) {
+            if (answered) return;
+            
+            const buttons = document.querySelectorAll('.answer-btn');
+            
+            if (selectedAnswer === value) {
+                buttons[index].classList.remove('selected');
+                selectedAnswer = null;
+                document.getElementById('submitBtn').disabled = true;
+                return;
+            }
+            
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            buttons[index].classList.add('selected');
+            selectedAnswer = value;
+            document.getElementById('submitBtn').disabled = false;
+        }
+        
+        function submitAnswer() {
+            if ((selectedAnswer !== 0 && !selectedAnswer) || answered) return;
+            
+            answered = true;
+            const buttons = document.querySelectorAll('.answer-btn');
+            const resultDiv = document.getElementById('result');
+            const correct = currentProblem.correct;
+            
+            let isCorrect = false;
+            
+            buttons.forEach(btn => {
+                const btnValue = parseFloat(btn.textContent);
+                
+                if (btnValue === correct) {
+                    btn.classList.add('correct');
+                    if (btnValue === selectedAnswer) {
+                        isCorrect = true;
+                    }
+                } else if (btnValue === selectedAnswer) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            if (isCorrect) {
+                resultDiv.innerHTML = '🎉 정답입니다!<br>에너지 효율 계산을 완벽하게 이해하셨네요!';
+                resultDiv.classList.add('correct');
+            } else {
+                resultDiv.innerHTML = `❌ 틀렸습니다.<br>정답: <strong>${correct}${currentProblem.unit}</strong><br><br>${currentProblem.concept}`;
+                resultDiv.classList.add('incorrect');
+                
+                // 틀렸을 때 해설 표시
+                const infoPanel = document.querySelector('.info-panel');
+                const infoTitle = document.querySelector('.info-title');
+                const infoContent = document.querySelector('.info-content');
+                
+                infoPanel.classList.add('solution-mode');
+                infoTitle.classList.add('solution');
+                infoContent.classList.add('solution');
+                
+                infoTitle.textContent = '📝 문제 해설';
+                infoContent.textContent = currentProblem.solution;
+            }
+            
+            resultDiv.classList.add('show');
+            document.getElementById('submitBtn').disabled = true;
+        }
+    </script>
+</body>
+</html>

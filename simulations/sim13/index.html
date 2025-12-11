@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 학습 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .question-box {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .question-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .option {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+            line-height: 1.6;
+        }
+        
+        .option:last-child {
+            border-bottom: none;
+        }
+        
+        .option-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 8px;
+        }
+        
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .choice-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .choice-btn {
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+        
+        .choice-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .choice-btn.selected {
+            background: #667eea;
+            color: white;
+        }
+        
+        .answer-display {
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .answer-text {
+            font-size: 1.1em;
+            color: #495057;
+        }
+        
+        .selected-answer {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-new {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-check {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .result {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        
+        .result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+        
+        .explanation {
+            background: #e7f3ff;
+            border: 2px solid #2196F3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            color: #1976D2;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        
+        .problem-number {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>에너지 효율 학습 시뮬레이션</h1>
+        
+        <div class="question-box">
+            <div class="question-title" id="questionTitle">문제를 불러오는 중...</div>
+            
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 1.1em; font-weight: bold; color: #495057;">< 보기 ></span>
+            </div>
+            
+            <div class="options">
+                <div class="option">
+                    <span class="option-label">ㄱ.</span>
+                    <span id="optionA">에너지 효율은 공급한 전체 에너지에 대한 열에너지 등으로 버려진 에너지의 비율이다.</span>
+                </div>
+                <div class="option">
+                    <span class="option-label">ㄴ.</span>
+                    <span id="optionB">에너지 효율이 높은 제품은 같은 효과를 내는 데 더 적은 에너지를 사용한다.</span>
+                </div>
+                <div class="option">
+                    <span class="option-label">ㄷ.</span>
+                    <span id="optionC">에너지 효율은 경우에 따라 100% 이상도 가능하다.</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="choice-buttons">
+            <button class="choice-btn" onclick="selectChoice('ㄱ')">ㄱ</button>
+            <button class="choice-btn" onclick="selectChoice('ㄴ')">ㄴ</button>
+            <button class="choice-btn" onclick="selectChoice('ㄷ')">ㄷ</button>
+        </div>
+        
+        <div class="answer-display">
+            <div class="answer-text" id="answerDisplay">옳은 것을 순서대로 선택하세요</div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-new" onclick="newProblem()">🔄 새문제</button>
+            <button class="btn btn-check" onclick="checkAnswer()">✓ 정답확인</button>
+            <button class="btn btn-reset" onclick="resetAnswer()">↺ 답변초기화</button>
+        </div>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="explanation" id="explanation">
+            <div class="explanation-title">📖 해설</div>
+            <div id="explanationText"></div>
+        </div>
+        
+        <div class="problem-number" id="problemNumber">문제 #1</div>
+    </div>
+
+    <script>
+        let selectedChoices = [];
+        let currentProblem = {};
+        let problemCount = 1;
+        
+        const problems = [
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "에너지 효율은 공급한 전체 에너지에 대한 열에너지 등으로 버려진 에너지의 비율이다.",
+                    B: "에너지 효율이 높은 제품은 같은 효과를 내는 데 더 적은 에너지를 사용한다.",
+                    C: "에너지 효율은 경우에 따라 100% 이상도 가능하다."
+                },
+                correct: ["ㄴ"],
+                explanation: "ㄱ. (×) 에너지 효율은 유용하게 사용된 에너지의 비율입니다. 버려진 에너지의 비율이 아닙니다.\nㄴ. (○) 에너지 효율이 높으면 같은 일을 하는 데 더 적은 에너지를 사용합니다.\nㄷ. (×) 에너지 보존 법칙에 따라 에너지 효율은 최대 100%입니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "에너지 효율은 유용하게 사용된 에너지를 공급한 전체 에너지로 나눈 값이다.",
+                    B: "에너지 효율이 높을수록 같은 일을 하는 데 더 많은 에너지가 필요하다.",
+                    C: "모든 에너지 변환 과정에서 에너지 효율은 100%를 초과할 수 없다."
+                },
+                correct: ["ㄱ", "ㄷ"],
+                explanation: "ㄱ. (○) 에너지 효율 = (유용한 에너지/공급된 에너지) × 100%입니다.\nㄴ. (×) 에너지 효율이 높을수록 더 적은 에너지가 필요합니다.\nㄷ. (○) 에너지 보존 법칙에 의해 효율은 100%를 초과할 수 없습니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "LED 전구는 백열전구보다 에너지 효율이 높다.",
+                    B: "에너지 효율이 높으면 같은 에너지로 더 많은 일을 할 수 있다.",
+                    C: "에너지 손실이 클수록 에너지 효율이 높아진다."
+                },
+                correct: ["ㄱ", "ㄴ"],
+                explanation: "ㄱ. (○) LED는 백열전구보다 효율이 5~10배 높습니다.\nㄴ. (○) 효율이 높으면 같은 에너지로 더 많은 유용한 일을 할 수 있습니다.\nㄷ. (×) 에너지 손실이 클수록 효율은 낮아집니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "에너지 효율 = (유용한 에너지 / 공급된 에너지) × 100%로 계산한다.",
+                    B: "에너지 효율이 80%라면 20%의 에너지가 유용하게 사용되었다는 의미이다.",
+                    C: "에너지 절약을 위해서는 에너지 효율이 높은 제품을 사용하는 것이 좋다."
+                },
+                correct: ["ㄱ", "ㄷ"],
+                explanation: "ㄱ. (○) 에너지 효율의 정확한 계산식입니다.\nㄴ. (×) 효율 80%는 80%가 유용하게 사용되었다는 의미입니다.\nㄷ. (○) 고효율 제품은 에너지 절약에 효과적입니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "전기 히터의 에너지 효율은 거의 100%에 가깝다.",
+                    B: "에너지 효율이 낮을수록 환경에 미치는 영향이 적다.",
+                    C: "에너지 변환 과정에서 일부 에너지는 항상 열에너지로 손실된다."
+                },
+                correct: ["ㄱ", "ㄷ"],
+                explanation: "ㄱ. (○) 전기 히터는 전기를 열로 직접 변환하므로 효율이 거의 100%입니다.\nㄴ. (×) 효율이 낮으면 에너지 소비가 많아 환경 영향이 큽니다.\nㄷ. (○) 모든 에너지 변환 과정에서 일부는 항상 열로 손실됩니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "에너지 효율이 높은 가전제품은 전기 요금이 더 많이 나온다.",
+                    B: "형광등은 백열전구보다 에너지 효율이 높다.",
+                    C: "에너지 효율 등급제는 소비자가 효율적인 제품을 선택하도록 돕는다."
+                },
+                correct: ["ㄴ", "ㄷ"],
+                explanation: "ㄱ. (×) 고효율 제품은 같은 성능에 전기를 덜 사용하므로 요금이 적게 나옵니다.\nㄴ. (○) 형광등은 백열전구보다 효율이 3~5배 높습니다.\nㄷ. (○) 효율 등급제는 소비자의 합리적 선택을 돕습니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "에너지 효율은 항상 100%보다 작다.",
+                    B: "에너지 효율이 높으면 에너지 손실이 크다.",
+                    C: "고효율 기기를 사용하면 온실가스 배출을 줄일 수 있다."
+                },
+                correct: ["ㄱ", "ㄷ"],
+                explanation: "ㄱ. (○) 에너지 보존 법칙에 따라 효율은 최대 100%입니다.\nㄴ. (×) 효율이 높으면 손실이 작습니다.\nㄷ. (○) 에너지 사용 감소로 발전소에서의 온실가스 배출이 줄어듭니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "자동차 엔진의 에너지 효율은 보통 20~30% 정도이다.",
+                    B: "에너지 효율이 50%라면 절반의 에너지가 손실되었다는 의미이다.",
+                    C: "에너지 효율을 높이면 같은 효과를 내는 데 더 많은 에너지가 필요하다."
+                },
+                correct: ["ㄱ", "ㄴ"],
+                explanation: "ㄱ. (○) 내연기관의 효율은 약 20~30%로 낮은 편입니다.\nㄴ. (○) 효율 50%는 나머지 50%가 열 등으로 손실되었다는 의미입니다.\nㄷ. (×) 효율을 높이면 더 적은 에너지가 필요합니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "에너지 효율 향상은 지속가능한 발전에 기여한다.",
+                    B: "버려지는 에너지가 많을수록 에너지 효율이 높다.",
+                    C: "인버터 에어컨은 일반 에어컨보다 에너지 효율이 높다."
+                },
+                correct: ["ㄱ", "ㄷ"],
+                explanation: "ㄱ. (○) 효율 향상은 자원 절약과 환경 보호에 기여합니다.\nㄴ. (×) 버려지는 에너지가 많으면 효율이 낮습니다.\nㄷ. (○) 인버터는 압축기 회전수를 조절하여 효율이 높습니다."
+            },
+            {
+                question: "에너지 효율에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?",
+                options: {
+                    A: "전기차는 내연기관차보다 에너지 효율이 높다.",
+                    B: "에너지 효율은 공급된 에너지를 유용한 에너지로 나눈 값이다.",
+                    C: "에너지 손실을 줄이면 에너지 효율이 높아진다."
+                },
+                correct: ["ㄱ", "ㄷ"],
+                explanation: "ㄱ. (○) 전기차는 약 60~80%, 내연기관차는 약 20~30%의 효율을 보입니다.\nㄴ. (×) 효율은 유용한 에너지를 공급된 에너지로 나눈 값입니다.\nㄷ. (○) 손실을 줄이면 유용한 에너지 비율이 높아져 효율이 증가합니다."
+            }
+        ];
+        
+        function newProblem() {
+            selectedChoices = [];
+            updateAnswerDisplay();
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('explanation').classList.remove('show');
+            
+            currentProblem = problems[Math.floor(Math.random() * problems.length)];
+            
+            document.getElementById('questionTitle').textContent = currentProblem.question;
+            document.getElementById('optionA').textContent = currentProblem.options.A;
+            document.getElementById('optionB').textContent = currentProblem.options.B;
+            document.getElementById('optionC').textContent = currentProblem.options.C;
+            
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            problemCount++;
+            document.getElementById('problemNumber').textContent = `문제 #${problemCount}`;
+        }
+        
+        function selectChoice(choice) {
+            if (selectedChoices.includes(choice)) {
+                selectedChoices = selectedChoices.filter(c => c !== choice);
+            } else {
+                selectedChoices.push(choice);
+            }
+            
+            updateAnswerDisplay();
+            updateButtonStates();
+        }
+        
+        function updateAnswerDisplay() {
+            const display = document.getElementById('answerDisplay');
+            if (selectedChoices.length === 0) {
+                display.innerHTML = '<div class="answer-text">옳은 것을 순서대로 선택하세요</div>';
+            } else {
+                display.innerHTML = `<div class="selected-answer">${selectedChoices.join(', ')}</div>`;
+            }
+        }
+        
+        function updateButtonStates() {
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                const choice = btn.textContent;
+                if (selectedChoices.includes(choice)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+        
+        function resetAnswer() {
+            selectedChoices = [];
+            updateAnswerDisplay();
+            updateButtonStates();
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('explanation').classList.remove('show');
+        }
+        
+        function checkAnswer() {
+            if (selectedChoices.length === 0) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            const explanationDiv = document.getElementById('explanation');
+            const explanationText = document.getElementById('explanationText');
+            const isCorrect = JSON.stringify(selectedChoices) === JSON.stringify(currentProblem.correct);
+            
+            if (isCorrect) {
+                resultDiv.textContent = '✓ 정답입니다!';
+                resultDiv.className = 'result show correct';
+            } else {
+                resultDiv.textContent = `✗ 오답입니다. 정답은 ${currentProblem.correct.join(', ')} 입니다.`;
+                resultDiv.className = 'result show incorrect';
+            }
+            
+            explanationText.textContent = currentProblem.explanation;
+            explanationDiv.classList.add('show');
+        }
+        
+        // 초기 문제 로드
+        newProblem();
+    </script>
+</body>
+</html>

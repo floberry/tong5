@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>열기관 에너지 효율 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            font-size: 22px;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .problem-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-left: 4px solid #667eea;
+        }
+        
+        .engine-diagram {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            background: linear-gradient(to bottom, #fff5f5 0%, #e3f2fd 100%);
+            border-radius: 15px;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .reservoir {
+            position: absolute;
+            width: 140px;
+            height: 70px;
+            border-radius: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        .hot-reservoir {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+        
+        .engine-core {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 4px solid white;
+            z-index: 10;
+        }
+        
+        .cold-reservoir {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #333;
+        }
+        
+        .arrow-flow {
+            position: absolute;
+            z-index: 5;
+        }
+        
+        .arrow-q1 {
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 40px solid rgba(255, 107, 107, 0.7);
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+        
+        .arrow-q1::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -10px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 107, 107, 0.7);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        
+        .arrow-w {
+            top: 185px;
+            right: 40px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 45px solid rgba(79, 172, 254, 0.7);
+            animation: arrowPulse 2s ease-in-out infinite 0.3s;
+        }
+        
+        .arrow-q2 {
+            bottom: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 40px solid rgba(100, 181, 246, 0.7);
+            animation: arrowPulse 2s ease-in-out infinite 0.6s;
+        }
+        
+        @keyframes arrowPulse {
+            0%, 100% { 
+                opacity: 0.5; 
+                transform: translateX(-50%) scale(0.9);
+            }
+            50% { 
+                opacity: 1; 
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+        
+        .label {
+            position: absolute;
+            font-weight: bold;
+            font-size: 16px;
+            z-index: 15;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .label-q1 {
+            top: 100px;
+            left: 25px;
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .label-w {
+            top: 185px;
+            right: 95px;
+            color: #4facfe;
+            border: 2px solid #4facfe;
+        }
+        
+        .label-q2 {
+            bottom: 100px;
+            right: 25px;
+            color: #64b5f6;
+            border: 2px solid #64b5f6;
+        }
+        
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 2px solid #e0e0e0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        td {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .input-field {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .result {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 2px solid #667eea;
+        }
+        
+        .result-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .result-text {
+            color: #333;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .efficiency-display {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 열기관 에너지 효율 시뮬레이션</h1>
+        
+        <div class="problem-text">
+            <strong>문제</strong><br>
+            그림은 어떤 열기관이 고열원에서 Q₁의 열을 받아 W의 일을 하고 저열원으로 Q₂의 열을 방출하는 것을 나타낸 것이다. 표는 이 열기관의 W에 따른 Q₁, Q₂를 나타낸 것이다.
+        </div>
+        
+        <div class="engine-diagram">
+            <div class="arrow-flow arrow-q1"></div>
+            <div class="arrow-flow arrow-w"></div>
+            <div class="arrow-flow arrow-q2"></div>
+            
+            <div class="label label-q1">Q₁</div>
+            <div class="label label-w">W</div>
+            <div class="label label-q2">Q₂</div>
+            
+            <div class="reservoir hot-reservoir">
+                고열원<br><span style="font-size:11px;">고온</span>
+            </div>
+            
+            <div class="engine-core">
+                열기관<br>
+                <small style="font-size:11px; margin-top:5px;">에너지 변환</small>
+            </div>
+            
+            <div class="reservoir cold-reservoir">
+                저열원<br><span style="font-size:11px;">저온</span>
+            </div>
+        </div>
+        
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>W (J)</th>
+                        <th>Q₁ (J)</th>
+                        <th>Q₂ (J)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td>(가)</td>
+                        <td id="q1_1">500</td>
+                        <td id="q2_1">400</td>
+                    </tr>
+                    <tr>
+                        <td id="w_2">150</td>
+                        <td>(나)</td>
+                        <td>(다)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <label style="font-weight: bold; color: #667eea; display: block; margin-bottom: 10px;">
+                빈칸에 들어갈 값을 입력하세요:
+            </label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label style="font-size: 13px; display: block; margin-bottom: 5px;">(가) W (J):</label>
+                    <input type="number" id="inputW1" class="input-field" placeholder="?">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 13px; display: block; margin-bottom: 5px;">(나) Q₁ (J):</label>
+                    <input type="number" id="inputQ1" class="input-field" placeholder="?">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 13px; display: block; margin-bottom: 5px;">(다) Q₂ (J):</label>
+                    <input type="number" id="inputQ2" class="input-field" placeholder="?">
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn-primary" onclick="checkAnswer()">정답 확인</button>
+            <button class="btn-secondary" onclick="showHint()">힌트 보기</button>
+        </div>
+        
+        <div class="controls">
+            <button class="btn-success" onclick="generateNewProblem()">🔄 새 문제</button>
+            <button class="btn-secondary" onclick="reset()">초기화</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+    
+    <script>
+        let currentProblem = {
+            q1_1: 500,
+            q2_1: 400,
+            w_2: 150,
+            answerW1: 100,
+            answerQ1: 750,
+            answerQ2: 600
+        };
+        
+        function generateNewProblem() {
+            // 계산하기 쉬운 효율 (20%, 25%, 40%, 50%)
+            const efficiencies = [0.20, 0.25, 0.40, 0.50];
+            const efficiency = efficiencies[Math.floor(Math.random() * efficiencies.length)];
+            
+            // 첫 번째 행: Q1을 200~800 사이의 100의 배수로 (계산 쉬운 숫자)
+            const q1_1 = (Math.floor(Math.random() * 7) + 2) * 100; // 200, 300, ..., 800
+            
+            // W = Q1 × efficiency (깔끔한 숫자가 나옴)
+            const w_1 = q1_1 * efficiency;
+            
+            // Q2 = Q1 - W
+            const q2_1 = q1_1 - w_1;
+            
+            // 두 번째 행: W를 50~300 사이의 50의 배수로
+            const w_2 = (Math.floor(Math.random() * 6) + 1) * 50; // 50, 100, 150, 200, 250, 300
+            
+            // 같은 효율 적용
+            const q1_2 = w_2 / efficiency;
+            const q2_2 = q1_2 - w_2;
+            
+            currentProblem = {
+                q1_1: q1_1,
+                q2_1: q2_1,
+                w_2: w_2,
+                answerW1: w_1,
+                answerQ1: q1_2,
+                answerQ2: q2_2,
+                efficiency: efficiency
+            };
+            
+            // 테이블 업데이트
+            document.getElementById('q1_1').textContent = q1_1;
+            document.getElementById('q2_1').textContent = q2_1;
+            document.getElementById('w_2').textContent = w_2;
+            
+            // 입력 필드 초기화
+            reset();
+        }
+        
+        function checkAnswer() {
+            const w1 = parseInt(document.getElementById('inputW1').value);
+            const q1 = parseInt(document.getElementById('inputQ1').value);
+            const q2 = parseInt(document.getElementById('inputQ2').value);
+            
+            const correctW1 = currentProblem.answerW1;
+            const correctQ1 = currentProblem.answerQ1;
+            const correctQ2 = currentProblem.answerQ2;
+            
+            // 정확한 값 비교
+            const w1Correct = w1 === correctW1;
+            const q1Correct = q1 === correctQ1;
+            const q2Correct = q2 === correctQ2;
+            
+            let resultHTML = '<div class="result"><div class="result-title">📊 결과</div><div class="result-text">';
+            
+            if (w1Correct && q1Correct && q2Correct) {
+                const efficiencyPercent = Math.round(currentProblem.efficiency * 100);
+                resultHTML += '<strong style="color: #4caf50;">✅ 정답입니다!</strong><br><br>';
+                resultHTML += '<strong>에너지 보존 법칙:</strong> Q₁ = W + Q₂<br><br>';
+                resultHTML += '<strong>첫 번째 경우:</strong><br>';
+                resultHTML += `Q₁ = W + Q₂ → ${currentProblem.q1_1} = W + ${currentProblem.q2_1} → W = ${correctW1} J<br><br>`;
+                resultHTML += '<strong>두 번째 경우:</strong><br>';
+                resultHTML += '열효율이 같으므로:<br>';
+                resultHTML += `η = W/Q₁ = ${correctW1}/${currentProblem.q1_1} = ${currentProblem.efficiency.toFixed(2)} (${efficiencyPercent}%)<br>`;
+                resultHTML += `Q₁ = W/η = ${currentProblem.w_2}/${currentProblem.efficiency.toFixed(2)} = ${correctQ1} J<br>`;
+                resultHTML += `Q₂ = Q₁ - W = ${correctQ1} - ${currentProblem.w_2} = ${correctQ2} J`;
+                
+                resultHTML += `<div class="efficiency-display">열효율: ${efficiencyPercent}%</div>`;
+            } else {
+                resultHTML += '<strong style="color: #f44336;">❌ 다시 시도해보세요.</strong><br><br>';
+                if (!w1Correct) resultHTML += `• (가) W 값을 다시 확인하세요.<br>`;
+                if (!q1Correct) resultHTML += `• (나) Q₁ 값을 다시 확인하세요.<br>`;
+                if (!q2Correct) resultHTML += `• (다) Q₂ 값을 다시 확인하세요.<br>`;
+            }
+            
+            resultHTML += '</div></div>';
+            document.getElementById('result').innerHTML = resultHTML;
+        }
+        
+        function showHint() {
+            const hint = `
+                <div class="result">
+                    <div class="result-title">💡 힌트</div>
+                    <div class="result-text">
+                        <strong>1. 에너지 보존 법칙</strong><br>
+                        열기관에서는 고열원에서 받은 열 Q₁이 일 W와 저열원으로 방출되는 열 Q₂로 나뉩니다.<br>
+                        <strong>Q₁ = W + Q₂</strong><br><br>
+                        
+                        <strong>2. 열효율</strong><br>
+                        열효율 η = W / Q₁ (일정함)<br><br>
+                        
+                        <strong>3. 문제 풀이 순서</strong><br>
+                        ① 첫 번째 행에서 (가) W를 구합니다.<br>
+                        ② 열효율을 계산합니다.<br>
+                        ③ 두 번째 행에서 같은 효율을 이용해 (나), (다)를 구합니다.<br><br>
+                        
+                        <strong>4. 현재 문제</strong><br>
+                        첫 번째 행: Q₁ = ${currentProblem.q1_1} J, Q₂ = ${currentProblem.q2_1} J<br>
+                        두 번째 행: W = ${currentProblem.w_2} J
+                    </div>
+                </div>
+            `;
+            document.getElementById('result').innerHTML = hint;
+        }
+        
+        function reset() {
+            document.getElementById('inputW1').value = '';
+            document.getElementById('inputQ1').value = '';
+            document.getElementById('inputQ2').value = '';
+            document.getElementById('result').innerHTML = '';
+        }
+        
+        // 페이지 로드 시 초기 문제 생성
+        window.onload = function() {
+            generateNewProblem();
+        };
+    </script>
+</body>
+</html>

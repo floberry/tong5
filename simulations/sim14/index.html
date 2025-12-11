@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>열기관 효율 연습</title>
+    <title>에너지 효율 연습 문제</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Malgun Gothic', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e0e0e0 0%, #9e9e9e 100%);
             min-height: 100vh;
             padding: 20px;
             display: flex;
@@ -24,118 +24,163 @@
         .container {
             background: white;
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
         
-        h1 {
-            color: #667eea;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        
-        .problem-box {
-            background: #f8f9ff;
-            border-left: 4px solid #667eea;
+        .header {
+            background: linear-gradient(135deg, #757575 0%, #424242 100%);
+            color: white;
             padding: 20px;
+            border-radius: 15px;
             margin-bottom: 25px;
-            border-radius: 8px;
-            line-height: 1.8;
+            text-align: center;
         }
         
-        .problem-box strong {
-            color: #667eea;
-            font-size: 18px;
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 8px;
         }
         
-        .values {
-            margin: 15px 0;
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .problem-title {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 25px;
             padding: 15px;
-            background: white;
-            border-radius: 8px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #757575;
         }
         
-        .value-item {
-            margin: 8px 0;
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #757575 0%, #424242 100%);
+            color: white;
+            padding: 15px;
             font-size: 16px;
         }
         
-        .answer-section {
+        .data-table td {
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .options-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
             margin: 25px 0;
         }
         
-        label {
-            display: block;
-            margin-bottom: 10px;
+        .options-title {
+            text-align: center;
             font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
             color: #333;
         }
         
-        input[type="number"] {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            transition: all 0.3s;
+        .option {
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .answer-section {
+            margin-top: 25px;
         }
         
-        .button-group {
-            display: flex;
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
-            margin-top: 20px;
+            margin-bottom: 15px;
         }
         
-        button {
-            flex: 1;
+        .answer-btn {
             padding: 15px;
+            border: 2px solid #757575;
+            background: white;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #424242;
+        }
+        
+        .answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .answer-btn.selected {
+            background: linear-gradient(135deg, #757575 0%, #424242 100%);
+            color: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
             border: none;
             border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
         }
         
-        .new-problem-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .btn-new {
+            background: linear-gradient(135deg, #757575 0%, #424242 100%);
             color: white;
         }
         
-        .new-problem-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .check-btn {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        .btn-check {
+            background: linear-gradient(135deg, #9e9e9e 0%, #616161 100%);
             color: white;
         }
         
-        .check-btn:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         .result {
             margin-top: 20px;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             text-align: center;
             font-size: 16px;
@@ -155,172 +200,270 @@
             border: 2px solid #f5c6cb;
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9ff;
-            border-radius: 10px;
-        }
-        
-        .stat-item {
+        .car-icon {
+            font-size: 40px;
             text-align: center;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ 열기관 효율 계산</h1>
-        <div class="subtitle">유화평 학생의 통합과학2 연습</div>
+        <div class="header">
+            <h1>🔬 에너지 효율 연습 문제</h1>
+            <p>통합과학2 - 에너지 효율 계산</p>
+        </div>
         
-        <div class="problem-box">
-            <strong>문제 15번</strong>
-            <p style="margin-top: 10px;">
-                그림은 화석 연료가 연소할 때 발생하는 열에너지를 이용하여 동력을 얻는 장치인 열기관을 나타낸 것이다.
-            </p>
-            <div class="values">
-                <div class="value-item">• 고열원으로부터 공급받은 열에너지: <strong><span id="inputEnergy">600</span> kJ</strong></div>
-                <div class="value-item">• 저열원으로 방출한 열에너지: <strong><span id="outputEnergy">480</span> kJ</strong></div>
-            </div>
-            <p>이 열기관의 열효율이 몇 %인지 계산 과정과 함께 구하시오.</p>
+        <div class="problem-title">
+            <strong>12.</strong> 다음은 전기 자동차 A, B에 공급한 전기 에너지와 바퀴를 움직이는 데 사용한 에너지를 나타낸 것이다. 이에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고른 것은?
+        </div>
+        
+        <div class="car-icon">🚗</div>
+        
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>자동차</th>
+                    <th>A</th>
+                    <th>B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>공급한 전기 에너지(J)</td>
+                    <td id="energyA">600</td>
+                    <td id="energyB">500</td>
+                </tr>
+                <tr>
+                    <td>바퀴를 움직이는 데 사용한 에너지(J)</td>
+                    <td id="usedA">300</td>
+                    <td id="usedB">400</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="options-box">
+            <div class="options-title">< 보기 ></div>
+            <div class="option" id="option1"></div>
+            <div class="option" id="option2"></div>
+            <div class="option" id="option3"></div>
         </div>
         
         <div class="answer-section">
-            <label>📝 정답 입력 (단위: %)</label>
-            <input type="number" id="userAnswer" placeholder="열효율을 입력하세요" min="0" max="100" step="1">
-        </div>
-        
-        <div class="button-group">
-            <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새문제</button>
-            <button class="check-btn" onclick="checkAnswer()">✓ 정답확인</button>
-        </div>
-        
-        <div id="result" class="result"></div>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-label">맞춘 문제</div>
-                <div class="stat-value" id="correct">0</div>
+            <div class="answer-buttons">
+                <button class="answer-btn" data-answer="1">①<br>ㄱ</button>
+                <button class="answer-btn" data-answer="2">②<br>ㄴ</button>
+                <button class="answer-btn" data-answer="3">③<br>ㄷ</button>
+                <button class="answer-btn" data-answer="4">④<br>ㄱ,ㄴ</button>
+                <button class="answer-btn" data-answer="5">⑤<br>ㄴ,ㄷ</button>
             </div>
-            <div class="stat-item">
-                <div class="stat-label">전체 문제</div>
-                <div class="stat-value" id="total">0</div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-new" onclick="generateNewProblem()">🔄 새 문제</button>
+                <button class="btn btn-check" onclick="checkAnswer()">✓ 정답 확인</button>
             </div>
-            <div class="stat-item">
-                <div class="stat-label">정답률</div>
-                <div class="stat-value" id="accuracy">0%</div>
-            </div>
+            
+            <div class="result" id="result"></div>
         </div>
     </div>
     
     <script>
-        let currentInput = 600;
-        let currentOutput = 480;
-        let correctCount = 0;
-        let totalCount = 0;
+        let currentAnswer = null;
+        let selectedAnswer = null;
+        let carOrder = ['A', 'B']; // A, B 순서 저장
+        let statements = []; // 현재 보기 저장
+        let correctStatements = []; // 참인 보기 저장
         
+        // 보기 템플릿 (다양한 표현)
+        const statementTemplates = {
+            efficiency: [
+                (c1, c2) => `에너지 효율은 ${c2}가 ${c1}보다 크다.`,
+                (c1, c2) => `에너지 효율은 ${c1}이 ${c2}보다 작다.`,
+                (c1, c2) => `${c2}의 에너지 효율이 ${c1}보다 높다.`,
+                (c1, c2) => `${c1}보다 ${c2}가 에너지를 더 효율적으로 사용한다.`
+            ],
+            waste: [
+                (c1, c2) => `공급한 전기 에너지가 같을 때 버려지는 열에너지는 ${c1}이 ${c2}보다 많다.`,
+                (c1, c2) => `같은 양의 전기를 공급하면 ${c1}이 ${c2}보다 더 많은 에너지를 버린다.`,
+                (c1, c2) => `전기 에너지를 같게 공급할 경우 손실되는 에너지는 ${c1}이 더 크다.`,
+                (c1, c2) => `동일한 전기 에너지 공급 시 ${c1}의 열손실이 ${c2}보다 크다.`
+            ],
+            supply: [
+                (c1, c2) => `바퀴를 움직이는 에너지가 같을 때 공급된 전기 에너지의 양은 ${c1}이 ${c2}보다 적다.`,
+                (c1, c2) => `같은 양의 일을 하는 데 필요한 전기 에너지는 ${c1}이 ${c2}보다 적다.`,
+                (c1, c2) => `동일한 유용 에너지를 얻기 위해 ${c1}은 ${c2}보다 적은 전기를 소비한다.`,
+                (c1, c2) => `바퀴를 같은 정도로 움직이려면 ${c1}이 ${c2}보다 전기를 덜 사용한다.`
+            ]
+        };
+        
+        // 보기 생성 함수
+        function generateStatements(effA, effB) {
+            const car1 = carOrder[0];
+            const car2 = carOrder[1];
+            
+            // 효율이 높은 차와 낮은 차 결정
+            let highEffCar, lowEffCar;
+            let efficiencyTrue, wasteTrue, supplyTrue;
+            
+            if (effA > effB) {
+                highEffCar = 'A';
+                lowEffCar = 'B';
+                efficiencyTrue = false; // "B가 A보다 크다"가 거짓
+                wasteTrue = false; // "A가 B보다 많다"가 거짓 (A가 효율 높아서 버리는 게 적음)
+                supplyTrue = true; // "A가 B보다 적다"가 참 (A가 효율 높아서 적게 필요)
+            } else {
+                highEffCar = 'B';
+                lowEffCar = 'A';
+                efficiencyTrue = true; // "B가 A보다 크다"가 참
+                wasteTrue = true; // "A가 B보다 많다"가 참 (A가 효율 낮아서 버리는 게 많음)
+                supplyTrue = false; // "A가 B보다 적다"가 거짓 (A가 효율 낮아서 많이 필요)
+            }
+            
+            // 각 유형별로 랜덤 선택
+            const effIdx = Math.floor(Math.random() * statementTemplates.efficiency.length);
+            const wasteIdx = Math.floor(Math.random() * statementTemplates.waste.length);
+            const supplyIdx = Math.floor(Math.random() * statementTemplates.supply.length);
+            
+            statements = [
+                statementTemplates.efficiency[effIdx]('A', 'B'),
+                statementTemplates.waste[wasteIdx]('A', 'B'),
+                statementTemplates.supply[supplyIdx]('A', 'B')
+            ];
+            
+            correctStatements = [efficiencyTrue, wasteTrue, supplyTrue];
+            
+            // 보기 순서를 랜덤하게 섞기
+            const indices = [0, 1, 2];
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
+                [statements[i], statements[j]] = [statements[j], statements[i]];
+                [correctStatements[i], correctStatements[j]] = [correctStatements[j], correctStatements[i]];
+            }
+            
+            // 화면에 표시
+            document.getElementById('option1').textContent = 'ㄱ. ' + statements[0];
+            document.getElementById('option2').textContent = 'ㄴ. ' + statements[1];
+            document.getElementById('option3').textContent = 'ㄷ. ' + statements[2];
+        }
+        
+        // 정답 계산 함수
+        function calculateCorrectAnswer() {
+            const correct = correctStatements;
+            
+            // ㄱ만 참
+            if (correct[0] && !correct[1] && !correct[2]) return 1;
+            // ㄴ만 참
+            if (!correct[0] && correct[1] && !correct[2]) return 2;
+            // ㄷ만 참
+            if (!correct[0] && !correct[1] && correct[2]) return 3;
+            // ㄱ, ㄴ 참
+            if (correct[0] && correct[1] && !correct[2]) return 4;
+            // ㄴ, ㄷ 참
+            if (!correct[0] && correct[1] && correct[2]) return 5;
+            // ㄱ, ㄷ 참
+            if (correct[0] && !correct[1] && correct[2]) return 4; // ㄱ,ㄷ도 4번으로
+            // 모두 참
+            if (correct[0] && correct[1] && correct[2]) return 5;
+            
+            return 1; // 기본값
+        }
+        
+        // 새 문제 생성
         function generateNewProblem() {
-            // 효율이 자연수가 되도록 설정 (10%, 20%, 25%, 30%, 40%, 50%)
-            const efficiencies = [10, 20, 25, 30, 40, 50];
-            const efficiency = efficiencies[Math.floor(Math.random() * efficiencies.length)];
+            // A, B 순서를 랜덤하게 결정
+            if (Math.random() < 0.5) {
+                carOrder = ['A', 'B'];
+            } else {
+                carOrder = ['B', 'A'];
+            }
             
-            // 고열원 에너지를 효율에 맞게 설정 (일이 자연수가 되도록)
-            // 100의 배수로 설정하여 모든 효율에서 자연수 결과 보장
-            currentInput = Math.floor(Math.random() * 9 + 2) * 100; // 200~1000 (100 단위)
+            // 공급 에너지: 400~800 (100 단위)
+            let energyFirst = Math.floor(Math.random() * 5 + 4) * 100;
+            let energySecond = Math.floor(Math.random() * 5 + 4) * 100;
             
-            // 실제로 한 일 계산 (항상 자연수)
-            const work = currentInput * efficiency / 100;
+            // 사용 에너지: 공급 에너지의 40~80%
+            let usedFirst = Math.floor((energyFirst * (Math.random() * 0.4 + 0.4)) / 100) * 100;
+            let usedSecond = Math.floor((energySecond * (Math.random() * 0.4 + 0.4)) / 100) * 100;
             
-            // 저열원 방출 에너지 계산 (항상 자연수)
-            currentOutput = currentInput - work;
+            // 순서에 따라 A, B 값 할당
+            let energyA, usedA, energyB, usedB;
             
-            document.getElementById('inputEnergy').textContent = currentInput;
-            document.getElementById('outputEnergy').textContent = currentOutput;
-            document.getElementById('userAnswer').value = '';
+            if (carOrder[0] === 'A') {
+                energyA = energyFirst;
+                usedA = usedFirst;
+                energyB = energySecond;
+                usedB = usedSecond;
+            } else {
+                energyA = energySecond;
+                usedA = usedSecond;
+                energyB = energyFirst;
+                usedB = usedFirst;
+            }
+            
+            // 효율 계산
+            const efficiencyA = (usedA / energyA) * 100;
+            const efficiencyB = (usedB / energyB) * 100;
+            
+            // 테이블 업데이트 (순서에 따라)
+            document.getElementById('energyA').textContent = energyFirst;
+            document.getElementById('energyB').textContent = energySecond;
+            document.getElementById('usedA').textContent = usedFirst;
+            document.getElementById('usedB').textContent = usedSecond;
+            
+            // 테이블 헤더 업데이트
+            const headers = document.querySelectorAll('.data-table th');
+            headers[1].textContent = carOrder[0];
+            headers[2].textContent = carOrder[1];
+            
+            // 보기 생성
+            generateStatements(efficiencyA, efficiencyB);
+            
+            // 정답 계산
+            currentAnswer = calculateCorrectAnswer();
+            selectedAnswer = null;
+            
+            // 선택 초기화
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // 결과 숨김
             document.getElementById('result').style.display = 'none';
         }
         
+        // 답안 선택
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.answer-btn').forEach(b => {
+                    b.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedAnswer = parseInt(this.dataset.answer);
+            });
+        });
+        
+        // 정답 확인
         function checkAnswer() {
-            const userAnswer = parseFloat(document.getElementById('userAnswer').value);
-            
-            if (isNaN(userAnswer)) {
-                alert('답을 입력해주세요!');
+            if (selectedAnswer === null) {
+                alert('답을 선택해주세요!');
                 return;
             }
             
-            // 열기관이 한 일 계산
-            const work = currentInput - currentOutput;
-            
-            // 정답 계산
-            const correctAnswer = (work / currentInput) * 100;
-            
             const resultDiv = document.getElementById('result');
-            totalCount++;
+            resultDiv.style.display = 'block';
             
-            // 오차 범위 ±0.5% 허용
-            if (Math.abs(userAnswer - correctAnswer) < 0.5) {
-                correctCount++;
+            if (selectedAnswer === currentAnswer) {
                 resultDiv.className = 'result correct';
-                resultDiv.innerHTML = `
-                    🎉 정답입니다!<br>
-                    <div style="margin-top: 15px; font-size: 14px; text-align: left; line-height: 1.8;">
-                        <strong>📚 계산 과정:</strong><br>
-                        ① 열기관이 한 일(W) 구하기<br>
-                        &nbsp;&nbsp;&nbsp;W = 고열원 에너지 - 저열원 에너지<br>
-                        &nbsp;&nbsp;&nbsp;W = ${currentInput} kJ - ${currentOutput} kJ = ${work} kJ<br><br>
-                        ② 열효율 구하기<br>
-                        &nbsp;&nbsp;&nbsp;열효율 = (열기관이 한 일 / 공급받은 에너지) × 100<br>
-                        &nbsp;&nbsp;&nbsp;열효율 = (${work} kJ / ${currentInput} kJ) × 100<br>
-                        &nbsp;&nbsp;&nbsp;열효율 = ${correctAnswer}%
-                    </div>
-                `;
+                resultDiv.textContent = '🎉 정답입니다!';
             } else {
                 resultDiv.className = 'result incorrect';
-                resultDiv.innerHTML = `
-                    ❌ 틀렸습니다. 정답은 ${correctAnswer}% 입니다.<br>
-                    <div style="margin-top: 15px; font-size: 14px; text-align: left; line-height: 1.8;">
-                        <strong>📚 계산 과정:</strong><br>
-                        ① 열기관이 한 일(W) 구하기<br>
-                        &nbsp;&nbsp;&nbsp;W = 고열원 에너지 - 저열원 에너지<br>
-                        &nbsp;&nbsp;&nbsp;W = ${currentInput} kJ - ${currentOutput} kJ = ${work} kJ<br><br>
-                        ② 열효율 구하기<br>
-                        &nbsp;&nbsp;&nbsp;열효율 = (열기관이 한 일 / 공급받은 에너지) × 100<br>
-                        &nbsp;&nbsp;&nbsp;열효율 = (${work} kJ / ${currentInput} kJ) × 100<br>
-                        &nbsp;&nbsp;&nbsp;열효율 = ${correctAnswer}%
-                    </div>
-                `;
+                resultDiv.textContent = `❌ 오답입니다. 정답은 ${currentAnswer}번입니다.`;
             }
-            
-            resultDiv.style.display = 'block';
-            updateStats();
         }
         
-        function updateStats() {
-            document.getElementById('correct').textContent = correctCount;
-            document.getElementById('total').textContent = totalCount;
-            const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
-            document.getElementById('accuracy').textContent = accuracy + '%';
-        }
-        
-        // 엔터키로 정답 확인
-        document.getElementById('userAnswer').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
+        // 초기 문제 생성
+        generateNewProblem();
     </script>
 </body>
 </html>
