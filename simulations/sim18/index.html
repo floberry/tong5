@@ -1,1 +1,744 @@
-<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><style type="text/css">ol{margin:0;padding:0}table td,table th{padding:0}.c0{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Arial";font-style:normal}.c1{padding-top:0pt;padding-bottom:0pt;line-height:1.15;orphans:2;widows:2;text-align:left}.c3{background-color:#ffffff;max-width:451.4pt;padding:72pt 72pt 72pt 72pt}.c2{height:11pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class="c3 doc-content"><p class="c1"><span class="c0">&lt;!DOCTYPE html&gt;</span></p><p class="c1 c2"><span class="c0"></span></p><p class="c1"><span class="c0">&lt;html lang=&quot;ko&quot;&gt;</span></p><p class="c1"><span class="c0">&lt;head&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;meta charset=&quot;UTF-8&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;title&gt;&#51088;&#46041;&#52264; &#50640;&#45320;&#51648; &#54952;&#50984; &#47928;&#51228;&lt;/title&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;style&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; * {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 0;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 0;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-sizing: border-box;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1 c2"><span class="c0"></span></p><p class="c1"><span class="c0">```</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; body {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-family: &#39;Malgun Gothic&#39;, sans-serif;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(135deg, #c02425 0%, #f0cb35 100%);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; min-height: 100vh;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; flex-direction: column;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; position: relative;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; overflow: hidden;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; body::before {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; content: &#39;&#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039; &#10052;&#65039;&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; position: fixed;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; top: -50px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; left: 0;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; height: 100%;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; animation: snowfall 10s linear infinite;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; pointer-events: none;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; opacity: 0.6;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; line-height: 100px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; @keyframes snowfall {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; 0% { transform: translateY(0); }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; 100% { transform: translateY(100vh); }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .container {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; max-width: 500px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: white;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 25px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 10px 40px rgba(0,0,0,0.3);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border: 3px solid #2ecc71;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; position: relative;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .container::before {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; content: &#39;&#127876;&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; top: -15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; right: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 2em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; z-index: 10;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .container::after {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; content: &#39;&#127877;&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; top: -15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; left: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 2em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; z-index: 10;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; h1 {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.3em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; line-height: 1.6;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: #333;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .car-section {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; gap: 15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 25px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: #f8f9fa;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 12px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .car-image {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; width: 120px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; height: 80px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(135deg, #8b8b8b 0%, #5a5a5a 100%);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; justify-content: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 50px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 4px 10px rgba(0,0,0,0.2);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .energy-info {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; flex: 1;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.1em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: #2c3e50;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; table {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-collapse: collapse;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 25px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 2px 10px rgba(0,0,0,0.1);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; overflow: hidden;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; th, td {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; text-align: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid #ddd;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; th {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(135deg, #c02425 0%, #27ae60 100%);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.1em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; td {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: white;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.05em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .highlight {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: #fff3cd !important;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: #856404;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .question {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: #fff9e6;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 12px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 25px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-left: 5px solid #f0cb35;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-right: 5px solid #c02425;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .question p {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.1em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; line-height: 1.6;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: #c02425;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-weight: 500;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .input-section {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; gap: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; input[type=&quot;number&quot;] {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; flex: 1;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.1em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border: 2px solid #ddd;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; text-align: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; transition: border 0.3s;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; input[type=&quot;number&quot;]:focus {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; outline: none;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-color: #c02425;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .button-group {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; gap: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; button {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; flex: 1;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 15px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.1em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border: none;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cursor: pointer;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; transition: all 0.3s;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .check-btn {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .check-btn:hover {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; transform: translateY(-2px);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .new-btn {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(135deg, #c02425 0%, #e74c3c 100%);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .new-btn:hover {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; transform: translateY(-2px);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 5px 15px rgba(192, 36, 37, 0.4);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .result {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border-radius: 10px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; text-align: center;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.1em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; display: none;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; animation: fadeIn 0.5s;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .result.correct {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: #d4edda;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: #155724;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border: 2px solid #c3e6cb;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .result.incorrect {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; background: #f8d7da;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; color: #721c24;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; border: 2px solid #f5c6cb;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; @keyframes fadeIn {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; from { opacity: 0; transform: translateY(-10px); }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; to { opacity: 1; transform: translateY(0); }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; .emoji {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.5em;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; margin-right: 8px;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&lt;/style&gt;</span></p><p class="c1"><span class="c0">```</span></p><p class="c1 c2"><span class="c0"></span></p><p class="c1"><span class="c0">&lt;/head&gt;</span></p><p class="c1"><span class="c0">&lt;body&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div class=&quot;container&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;h1&gt;&#44536;&#47548;&#51008; &#51088;&#46041;&#52264;&#50640; &#44277;&#44553;&#46108; &#50640;&#45320;&#51648;&#50752; &#50640;&#45320;&#51648;&#44032; &#51204;&#54872;&#46108; &#48708;&#50984;&#51012; &#45208;&#53440;&#45240; &#44163;&#51060;&#45796;.&lt;/h1&gt;</span></p><p class="c1 c2"><span class="c0"></span></p><p class="c1"><span class="c0">```</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div class=&quot;car-section&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;car-image&quot;&gt;&#128663;&lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;energy-info&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#51088;&#46041;&#52264;&#50640; &#44277;&#44553;&#46108;&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#55064;&#48156;&#50976; &#50640;&#45320;&#51648;: &lt;span id=&quot;totalEnergy&quot;&gt;100&lt;/span&gt; MJ</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;table&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;thead&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tr&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;th&gt;&#45236;&#50857;&lt;/th&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;th&gt;&#50640;&#45320;&#51648;(MJ)&lt;/th&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tr&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/thead&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;tbody&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tr class=&quot;highlight&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td&gt;&#45804;&#47532;&#45716; &#45936; &#49324;&#50857;&#54620; &#50640;&#45320;&#51648;&lt;/td&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td id=&quot;running&quot;&gt;&#10067;&lt;/td&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tr&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tr&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td&gt;&#48176;&#44592; &#44032;&#49828;&lt;/td&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td id=&quot;exhaust&quot;&gt;35&lt;/td&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tr&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/tbody&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/table&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div class=&quot;question&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;p&gt;&#10067;&#51012; &#44396;&#54616;&#44256;, &#50644;&#51652;&#51032; &#50640;&#45320;&#51648; &#54952;&#50984;(%)&#51012; &#44396;&#54616;&#49884;&#50724;.&lt;/p&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div class=&quot;input-section&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;input type=&quot;number&quot; id=&quot;answer&quot; placeholder=&quot;&#50640;&#45320;&#51648; &#54952;&#50984;(%)&#51012; &#51077;&#47141;&#54616;&#49464;&#50836;&quot; min=&quot;0&quot; max=&quot;100&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;span style=&quot;font-size: 1.1em; font-weight: bold;&quot;&gt;%&lt;/span&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div class=&quot;button-group&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;button class=&quot;check-btn&quot; onclick=&quot;checkAnswer()&quot;&gt;&#51221;&#45813; &#54869;&#51064;&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;button class=&quot;new-btn&quot; onclick=&quot;newProblem()&quot;&gt;&#49352; &#47928;&#51228;&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div class=&quot;result&quot; id=&quot;result&quot;&gt;&lt;/div&gt;</span></p><p class="c1"><span class="c0">&lt;/div&gt;</span></p><p class="c1 c2"><span class="c0"></span></p><p class="c1"><span class="c0">&lt;script&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; let correctAnswer = 65;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; let totalEnergy = 100;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; let runningEnergy = 65;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; function newProblem() {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // &#44277;&#44553;&#46108; &#55064;&#48156;&#50976; &#50640;&#45320;&#51648; (60-100 MJ)</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; totalEnergy = Math.floor(Math.random() * 41) + 60;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // &#48176;&#44592; &#44032;&#49828; (&#51204;&#52404;&#51032; 30-50%)</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const exhaustPercent = Math.floor(Math.random() * 21) + 30;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const exhaust = Math.round(totalEnergy * exhaustPercent / 100);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // &#45804;&#47532;&#45716; &#45936; &#49324;&#50857;&#54620; &#50640;&#45320;&#51648;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; runningEnergy = totalEnergy - exhaust;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // &#50640;&#45320;&#51648; &#54952;&#50984; &#44228;&#49328;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; correctAnswer = Math.round((runningEnergy / totalEnergy) * 100);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;totalEnergy&#39;).textContent = totalEnergy;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;running&#39;).textContent = &#39;&#10067;&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;exhaust&#39;).textContent = exhaust;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;answer&#39;).value = &#39;&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;result&#39;).style.display = &#39;none&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; function checkAnswer() {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const userAnswer = parseInt(document.getElementById(&#39;answer&#39;).value);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const resultDiv = document.getElementById(&#39;result&#39;);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (isNaN(userAnswer)) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.className = &#39;result incorrect&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.innerHTML = &#39;&lt;span class=&quot;emoji&quot;&gt;&#9888;&#65039;&lt;/span&gt;&#45813;&#51012; &#51077;&#47141;&#54644;&#51452;&#49464;&#50836;!&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.style.display = &#39;block&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (userAnswer === correctAnswer) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.className = &#39;result correct&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.innerHTML = `</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span class=&quot;emoji&quot;&gt;&#127881;&lt;/span&gt;&#51221;&#45813;&#51077;&#45768;&#45796;!&lt;br&gt;&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong&gt;&#54400;&#51060;:&lt;/strong&gt;&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#45804;&#47532;&#45716; &#45936; &#49324;&#50857;&#54620; &#50640;&#45320;&#51648; = ${totalEnergy} - ${document.getElementById(&#39;exhaust&#39;).textContent} = ${runningEnergy} MJ&lt;br&gt;&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#50644;&#51652;&#51032; &#50640;&#45320;&#51648; &#54952;&#50984; = (${runningEnergy} &divide; ${totalEnergy}) &times; 100&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong&gt;= ${correctAnswer}%&lt;/strong&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;running&#39;).textContent = runningEnergy;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; } else {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.className = &#39;result incorrect&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; resultDiv.innerHTML = `</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span class=&quot;emoji&quot;&gt;&#10060;&lt;/span&gt;&#53952;&#47160;&#49845;&#45768;&#45796;.&lt;br&gt;&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#55180;&#53944;:&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. &#47676;&#51200; &#45804;&#47532;&#45716; &#45936; &#49324;&#50857;&#54620; &#50640;&#45320;&#51648;&#47484; &#44396;&#54616;&#49464;&#50836;.&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (&#44277;&#44553;&#46108; &#50640;&#45320;&#51648; - &#48176;&#44592; &#44032;&#49828;)&lt;br&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. &#50640;&#45320;&#51648; &#54952;&#50984; = (&#45804;&#47532;&#45716; &#45936; &#49324;&#50857;&#54620; &#50640;&#45320;&#51648; &divide; &#44277;&#44553;&#46108; &#50640;&#45320;&#51648;) &times; 100</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; resultDiv.style.display = &#39;block&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; document.getElementById(&#39;answer&#39;).addEventListener(&#39;keypress&#39;, function(e) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (e.key === &#39;Enter&#39;) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; checkAnswer();</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; });</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; newProblem();</span></p><p class="c1"><span class="c0">&lt;/script&gt;</span></p><p class="c1"><span class="c0">```</span></p><p class="c1 c2"><span class="c0"></span></p><p class="c1"><span class="c0">&lt;/body&gt;</span></p><p class="c1"><span class="c0">&lt;/html&gt;</span></p><p class="c1 c2"><span class="c0"></span></p></body></html>
+<!DOCTYPE html>
+
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>자동차 에너지 효율 문제</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+
+```
+
+    body {
+
+        font-family: 'Malgun Gothic', sans-serif;
+
+        background: linear-gradient(135deg, #c02425 0%, #f0cb35 100%);
+
+        min-height: 100vh;
+
+        padding: 20px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        position: relative;
+
+        overflow: hidden;
+
+    }
+
+   
+
+    body::before {
+
+        content: '❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️';
+
+        position: fixed;
+
+        top: -50px;
+
+        left: 0;
+
+        width: 100%;
+
+        height: 100%;
+
+        font-size: 20px;
+
+        animation: snowfall 10s linear infinite;
+
+        pointer-events: none;
+
+        opacity: 0.6;
+
+        line-height: 100px;
+
+    }
+
+   
+
+    @keyframes snowfall {
+
+        0% { transform: translateY(0); }
+
+        100% { transform: translateY(100vh); }
+
+    }
+
+   
+
+    .container {
+
+        max-width: 500px;
+
+        width: 100%;
+
+        background: white;
+
+        border-radius: 20px;
+
+        padding: 25px;
+
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+
+        border: 3px solid #2ecc71;
+
+        position: relative;
+
+    }
+
+   
+
+    .container::before {
+
+        content: '🎄';
+
+        position: absolute;
+
+        top: -15px;
+
+        right: 20px;
+
+        font-size: 2em;
+
+        z-index: 10;
+
+    }
+
+   
+
+    .container::after {
+
+        content: '🎅';
+
+        position: absolute;
+
+        top: -15px;
+
+        left: 20px;
+
+        font-size: 2em;
+
+        z-index: 10;
+
+    }
+
+   
+
+    h1 {
+
+        font-size: 1.3em;
+
+        line-height: 1.6;
+
+        margin-bottom: 20px;
+
+        color: #333;
+
+    }
+
+   
+
+    .car-section {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 25px;
+
+        padding: 15px;
+
+        background: #f8f9fa;
+
+        border-radius: 12px;
+
+    }
+
+   
+
+    .car-image {
+
+        width: 120px;
+
+        height: 80px;
+
+        background: linear-gradient(135deg, #8b8b8b 0%, #5a5a5a 100%);
+
+        border-radius: 10px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 50px;
+
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+    }
+
+   
+
+    .energy-info {
+
+        flex: 1;
+
+        font-size: 1.1em;
+
+        font-weight: bold;
+
+        color: #2c3e50;
+
+    }
+
+   
+
+    table {
+
+        width: 100%;
+
+        border-collapse: collapse;
+
+        margin-bottom: 25px;
+
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        border-radius: 10px;
+
+        overflow: hidden;
+
+    }
+
+   
+
+    th, td {
+
+        padding: 15px;
+
+        text-align: center;
+
+        border: 1px solid #ddd;
+
+    }
+
+   
+
+    th {
+
+        background: linear-gradient(135deg, #c02425 0%, #27ae60 100%);
+
+        color: white;
+
+        font-size: 1.1em;
+
+        font-weight: bold;
+
+    }
+
+   
+
+    td {
+
+        background: white;
+
+        font-size: 1.05em;
+
+    }
+
+   
+
+    .highlight {
+
+        background: #fff3cd !important;
+
+        font-weight: bold;
+
+        color: #856404;
+
+    }
+
+   
+
+    .question {
+
+        background: #fff9e6;
+
+        padding: 20px;
+
+        border-radius: 12px;
+
+        margin-bottom: 25px;
+
+        border-left: 5px solid #f0cb35;
+
+        border-right: 5px solid #c02425;
+
+    }
+
+   
+
+    .question p {
+
+        font-size: 1.1em;
+
+        line-height: 1.6;
+
+        color: #c02425;
+
+        font-weight: 500;
+
+    }
+
+   
+
+    .input-section {
+
+        display: flex;
+
+        gap: 10px;
+
+        margin-bottom: 20px;
+
+        align-items: center;
+
+    }
+
+   
+
+    input[type="number"] {
+
+        flex: 1;
+
+        padding: 15px;
+
+        font-size: 1.1em;
+
+        border: 2px solid #ddd;
+
+        border-radius: 10px;
+
+        text-align: center;
+
+        transition: border 0.3s;
+
+    }
+
+   
+
+    input[type="number"]:focus {
+
+        outline: none;
+
+        border-color: #c02425;
+
+    }
+
+   
+
+    .button-group {
+
+        display: flex;
+
+        gap: 10px;
+
+        margin-bottom: 20px;
+
+    }
+
+   
+
+    button {
+
+        flex: 1;
+
+        padding: 15px;
+
+        font-size: 1.1em;
+
+        font-weight: bold;
+
+        border: none;
+
+        border-radius: 10px;
+
+        cursor: pointer;
+
+        transition: all 0.3s;
+
+        color: white;
+
+    }
+
+   
+
+    .check-btn {
+
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+
+    }
+
+   
+
+    .check-btn:hover {
+
+        transform: translateY(-2px);
+
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+
+    }
+
+   
+
+    .new-btn {
+
+        background: linear-gradient(135deg, #c02425 0%, #e74c3c 100%);
+
+    }
+
+   
+
+    .new-btn:hover {
+
+        transform: translateY(-2px);
+
+        box-shadow: 0 5px 15px rgba(192, 36, 37, 0.4);
+
+    }
+
+   
+
+    .result {
+
+        padding: 20px;
+
+        border-radius: 10px;
+
+        text-align: center;
+
+        font-size: 1.1em;
+
+        font-weight: bold;
+
+        display: none;
+
+        animation: fadeIn 0.5s;
+
+    }
+
+   
+
+    .result.correct {
+
+        background: #d4edda;
+
+        color: #155724;
+
+        border: 2px solid #c3e6cb;
+
+    }
+
+   
+
+    .result.incorrect {
+
+        background: #f8d7da;
+
+        color: #721c24;
+
+        border: 2px solid #f5c6cb;
+
+    }
+
+   
+
+    @keyframes fadeIn {
+
+        from { opacity: 0; transform: translateY(-10px); }
+
+        to { opacity: 1; transform: translateY(0); }
+
+    }
+
+   
+
+    .emoji {
+
+        font-size: 1.5em;
+
+        margin-right: 8px;
+
+    }
+
+</style>
+
+```
+
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>그림은 자동차에 공급된 에너지와 에너지가 전환된 비율을 나타낸 것이다.</h1>
+
+
+```
+
+    <div class="car-section">
+
+        <div class="car-image">🚗</div>
+
+        <div class="energy-info">
+
+            자동차에 공급된<br>
+
+            휘발유 에너지: <span id="totalEnergy">100</span> MJ
+
+        </div>
+
+    </div>
+
+   
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>내용</th>
+
+                <th>에너지(MJ)</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr class="highlight">
+
+                <td>달리는 데 사용한 에너지</td>
+
+                <td id="running">❓</td>
+
+            </tr>
+
+            <tr>
+
+                <td>배기 가스</td>
+
+                <td id="exhaust">35</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+   
+
+    <div class="question">
+
+        <p>❓을 구하고, 엔진의 에너지 효율(%)을 구하시오.</p>
+
+    </div>
+
+   
+
+    <div class="input-section">
+
+        <input type="number" id="answer" placeholder="에너지 효율(%)을 입력하세요" min="0" max="100">
+
+        <span style="font-size: 1.1em; font-weight: bold;">%</span>
+
+    </div>
+
+   
+
+    <div class="button-group">
+
+        <button class="check-btn" onclick="checkAnswer()">정답 확인</button>
+
+        <button class="new-btn" onclick="newProblem()">새 문제</button>
+
+    </div>
+
+   
+
+    <div class="result" id="result"></div>
+
+</div>
+
+
+<script>
+
+    let correctAnswer = 65;
+
+    let totalEnergy = 100;
+
+    let runningEnergy = 65;
+
+   
+
+    function newProblem() {
+
+        // 공급된 휘발유 에너지 (60-100 MJ)
+
+        totalEnergy = Math.floor(Math.random() * 41) + 60;
+
+       
+
+        // 배기 가스 (전체의 30-50%)
+
+        const exhaustPercent = Math.floor(Math.random() * 21) + 30;
+
+        const exhaust = Math.round(totalEnergy * exhaustPercent / 100);
+
+       
+
+        // 달리는 데 사용한 에너지
+
+        runningEnergy = totalEnergy - exhaust;
+
+       
+
+        // 에너지 효율 계산
+
+        correctAnswer = Math.round((runningEnergy / totalEnergy) * 100);
+
+       
+
+        document.getElementById('totalEnergy').textContent = totalEnergy;
+
+        document.getElementById('running').textContent = '❓';
+
+        document.getElementById('exhaust').textContent = exhaust;
+
+        document.getElementById('answer').value = '';
+
+        document.getElementById('result').style.display = 'none';
+
+    }
+
+   
+
+    function checkAnswer() {
+
+        const userAnswer = parseInt(document.getElementById('answer').value);
+
+        const resultDiv = document.getElementById('result');
+
+       
+
+        if (isNaN(userAnswer)) {
+
+            resultDiv.className = 'result incorrect';
+
+            resultDiv.innerHTML = '<span class="emoji">⚠️</span>답을 입력해주세요!';
+
+            resultDiv.style.display = 'block';
+
+            return;
+
+        }
+
+       
+
+        if (userAnswer === correctAnswer) {
+
+            resultDiv.className = 'result correct';
+
+            resultDiv.innerHTML = `
+
+                <span class="emoji">🎉</span>정답입니다!<br><br>
+
+                <strong>풀이:</strong><br>
+
+                달리는 데 사용한 에너지 = ${totalEnergy} - ${document.getElementById('exhaust').textContent} = ${runningEnergy} MJ<br><br>
+
+                엔진의 에너지 효율 = (${runningEnergy} ÷ ${totalEnergy}) × 100<br>
+
+                <strong>= ${correctAnswer}%</strong>
+
+            `;
+
+            document.getElementById('running').textContent = runningEnergy;
+
+        } else {
+
+            resultDiv.className = 'result incorrect';
+
+            resultDiv.innerHTML = `
+
+                <span class="emoji">❌</span>틀렸습니다.<br><br>
+
+                힌트:<br>
+
+                1. 먼저 달리는 데 사용한 에너지를 구하세요.<br>
+
+                (공급된 에너지 - 배기 가스)<br>
+
+                2. 에너지 효율 = (달리는 데 사용한 에너지 ÷ 공급된 에너지) × 100
+
+            `;
+
+        }
+
+       
+
+        resultDiv.style.display = 'block';
+
+    }
+
+   
+
+    document.getElementById('answer').addEventListener('keypress', function(e) {
+
+        if (e.key === 'Enter') {
+
+            checkAnswer();
+
+        }
+
+    });
+
+   
+
+    newProblem();
+
+</script>
+
+```
+
+
+</body>
+
+</html>
+
