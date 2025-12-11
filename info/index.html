@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용 안내</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        h1 { color: #fff; margin-bottom: 20px; }
+        .back-btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="goBack()">← 메인으로 돌아가기</button>
+        <h1>물리 시뮬레이션 갤러리 사용법</h1>
+        <h3>📱 사용 방법</h3>
+        <p>• 메인 화면에서 원하는 시뮬레이션 썸네일을 터치하세요</p>
+        <p>• 각 시뮬레이션은 새 페이지에서 실행됩니다</p>
+        <p>• 브라우저의 뒤로가기 버튼으로 메인 화면으로 돌아올 수 있습니다</p>
+        
+        <h3>🔬 시뮬레이션 목록</h3>
+        <p>총 29개의 물리 시뮬레이션이 제공됩니다:</p>
+        <p>• 파동, 전기, 자기, 역학, 열역학, 광학 등</p>
+        <p>• 모든 시뮬레이션은 학생들이 직접 제작했습니다</p>
+        
+        <h3>📞 문의사항</h3>
+        <p>시뮬레이션 관련 문의는 물리 선생님께 연락하세요.</p>
+    </div>
+    
+    <script>
+        function goBack() {
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>

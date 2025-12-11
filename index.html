@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합과학2 시뮬레이션 갤러리</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f2e780 0%, #edae5c 100%);
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .gallery-container {
+            max-width: 400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 0 10px;
+        }
+
+        .sim-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sim-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .sim-card:active {
+            transform: translateY(-2px);
+        }
+
+        .card-image {
+            flex: 1;
+            background: linear-gradient(45deg, #f0f2f5, #e1e5ea);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(102, 126, 234, 0.1) 0%, 
+                rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .card-title {
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #333;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+        }
+
+        .info-card .card-image {
+            background: transparent;
+            font-size: 28px;
+        }
+
+        .info-card .card-title {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 380px) {
+            .gallery-container {
+                gap: 10px;
+                padding: 0 5px;
+            }
+            
+            .card-title {
+                font-size: 10px;
+                padding: 6px;
+            }
+        }
+
+        @media (min-width: 480px) {
+            .gallery-container {
+                max-width: 450px;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔬 수행평가2 시뮬레이션 갤러리</h1>
+        <p>학생들이 만든 Interactive Physics Simulations</p>
+    </div>
+
+    <div class="gallery-container">
+        <!-- 안내 페이지 -->
+        <div class="sim-card info-card" onclick="openSimulation('info')">
+            <div class="card-image">ℹ️</div>
+            <div class="card-title">사용 안내</div>
+        </div>
+
+        <!-- 물리 시뮬레이션들 -->
+        <div class="sim-card" onclick="openSimulation('sim01')">
+            <div class="card-image">
+                <img src="thumbnails/sim01.png" alt="1101 강다현">
+            </div>
+            <div class="card-title">1101 강다현</div>
+        </div>
+
+        <div class="sim-card" onclick="openSimulation('sim02')">
+            <div class="card-image">
+                <img src="thumbnails/sim02.png" alt="1102 강지연">
+            </div>
+            <div class="card-title">1102 강지연</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim03')">
+            <div class="card-image">
+                <img src="thumbnails/sim03.png" alt="1103 곽서현">
+            </div>
+            <div class="card-title">1103 곽서현</div>
+        </div>
+
+
+
+         <div class="sim-card" onclick="openSimulation('sim04')">
+            <div class="card-image">
+                <img src="thumbnails/sim04.png" alt="1104 김경린">
+            </div>
+            <div class="card-title">1104 김경린</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim05')">
+            <div class="card-image">
+                <img src="thumbnails/sim05.png" alt="1105 김난경">
+            </div>
+            <div class="card-title">1105 김난경</div>
+        </div>
+
+        <div class="sim-card" onclick="openSimulation('sim06')">
+            <div class="card-image">
+                <img src="thumbnails/sim06.png" alt="1106 박가연">
+            </div>
+            <div class="card-title">1106 박가연</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim07')">
+            <div class="card-image">
+                <img src="thumbnails/sim07.png" alt="1107 박금결">
+            </div>
+            <div class="card-title">1107 박금결</div>
+        </div>
+
+        <div class="sim-card" onclick="openSimulation('sim08')">
+            <div class="card-image">
+                <img src="thumbnails/sim08.png" alt="1108 박지민">
+            </div>
+            <div class="card-title">1108 박지민</div>
+        </div>
+
+
+         <div class="sim-card" onclick="openSimulation('sim09')">
+            <div class="card-image">
+                <img src="thumbnails/sim09.png" alt="1109 배자은">
+            </div>
+            <div class="card-title">1109 배자은</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim10')">
+            <div class="card-image">
+                <img src="thumbnails/sim10.png" alt="1110 사예나">
+            </div>
+            <div class="card-title">1110 사예나</div>
+        </div>
+
+        <div class="sim-card" onclick="openSimulation('sim11')">
+            <div class="card-image">
+                <img src="thumbnails/sim11.png" alt="1111 송효주">
+            </div>
+            <div class="card-title">1111 송효주</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim12')">
+            <div class="card-image">
+                <img src="thumbnails/sim12.png" alt="1112 신가람">
+            </div>
+            <div class="card-title">1112 신가람</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim13')">
+            <div class="card-image">
+                <img src="thumbnails/sim13.png" alt="1113 양예진">
+            </div>
+            <div class="card-title">1113 양예진</div>
+        </div>
+
+        <div class="sim-card" onclick="openSimulation('sim14')">
+            <div class="card-image">
+                <img src="thumbnails/sim14.png" alt="1114 유화평">
+            </div>
+            <div class="card-title">1114 유화평</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim15')">
+            <div class="card-image">
+                <img src="thumbnails/sim15.png" alt="1115 이보현">
+            </div>
+            <div class="card-title">1115 이보현</div>
+        </div>
+
+    
+        <div class="sim-card" onclick="openSimulation('sim17')">
+            <div class="card-image">
+                <img src="thumbnails/sim17.png" alt="1117 이효주">
+            </div>
+            <div class="card-title">1117 이효주</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim18')">
+            <div class="card-image">
+                <img src="thumbnails/sim18.png" alt="1118 임우빈">
+            </div>
+            <div class="card-title">1118 임우빈</div>
+        </div>
+
+        <div class="sim-card" onclick="openSimulation('sim19')">
+            <div class="card-image">
+                <img src="thumbnails/sim19.png" alt="1119 전선화">
+            </div>
+            <div class="card-title">1119 전선화</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim20')">
+            <div class="card-image">
+                <img src="thumbnails/sim20.png" alt="1120 전혜주">
+            </div>
+            <div class="card-title">1120 전혜주</div>
+        </div>
+
+         <div class="sim-card" onclick="openSimulation('sim21')">
+            <div class="card-image">
+                <img src="thumbnails/sim21.png" alt="1121 최서현">
+            </div>
+            <div class="card-title">1121 최서현</div>
+        </div>
+
+               
+
+
+    </div>
+
+    <script>
+        function openExternalLink(url) {
+            window.open(url, '_blank');
+        }
+
+        function openSimulation(simId) {
+            if (simId === 'info') {
+                window.location.href = './info/index.html';
+            } else {
+                window.location.href = `./simulations/${simId}/index.html`;
+            }
+        }
+
+        // 터치 피드백 개선
+        document.querySelectorAll('.sim-card').forEach(card => {
+            card.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(-2px) scale(0.98)';
+            });
+            
+            card.addEventListener('touchend', function() {
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

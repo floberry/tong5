@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>열기관 효율 연습</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .problem-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        
+        .problem-box strong {
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .values {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .value-item {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        
+        .answer-section {
+            margin: 25px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .new-problem-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .new-problem-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .check-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .result.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 열기관 효율 계산</h1>
+        <div class="subtitle">유화평 학생의 통합과학2 연습</div>
+        
+        <div class="problem-box">
+            <strong>문제 15번</strong>
+            <p style="margin-top: 10px;">
+                그림은 화석 연료가 연소할 때 발생하는 열에너지를 이용하여 동력을 얻는 장치인 열기관을 나타낸 것이다.
+            </p>
+            <div class="values">
+                <div class="value-item">• 고열원으로부터 공급받은 열에너지: <strong><span id="inputEnergy">600</span> kJ</strong></div>
+                <div class="value-item">• 저열원으로 방출한 열에너지: <strong><span id="outputEnergy">480</span> kJ</strong></div>
+            </div>
+            <p>이 열기관의 열효율이 몇 %인지 계산 과정과 함께 구하시오.</p>
+        </div>
+        
+        <div class="answer-section">
+            <label>📝 정답 입력 (단위: %)</label>
+            <input type="number" id="userAnswer" placeholder="열효율을 입력하세요" min="0" max="100" step="1">
+        </div>
+        
+        <div class="button-group">
+            <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새문제</button>
+            <button class="check-btn" onclick="checkAnswer()">✓ 정답확인</button>
+        </div>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">맞춘 문제</div>
+                <div class="stat-value" id="correct">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">전체 문제</div>
+                <div class="stat-value" id="total">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">정답률</div>
+                <div class="stat-value" id="accuracy">0%</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentInput = 600;
+        let currentOutput = 480;
+        let correctCount = 0;
+        let totalCount = 0;
+        
+        function generateNewProblem() {
+            // 효율이 자연수가 되도록 설정 (10%, 20%, 25%, 30%, 40%, 50%)
+            const efficiencies = [10, 20, 25, 30, 40, 50];
+            const efficiency = efficiencies[Math.floor(Math.random() * efficiencies.length)];
+            
+            // 고열원 에너지를 효율에 맞게 설정 (일이 자연수가 되도록)
+            // 100의 배수로 설정하여 모든 효율에서 자연수 결과 보장
+            currentInput = Math.floor(Math.random() * 9 + 2) * 100; // 200~1000 (100 단위)
+            
+            // 실제로 한 일 계산 (항상 자연수)
+            const work = currentInput * efficiency / 100;
+            
+            // 저열원 방출 에너지 계산 (항상 자연수)
+            currentOutput = currentInput - work;
+            
+            document.getElementById('inputEnergy').textContent = currentInput;
+            document.getElementById('outputEnergy').textContent = currentOutput;
+            document.getElementById('userAnswer').value = '';
+            document.getElementById('result').style.display = 'none';
+        }
+        
+        function checkAnswer() {
+            const userAnswer = parseFloat(document.getElementById('userAnswer').value);
+            
+            if (isNaN(userAnswer)) {
+                alert('답을 입력해주세요!');
+                return;
+            }
+            
+            // 열기관이 한 일 계산
+            const work = currentInput - currentOutput;
+            
+            // 정답 계산
+            const correctAnswer = (work / currentInput) * 100;
+            
+            const resultDiv = document.getElementById('result');
+            totalCount++;
+            
+            // 오차 범위 ±0.5% 허용
+            if (Math.abs(userAnswer - correctAnswer) < 0.5) {
+                correctCount++;
+                resultDiv.className = 'result correct';
+                resultDiv.innerHTML = `
+                    🎉 정답입니다!<br>
+                    <div style="margin-top: 15px; font-size: 14px; text-align: left; line-height: 1.8;">
+                        <strong>📚 계산 과정:</strong><br>
+                        ① 열기관이 한 일(W) 구하기<br>
+                        &nbsp;&nbsp;&nbsp;W = 고열원 에너지 - 저열원 에너지<br>
+                        &nbsp;&nbsp;&nbsp;W = ${currentInput} kJ - ${currentOutput} kJ = ${work} kJ<br><br>
+                        ② 열효율 구하기<br>
+                        &nbsp;&nbsp;&nbsp;열효율 = (열기관이 한 일 / 공급받은 에너지) × 100<br>
+                        &nbsp;&nbsp;&nbsp;열효율 = (${work} kJ / ${currentInput} kJ) × 100<br>
+                        &nbsp;&nbsp;&nbsp;열효율 = ${correctAnswer}%
+                    </div>
+                `;
+            } else {
+                resultDiv.className = 'result incorrect';
+                resultDiv.innerHTML = `
+                    ❌ 틀렸습니다. 정답은 ${correctAnswer}% 입니다.<br>
+                    <div style="margin-top: 15px; font-size: 14px; text-align: left; line-height: 1.8;">
+                        <strong>📚 계산 과정:</strong><br>
+                        ① 열기관이 한 일(W) 구하기<br>
+                        &nbsp;&nbsp;&nbsp;W = 고열원 에너지 - 저열원 에너지<br>
+                        &nbsp;&nbsp;&nbsp;W = ${currentInput} kJ - ${currentOutput} kJ = ${work} kJ<br><br>
+                        ② 열효율 구하기<br>
+                        &nbsp;&nbsp;&nbsp;열효율 = (열기관이 한 일 / 공급받은 에너지) × 100<br>
+                        &nbsp;&nbsp;&nbsp;열효율 = (${work} kJ / ${currentInput} kJ) × 100<br>
+                        &nbsp;&nbsp;&nbsp;열효율 = ${correctAnswer}%
+                    </div>
+                `;
+            }
+            
+            resultDiv.style.display = 'block';
+            updateStats();
+        }
+        
+        function updateStats() {
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('total').textContent = totalCount;
+            const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+        
+        // 엔터키로 정답 확인
+        document.getElementById('userAnswer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    </script>
+</body>
+</html>

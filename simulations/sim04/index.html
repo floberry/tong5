@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 비교 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        
+        .device {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .device:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .device.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #e0e7ff 0%, #cfd9ff 100%);
+        }
+        
+        .device-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .device-data {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .label {
+            color: #555;
+        }
+        
+        .value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .efficiency {
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #764ba2;
+        }
+        
+        .selection-order {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .selection-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .selection-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .selection-item {
+            background: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .selection-item.empty {
+            color: #ccc;
+            border: 2px dashed #ddd;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .new-problem-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .new-problem-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .reset-btn {
+            background: #e0e0e0;
+            color: #666;
+        }
+        
+        .reset-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        .check-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        .check-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .result.correct {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #2d5f3d;
+        }
+        
+        .result.incorrect {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #8b3a3a;
+        }
+        
+        .instruction {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .instruction strong {
+            color: #f5576c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 비교</h1>
+        <div class="subtitle">통합과학 - 에너지 효율 연습</div>
+        
+        <div class="instruction">
+            <strong>문제:</strong> 세 장치의 에너지 효율을 계산하고, <strong>효율이 높은 순서대로</strong> 장치를 클릭하여 정렬하세요.
+        </div>
+        
+        <div id="devices"></div>
+        
+        <div class="selection-order">
+            <div class="selection-title">선택 순서 (높은 효율 → 낮은 효율)</div>
+            <div class="selection-display">
+                <div class="selection-item empty" id="pos1">?</div>
+                <div class="selection-item empty" id="pos2">?</div>
+                <div class="selection-item empty" id="pos3">?</div>
+            </div>
+            <div class="button-group">
+                <button class="reset-btn" onclick="resetSelection()">선택 초기화</button>
+                <button class="check-btn" id="checkBtn" onclick="checkAnswer()" disabled>정답 확인</button>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+        
+        <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
+    </div>
+
+    <script>
+        let devices = [];
+        let selectedOrder = [];
+        let correctOrder = [];
+
+        function generateNewProblem() {
+            devices = [];
+            selectedOrder = [];
+            document.getElementById('result').innerHTML = '';
+            
+            const deviceNames = ['A', 'B', 'C'];
+            
+            for (let i = 0; i < 3; i++) {
+                const suppliedEnergy = Math.floor(Math.random() * 401) + 100; // 100-500 J
+                const efficiency = Math.floor(Math.random() * 51) + 20; // 20-70%
+                const usefulEnergy = Math.round(suppliedEnergy * efficiency / 100);
+                
+                devices.push({
+                    name: deviceNames[i],
+                    supplied: suppliedEnergy,
+                    useful: usefulEnergy,
+                    efficiency: efficiency
+                });
+            }
+            
+            // 정답 순서 계산 (효율 높은 순)
+            correctOrder = devices
+                .map((d, idx) => ({...d, originalIndex: idx}))
+                .sort((a, b) => b.efficiency - a.efficiency)
+                .map(d => d.name);
+            
+            renderDevices();
+            resetSelection();
+        }
+
+        function renderDevices() {
+            const container = document.getElementById('devices');
+            container.innerHTML = '';
+            
+            devices.forEach((device, index) => {
+                const div = document.createElement('div');
+                div.className = 'device';
+                div.onclick = () => selectDevice(device.name);
+                
+                div.innerHTML = `
+                    <div class="device-name">장치 ${device.name}</div>
+                    <div class="device-data">
+                        <span class="label">공급된 에너지:</span>
+                        <span class="value">${device.supplied} J</span>
+                    </div>
+                    <div class="device-data">
+                        <span class="label">유용한 에너지:</span>
+                        <span class="value">${device.useful} J</span>
+                    </div>
+                    <div class="efficiency">
+                        에너지 효율: ${device.efficiency}%
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        function selectDevice(name) {
+            // 이미 선택된 장치를 다시 클릭하면 선택 취소
+            if (selectedOrder.includes(name)) {
+                selectedOrder = selectedOrder.filter(item => item !== name);
+                updateSelection();
+                return;
+            }
+            
+            if (selectedOrder.length >= 3) {
+                return; // 3개 모두 선택됨
+            }
+            
+            selectedOrder.push(name);
+            updateSelection();
+        }
+
+        function updateSelection() {
+            // 장치 강조 표시 업데이트
+            const deviceDivs = document.querySelectorAll('.device');
+            deviceDivs.forEach((div, index) => {
+                const deviceName = devices[index].name;
+                if (selectedOrder.includes(deviceName)) {
+                    div.classList.add('selected');
+                } else {
+                    div.classList.remove('selected');
+                }
+            });
+            
+            // 선택 순서 표시 업데이트
+            for (let i = 0; i < 3; i++) {
+                const posDiv = document.getElementById(`pos${i + 1}`);
+                if (i < selectedOrder.length) {
+                    posDiv.textContent = selectedOrder[i];
+                    posDiv.classList.remove('empty');
+                } else {
+                    posDiv.textContent = '?';
+                    posDiv.classList.add('empty');
+                }
+            }
+            
+            // 정답 확인 버튼 활성화
+            document.getElementById('checkBtn').disabled = selectedOrder.length < 3;
+        }
+
+        function resetSelection() {
+            selectedOrder = [];
+            updateSelection();
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function checkAnswer() {
+            const resultDiv = document.getElementById('result');
+            const isCorrect = JSON.stringify(selectedOrder) === JSON.stringify(correctOrder);
+            
+            if (isCorrect) {
+                resultDiv.className = 'result correct';
+                resultDiv.innerHTML = '🎉 정답입니다!<br>에너지 효율이 높은 순서대로 잘 정렬했습니다.';
+            } else {
+                resultDiv.className = 'result incorrect';
+                resultDiv.innerHTML = `❌ 틀렸습니다.<br>정답: ${correctOrder.join(' → ')}<br>다시 도전해보세요!`;
+            }
+        }
+
+        // 초기 문제 생성
+        generateNewProblem();
+    </script>
+</body>
+</html>

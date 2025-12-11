@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 95vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .problem-type {
+            text-align: center;
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-section {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .table-container {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .calculation-section {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00bcd4;
+        }
+
+        .calc-title {
+            font-weight: bold;
+            color: #00695c;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .calc-item {
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .calc-item span {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #1565c0;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .power-selection {
+            margin-bottom: 20px;
+        }
+
+        .power-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .power-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .power-btn {
+            padding: 15px;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .power-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .power-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .result-section {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff9800;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .result-text {
+            color: #333;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .result-text.correct {
+            color: #2e7d32;
+        }
+
+        .result-text.incorrect {
+            color: #c62828;
+        }
+
+        .button-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button.main-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-new {
+            background: #00bcd4;
+            color: white;
+        }
+
+        .btn-new:hover {
+            background: #0097a7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+        }
+
+        .btn-reset {
+            background: #757575;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #616161;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(117, 117, 117, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .question-text {
+                font-size: 15px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ 에너지 효율 시뮬레이션</h1>
+            <p>발전소의 에너지 효율을 비교해보세요</p>
+        </div>
+
+        <div class="problem-type" id="problemType">유형 1</div>
+
+        <div class="info-box">
+            💡 같은 양의 에너지를 공급했을 때, 어느 발전소가 더 많은 전기 에너지를 생산할까요?
+        </div>
+
+        <div class="question-section" id="questionSection">
+            <div class="question-number">문제</div>
+            <div class="question-text" id="questionText">
+                표는 전기 에너지를 생산하는 발전소 A, B, C에 대한 자료입니다. 공급된 에너지의 양이 같을 때, A, B, C에서 생산하는 전기 에너지의 양을 옳게 비교한 것은?
+            </div>
+
+            <div class="table-container" id="tableContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>발전소</th>
+                            <th>발전 방식</th>
+                            <th>공급 에너지 (MJ)</th>
+                            <th>생산 전기 에너지 (MJ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A</strong></td>
+                            <td>수력 발전</td>
+                            <td id="inputA">100</td>
+                            <td id="outputA">85</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B</strong></td>
+                            <td>태양광 발전</td>
+                            <td id="inputB">100</td>
+                            <td id="outputB">18</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C</strong></td>
+                            <td>화력 발전</td>
+                            <td id="inputC">100</td>
+                            <td id="outputC">42</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="calculation-section">
+            <div class="calc-title">📊 전기 에너지 생산량 비교</div>
+            <div class="calc-item">
+                발전소 A: <span id="calcA">85</span> MJ
+            </div>
+            <div class="calc-item">
+                발전소 B: <span id="calcB">18</span> MJ
+            </div>
+            <div class="calc-item">
+                발전소 C: <span id="calcC">42</span> MJ
+            </div>
+            <div class="calc-item" style="background: #fff9c4; border-left: 3px solid #fbc02d; margin-top: 10px;">
+                내 답: <span id="myAnswer">선택하세요</span>
+            </div>
+        </div>
+
+        <div class="power-selection">
+            <div class="power-title" id="powerTitle">발전소 선택 (큰 순서대로 클릭)</div>
+            <div class="power-buttons">
+                <button class="power-btn" id="btnA" onclick="selectPower('A')">A</button>
+                <button class="power-btn" id="btnB" onclick="selectPower('B')">B</button>
+                <button class="power-btn" id="btnC" onclick="selectPower('C')">C</button>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title" id="resultTitle">결과</div>
+            <div class="result-text" id="resultText"></div>
+        </div>
+
+        <div class="button-section">
+            <button class="main-btn btn-check" onclick="checkAnswer()">정답 확인</button>
+            <button class="main-btn btn-new" onclick="generateNewProblem()">새 문제</button>
+            <button class="main-btn btn-reset" onclick="resetProblem()">초기화</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedPowers = [];
+        let clickedPowers = {};
+        let currentProblemType = 1;
+        let currentData = {};
+
+        const efficiencyData = [
+            { A: 80, B: 10, C: 40 },
+            { A: 70, B: 20, C: 30 },
+            { A: 90, B: 10, C: 50 },
+            { A: 80, B: 20, C: 40 },
+            { A: 60, B: 10, C: 50 },
+            { A: 70, B: 30, C: 30 },
+            { A: 80, B: 20, C: 50 },
+            { A: 90, B: 30, C: 40 },
+            { A: 70, B: 10, C: 60 },
+            { A: 60, B: 30, C: 40 }
+        ];
+
+        function selectPower(power) {
+            if (clickedPowers[power]) {
+                selectedPowers = selectedPowers.filter(function(p) {
+                    return p !== power;
+                });
+                clickedPowers[power] = false;
+                document.getElementById('btn' + power).classList.remove('active');
+            } else {
+                selectedPowers.push(power);
+                clickedPowers[power] = true;
+                document.getElementById('btn' + power).classList.add('active');
+            }
+            updateMyAnswer();
+        }
+
+        function updateMyAnswer() {
+            var answerText = selectedPowers.length > 0 ? selectedPowers.join(' > ') : '선택하세요';
+            document.getElementById('myAnswer').textContent = answerText;
+        }
+
+        function resetOptions() {
+            selectedPowers = [];
+            clickedPowers = {};
+            var buttons = document.querySelectorAll('.power-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            document.getElementById('myAnswer').textContent = '선택하세요';
+        }
+
+        function getCorrectAnswer() {
+            var powers = [
+                { name: 'A', value: currentData.A },
+                { name: 'B', value: currentData.B },
+                { name: 'C', value: currentData.C }
+            ];
+            powers.sort(function(a, b) {
+                return a.value - b.value;
+            });
+            return powers.map(function(p) { return p.name; });
+        }
+
+        function checkAnswer() {
+            if (selectedPowers.length === 0) {
+                alert('발전소를 선택해주세요.');
+                return;
+            }
+
+            var correctAnswer = getCorrectAnswer();
+            var isCorrect = selectedPowers.length === correctAnswer.length &&
+                selectedPowers.every(function(power, index) {
+                    return power === correctAnswer[index];
+                });
+
+            var resultSection = document.getElementById('resultSection');
+            var resultTitle = document.getElementById('resultTitle');
+            var resultText = document.getElementById('resultText');
+
+            if (isCorrect) {
+                resultTitle.textContent = '✓ 정답입니다!';
+                resultText.className = 'result-text correct';
+                resultText.innerHTML = '축하합니다! 공급된 에너지의 양이 같을 때는 생산하는 전기 에너지의 양을 직접 비교하면 됩니다.';
+            } else {
+                resultTitle.textContent = '✗ 틀렸습니다.';
+                resultText.className = 'result-text incorrect';
+                var correctStr = correctAnswer.join(' > ');
+                resultText.innerHTML = '정답: <strong>' + correctStr + '</strong><br><br>각 발전소가 생산하는 전기 에너지의 양을 비교하여 큰 순서대로 나열하면 정답을 구할 수 있습니다.';
+            }
+
+            resultSection.classList.add('show');
+        }
+
+        function resetProblem() {
+            resetOptions();
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function createProblemType1() {
+            currentProblemType = 1;
+            document.getElementById('problemType').textContent = '유형 1: 생산량 비교';
+            document.getElementById('powerTitle').textContent = '발전소 선택 (큰 순서대로 클릭)';
+            document.getElementById('questionText').textContent = '표는 전기 에너지를 생산하는 발전소 A, B, C에 대한 자료입니다. 공급된 에너지의 양이 같을 때, A, B, C에서 생산하는 전기 에너지의 양을 옳게 비교한 것은?';
+            document.getElementById('tableContainer').innerHTML = '<table><thead><tr><th>발전소</th><th>발전 방식</th><th>공급 에너지 (MJ)</th><th>생산 전기 에너지 (MJ)</th></tr></thead><tbody><tr><td><strong>A</strong></td><td>수력 발전</td><td id="inputA">100</td><td id="outputA">' + currentData.A + '</td></tr><tr><td><strong>B</strong></td><td>태양광 발전</td><td id="inputB">100</td><td id="outputB">' + currentData.B + '</td></tr><tr><td><strong>C</strong></td><td>화력 발전</td><td id="inputC">100</td><td id="outputC">' + currentData.C + '</td></tr></tbody></table>';
+            document.getElementById('calcA').textContent = currentData.A;
+            document.getElementById('calcB').textContent = currentData.B;
+            document.getElementById('calcC').textContent = currentData.C;
+        }
+
+        function createProblemType2() {
+            currentProblemType = 2;
+            document.getElementById('problemType').textContent = '유형 2: 가장 적게 생산하는 발전소';
+            document.getElementById('powerTitle').textContent = '가장 적게 생산하는 발전소부터 가장 많이 생산하는 발전소 순으로 클릭';
+            document.getElementById('questionText').textContent = '표는 같은 양의 에너지를 공급받아 생산한 전기 에너지를 나타낸 것입니다. 생산량이 적은 순서대로 발전소를 나열하면?';
+            document.getElementById('tableContainer').innerHTML = '<table><thead><tr><th>발전소</th><th>발전 방식</th><th>생산 전기 에너지 (MJ)</th></tr></thead><tbody><tr><td><strong>A</strong></td><td>수력 발전</td><td id="outputA">' + currentData.A + '</td></tr><tr><td><strong>B</strong></td><td>태양광 발전</td><td id="outputB">' + currentData.B + '</td></tr><tr><td><strong>C</strong></td><td>화력 발전</td><td id="outputC">' + currentData.C + '</td></tr></tbody></table>';
+            document.getElementById('calcA').textContent = currentData.A;
+            document.getElementById('calcB').textContent = currentData.B;
+            document.getElementById('calcC').textContent = currentData.C;
+        }
+
+        function createProblemType3() {
+            currentProblemType = 3;
+            document.getElementById('problemType').textContent = '유형 3: 효율 계산';
+            document.getElementById('powerTitle').textContent = '효율이 높은 순서대로 클릭';
+            document.getElementById('questionText').textContent = '표는 같은 양의 에너지를 공급받아 생산한 전기 에너지를 나타낸 것입니다. 에너지 효율이 높은 순서대로 발전소를 나열하면? (공급 에너지: 100 MJ)';
+            document.getElementById('tableContainer').innerHTML = '<table><thead><tr><th>발전소</th><th>생산 전기 에너지 (MJ)</th></tr></thead><tbody><tr><td><strong>A</strong></td><td id="outputA">' + currentData.A + '</td></tr><tr><td><strong>B</strong></td><td id="outputB">' + currentData.B + '</td></tr><tr><td><strong>C</strong></td><td id="outputC">' + currentData.C + '</td></tr></tbody></table>';
+            document.getElementById('calcA').textContent = (currentData.A / 100 * 100).toFixed(0) + '%';
+            document.getElementById('calcB').textContent = (currentData.B / 100 * 100).toFixed(0) + '%';
+            document.getElementById('calcC').textContent = (currentData.C / 100 * 100).toFixed(0) + '%';
+        }
+
+        function generateNewProblem() {
+            resetOptions();
+            var randomIdx = Math.floor(Math.random() * efficiencyData.length);
+            currentData = efficiencyData[randomIdx];
+            var problemType = Math.floor(Math.random() * 3) + 1;
+
+            if (problemType === 1) {
+                createProblemType1();
+            } else if (problemType === 2) {
+                createProblemType2();
+            } else {
+                createProblemType3();
+            }
+
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        generateNewProblem();
+    </script>
+</body>
+</html>

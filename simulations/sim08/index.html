@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .problem-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .problem-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .problem-content {
+            color: #212529;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        
+        .multiple-answer-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+            color: #856404;
+            font-size: 14px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        
+        .data-table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .visual-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        .energy-diagram {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        
+        .energy-box {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .input-energy {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: 2px solid #c92a2a;
+        }
+        
+        .output-energy {
+            background: linear-gradient(135deg, #51cf66, #37b24d);
+            color: white;
+            border: 2px solid #2b8a3e;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #495057;
+            font-weight: bold;
+        }
+        
+        .plant-icon {
+            font-size: 32px;
+            margin: 0 5px;
+        }
+        
+        .options {
+            margin-top: 20px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .option.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .option.wrong {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        .option-number {
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-new {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-new:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-check {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-check:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .result.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .result.partial {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+        
+        .explanation {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1.8;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .explanation-step {
+            margin: 8px 0;
+            padding-left: 10px;
+        }
+        
+        .formula {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 시뮬레이션</h1>
+        <div class="subtitle">통합과학 - 에너지 전환과 효율</div>
+        
+        <div class="problem-box">
+            <div class="problem-title" id="problemNumber">1번 문제</div>
+            <div class="problem-content" id="problemText"></div>
+            <table class="data-table" id="dataTable"></table>
+            <div class="multiple-answer-notice" id="multipleNotice" style="display: none;">
+                ⚠️ 이 문제는 복수 정답입니다. 정답을 모두 선택해야 합니다.
+            </div>
+            <div class="problem-content">
+                공급된 에너지의 양이 같을 때, A, B, C에서 생산하는 전기 에너지의 양을 옳게 비교한 것은?
+            </div>
+        </div>
+        
+        <div class="options" id="options"></div>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="buttons">
+            <button class="btn btn-new" onclick="generateNewProblem()">🔄 새 문제</button>
+            <button class="btn btn-check" id="checkBtn" onclick="checkAnswer()">✓ 정답 확인</button>
+        </div>
+    </div>
+
+    <script>
+        let currentProblem = {};
+        let selectedAnswers = [];
+        let answered = false;
+        let problemNumber = 1;
+
+        function generateNewProblem() {
+            // 랜덤 값 생성 (10 단위)
+            const inputA = Math.floor(Math.random() * 11) * 10; // 0-100
+            const outputA = Math.floor(Math.random() * (inputA/10 + 1)) * 10;
+            
+            const inputB = Math.floor(Math.random() * 11) * 10;
+            const outputB = Math.floor(Math.random() * (inputB/10 + 1)) * 10;
+            
+            const inputC = Math.floor(Math.random() * 11) * 10;
+            const outputC = Math.floor(Math.random() * (inputC/10 + 1)) * 10;
+
+            // 효율 계산
+            const effA = inputA > 0 ? outputA / inputA : 0;
+            const effB = inputB > 0 ? outputB / inputB : 0;
+            const effC = inputC > 0 ? outputC / inputC : 0;
+
+            // 같은 입력 에너지에 대한 출력 비교를 위해 표준화
+            const normalizedA = effA * 100;
+            const normalizedB = effB * 100;
+            const normalizedC = effC * 100;
+
+            currentProblem = {
+                inputA, outputA, effA: effA * 100,
+                inputB, outputB, effB: effB * 100,
+                inputC, outputC, effC: effC * 100,
+                normalizedA, normalizedB, normalizedC
+            };
+
+            document.getElementById('problemNumber').textContent = `${problemNumber}번 문제`;
+            problemNumber = (problemNumber % 5) + 1; // 1-5 순환
+
+            displayProblem();
+            generateOptions();
+            resetAnswer();
+        }
+
+        function displayProblem() {
+            const problemText = `표는 전기 에너지를 생산하는 발전소 A, B, C에 대한 자료이다.`;
+            document.getElementById('problemText').innerHTML = problemText;
+
+            const tableHTML = `
+                <tr>
+                    <th>발전소</th>
+                    <th>발전 방식</th>
+                    <th>에너지 변환 과정</th>
+                </tr>
+                <tr>
+                    <td><strong>A</strong></td>
+                    <td>💧 수력 발전</td>
+                    <td>
+                        <div class="visual-row">
+                            <div class="energy-diagram">
+                                <div class="energy-box input-energy">${currentProblem.inputA} MJ</div>
+                                <span class="arrow">→</span>
+                                <span class="plant-icon">🏭</span>
+                                <span class="arrow">→</span>
+                                <div class="energy-box output-energy">${currentProblem.outputA} MJ</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>B</strong></td>
+                    <td>☀️ 태양광 발전</td>
+                    <td>
+                        <div class="visual-row">
+                            <div class="energy-diagram">
+                                <div class="energy-box input-energy">${currentProblem.inputB} kJ</div>
+                                <span class="arrow">→</span>
+                                <span class="plant-icon">🔆</span>
+                                <span class="arrow">→</span>
+                                <div class="energy-box output-energy">${currentProblem.outputB} kJ</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>C</strong></td>
+                    <td>🔥 화력 발전</td>
+                    <td>
+                        <div class="visual-row">
+                            <div class="energy-diagram">
+                                <div class="energy-box input-energy">${currentProblem.inputC} MJ</div>
+                                <span class="arrow">→</span>
+                                <span class="plant-icon">⚡</span>
+                                <span class="arrow">→</span>
+                                <div class="energy-box output-energy">${currentProblem.outputC} MJ</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            document.getElementById('dataTable').innerHTML = tableHTML;
+        }
+
+        function generateOptions() {
+            const values = [
+                { name: 'A', value: currentProblem.normalizedA },
+                { name: 'B', value: currentProblem.normalizedB },
+                { name: 'C', value: currentProblem.normalizedC }
+            ];
+
+            // 정렬하여 정답 찾기
+            const sorted = [...values].sort((a, b) => b.value - a.value);
+            
+            // 동점자 확인
+            const correctAnswers = [];
+            const firstValue = sorted[0].value;
+            
+            // 가장 높은 효율과 같은 값을 가진 모든 발전소 찾기
+            for (let i = 0; i < sorted.length; i++) {
+                if (Math.abs(sorted[i].value - firstValue) < 0.01) { // 부동소수점 오차 고려
+                    correctAnswers.push(sorted[i].name);
+                }
+            }
+            
+            // 복수 정답 여부 확인
+            const isMultipleAnswer = correctAnswers.length > 1;
+            currentProblem.isMultipleAnswer = isMultipleAnswer;
+            currentProblem.correctAnswers = correctAnswers;
+            currentProblem.sorted = sorted;
+
+            // 복수 정답 안내 표시
+            const noticeElement = document.getElementById('multipleNotice');
+            if (isMultipleAnswer) {
+                noticeElement.style.display = 'block';
+                noticeElement.textContent = `⚠️ 이 문제는 복수 정답입니다. 정답 ${correctAnswers.length}개를 모두 선택해야 합니다.`;
+            } else {
+                noticeElement.style.display = 'none';
+            }
+
+            // 정답 문자열 생성 (등호 포함)
+            function createAnswerString(sortedValues) {
+                let result = sortedValues[0].name;
+                for (let i = 1; i < sortedValues.length; i++) {
+                    if (Math.abs(sortedValues[i].value - sortedValues[i-1].value) < 0.01) {
+                        result += ' = ' + sortedValues[i].name;
+                    } else {
+                        result += ' > ' + sortedValues[i].name;
+                    }
+                }
+                return result;
+            }
+
+            // 모든 가능한 조합 생성
+            let allCombinations = [];
+            
+            if (isMultipleAnswer) {
+                // 복수 정답인 경우: 효율이 같은 발전소들의 순열 생성
+                const equalPlants = correctAnswers;
+                const remainingPlants = sorted.filter(s => !equalPlants.includes(s.name)).map(s => s.name);
+                
+                // 같은 효율의 발전소들을 순서를 바꿔가며 조합 생성
+                function permute(arr) {
+                    if (arr.length <= 1) return [arr];
+                    const result = [];
+                    for (let i = 0; i < arr.length; i++) {
+                        const current = arr[i];
+                        const remaining = arr.slice(0, i).concat(arr.slice(i + 1));
+                        const perms = permute(remaining);
+                        for (const perm of perms) {
+                            result.push([current, ...perm]);
+                        }
+                    }
+                    return result;
+                }
+                
+                const equalPerms = permute(equalPlants);
+                
+                for (const perm of equalPerms) {
+                    const equalPart = perm.join(' = ');
+                    if (remainingPlants.length > 0) {
+                        allCombinations.push(equalPart + ' > ' + remainingPlants.join(' > '));
+                    } else {
+                        allCombinations.push(equalPart);
+                    }
+                }
+            } else {
+                // 단일 정답인 경우: 기존 6개 조합
+                allCombinations = [
+                    'A > B > C',
+                    'A > C > B',
+                    'B > A > C',
+                    'B > C > A',
+                    'C > A > B',
+                    'C > B > A'
+                ];
+            }
+
+            // 5개만 선택 (정답은 반드시 포함)
+            let selectedCombinations = [];
+            
+            if (isMultipleAnswer) {
+                // 복수 정답인 경우 모든 정답 조합 추가
+                selectedCombinations = allCombinations.slice(0, Math.min(correctAnswers.length, 5));
+            } else {
+                // 단일 정답인 경우
+                const correctAnswer = createAnswerString(sorted);
+                const correctIndex = allCombinations.indexOf(correctAnswer);
+                if (correctIndex !== -1) {
+                    selectedCombinations.push(correctAnswer);
+                    const remaining = allCombinations.filter((_, index) => index !== correctIndex);
+                    const shuffled = remaining.sort(() => Math.random() - 0.5);
+                    selectedCombinations = selectedCombinations.concat(shuffled.slice(0, 4));
+                }
+            }
+            
+            // 나머지 선지 추가 (5개가 안되면)
+            if (selectedCombinations.length < 5) {
+                const basicCombos = [
+                    'A > B > C',
+                    'A > C > B',
+                    'B > A > C',
+                    'B > C > A',
+                    'C > A > B',
+                    'C > B > A'
+                ];
+                const remaining = basicCombos.filter(combo => !selectedCombinations.includes(combo));
+                const shuffled = remaining.sort(() => Math.random() - 0.5);
+                selectedCombinations = selectedCombinations.concat(shuffled.slice(0, 5 - selectedCombinations.length));
+            }
+            
+            // 5개를 랜덤하게 섞기
+            selectedCombinations.sort(() => Math.random() - 0.5);
+
+            const optionNumbers = ['①', '②', '③', '④', '⑤'];
+            const optionsHTML = selectedCombinations.slice(0, 5).map((combo, index) => `
+                <div class="option" onclick="selectOption('${combo}')">
+                    <span class="option-number">${optionNumbers[index]}</span>
+                    <span>${combo}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('options').innerHTML = optionsHTML;
+        }
+
+        function selectOption(answer) {
+            if (answered) return;
+
+            const clickedOption = event.currentTarget;
+            
+            // 복수 정답인 경우
+            if (currentProblem.isMultipleAnswer) {
+                // 이미 선택된 선지를 다시 클릭하면 선택 취소
+                if (clickedOption.classList.contains('selected')) {
+                    clickedOption.classList.remove('selected');
+                    selectedAnswers = selectedAnswers.filter(a => a !== answer);
+                } else {
+                    // 새로운 선지 선택
+                    clickedOption.classList.add('selected');
+                    selectedAnswers.push(answer);
+                }
+            } else {
+                // 단일 정답인 경우
+                // 이미 선택된 선지를 다시 클릭하면 선택 취소
+                if (clickedOption.classList.contains('selected')) {
+                    clickedOption.classList.remove('selected');
+                    selectedAnswers = [];
+                    return;
+                }
+
+                // 다른 선지 선택
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                clickedOption.classList.add('selected');
+                selectedAnswers = [answer];
+            }
+        }
+
+        function checkAnswer() {
+            if (answered) return;
+            if (selectedAnswers.length === 0) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+
+            answered = true;
+            
+            // 정답 문자열 생성 함수
+            function createAnswerString(sortedValues) {
+                let result = sortedValues[0].name;
+                for (let i = 1; i < sortedValues.length; i++) {
+                    if (Math.abs(sortedValues[i].value - sortedValues[i-1].value) < 0.01) {
+                        result += ' = ' + sortedValues[i].name;
+                    } else {
+                        result += ' > ' + sortedValues[i].name;
+                    }
+                }
+                return result;
+            }
+            
+            const correctAnswerString = createAnswerString(currentProblem.sorted);
+            
+            // 정답 확인
+            let isCorrect = false;
+            if (currentProblem.isMultipleAnswer) {
+                // 복수 정답: 선택한 답 중 하나라도 정답 형태인지 확인
+                isCorrect = selectedAnswers.some(answer => {
+                    // 등호가 포함되어 있고, 모든 정답 발전소가 포함되어 있는지 확인
+                    if (!answer.includes('=')) return false;
+                    
+                    // 선택한 답에 모든 정답 발전소가 포함되어 있는지 확인
+                    const hasAllCorrect = currentProblem.correctAnswers.every(ca => answer.includes(ca));
+                    
+                    // 등호로 연결된 발전소들만 추출
+                    const parts = answer.split(/\s*>\s*/); // '>' 기준으로 분리
+                    for (const part of parts) {
+                        const equalParts = part.split(/\s*=\s*/); // '=' 기준으로 분리
+                        // 등호로 연결된 부분에 모든 정답 발전소가 포함되어 있는지 확인
+                        if (equalParts.length === currentProblem.correctAnswers.length) {
+                            const allMatch = currentProblem.correctAnswers.every(ca => equalParts.includes(ca));
+                            if (allMatch) return true;
+                        }
+                    }
+                    
+                    return false;
+                });
+            } else {
+                // 단일 정답
+                if (selectedAnswers.length === 1) {
+                    isCorrect = selectedAnswers[0] === correctAnswerString;
+                }
+            }
+
+            // 선지 색상 표시
+            document.querySelectorAll('.option').forEach(opt => {
+                const optionText = opt.querySelector('span:last-child').textContent;
+                
+                if (currentProblem.isMultipleAnswer) {
+                    // 복수 정답인 경우: 등호가 포함되고 정답 발전소들이 올바르게 연결된 선지
+                    const hasEqual = optionText.includes('=');
+                    
+                    if (hasEqual) {
+                        // 등호로 연결된 부분 확인
+                        const parts = optionText.split(/\s*>\s*/);
+                        let isCorrectOption = false;
+                        
+                        for (const part of parts) {
+                            const equalParts = part.split(/\s*=\s*/);
+                            if (equalParts.length === currentProblem.correctAnswers.length) {
+                                const allMatch = currentProblem.correctAnswers.every(ca => equalParts.includes(ca));
+                                if (allMatch) {
+                                    isCorrectOption = true;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if (isCorrectOption) {
+                            opt.classList.add('correct');
+                        } else if (selectedAnswers.includes(optionText)) {
+                            opt.classList.add('wrong');
+                        }
+                    } else if (selectedAnswers.includes(optionText)) {
+                        opt.classList.add('wrong');
+                    }
+                } else {
+                    // 단일 정답인 경우
+                    if (optionText === correctAnswerString) {
+                        opt.classList.add('correct');
+                    } else if (selectedAnswers.includes(optionText) && !isCorrect) {
+                        opt.classList.add('wrong');
+                    }
+                }
+                opt.style.cursor = 'default';
+            });
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
+            
+            if (isCorrect) {
+                resultDiv.className = 'result show correct';
+                let correctAnswersText = '';
+                if (currentProblem.isMultipleAnswer) {
+                    correctAnswersText = correctAnswerString + ' (동일한 효율)';
+                }
+                resultDiv.innerHTML = `
+                    ✓ 정답입니다!<br>
+                    ${currentProblem.isMultipleAnswer ? '<small style="font-size: 14px;">' + correctAnswersText + '</small><br>' : ''}
+                    <small style="font-size: 14px; margin-top: 10px; display: block;">
+                    효율: A = ${currentProblem.effA.toFixed(1)}%, 
+                    B = ${currentProblem.effB.toFixed(1)}%, 
+                    C = ${currentProblem.effC.toFixed(1)}%
+                    </small>
+                `;
+            } else {
+                // 부분 정답 확인 (복수 정답인 경우)
+                let partialCorrect = false;
+                if (currentProblem.isMultipleAnswer && selectedAnswers.length > 0) {
+                    partialCorrect = selectedAnswers.some(answer => {
+                        if (!answer.includes('=')) return false;
+                        const parts = answer.split(/\s*>\s*/);
+                        for (const part of parts) {
+                            const equalParts = part.split(/\s*=\s*/);
+                            if (equalParts.length === currentProblem.correctAnswers.length) {
+                                const allMatch = currentProblem.correctAnswers.every(ca => equalParts.includes(ca));
+                                if (allMatch) return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+                
+                // 해설 생성
+                const explanation = generateExplanation();
+                
+                resultDiv.className = 'result show wrong';
+                
+                if (partialCorrect && currentProblem.isMultipleAnswer) {
+                    // 부분 정답인 경우
+                    resultDiv.className = 'result show partial';
+                    resultDiv.innerHTML = `
+                        ⚠️ 부분 정답입니다!<br>
+                        <small style="font-size: 14px; margin-top: 5px; display: block;">
+                        올바른 답을 선택했지만, 모든 정답을 선택해야 만점입니다.
+                        </small><br>
+                        정답: ${correctAnswerString}<br>
+                        <small style="font-size: 14px; margin-top: 10px; display: block;">
+                        효율: A = ${currentProblem.effA.toFixed(1)}%, 
+                        B = ${currentProblem.effB.toFixed(1)}%, 
+                        C = ${currentProblem.effC.toFixed(1)}%
+                        </small>
+                        ${explanation}
+                    `;
+                } else {
+                    // 완전 오답인 경우
+                    resultDiv.innerHTML = `
+                        ✗ 틀렸습니다.<br>
+                        정답: ${correctAnswerString}<br>
+                        <small style="font-size: 14px; margin-top: 10px; display: block;">
+                        효율: A = ${currentProblem.effA.toFixed(1)}%, 
+                        B = ${currentProblem.effB.toFixed(1)}%, 
+                        C = ${currentProblem.effC.toFixed(1)}%
+                        </small>
+                        ${explanation}
+                    `;
+                }
+            }
+        }
+
+        function generateExplanation() {
+            const sorted = currentProblem.sorted;
+            
+            let explanation = `<div class="explanation">
+                <div class="explanation-title">📝 문제 풀이</div>`;
+            
+            explanation += `<div class="explanation-step">
+                <strong>1단계: 각 발전소의 효율 계산</strong><br>
+                효율 = (생산된 전기 에너지 / 공급된 에너지) × 100%
+            </div>`;
+            
+            explanation += `<div class="explanation-step">
+                • A 발전소: ${currentProblem.outputA} MJ ÷ ${currentProblem.inputA} MJ × 100% = <strong>${currentProblem.effA.toFixed(1)}%</strong><br>
+                • B 발전소: ${currentProblem.outputB} kJ ÷ ${currentProblem.inputB} kJ × 100% = <strong>${currentProblem.effB.toFixed(1)}%</strong><br>
+                • C 발전소: ${currentProblem.outputC} MJ ÷ ${currentProblem.inputC} MJ × 100% = <strong>${currentProblem.effC.toFixed(1)}%</strong>
+            </div>`;
+            
+            explanation += `<div class="explanation-step">
+                <strong>2단계: 효율 비교</strong><br>
+                효율이 높을수록 같은 에너지로 더 많은 전기를 생산합니다.
+            </div>`;
+            
+            // 정답 문자열 생성
+            let answerString = sorted[0].name;
+            for (let i = 1; i < sorted.length; i++) {
+                if (Math.abs(sorted[i].value - sorted[i-1].value) < 0.01) {
+                    answerString += ' = ' + sorted[i].name;
+                } else {
+                    answerString += ' > ' + sorted[i].name;
+                }
+            }
+            
+            if (currentProblem.isMultipleAnswer) {
+                explanation += `<div class="explanation-step">
+                    <strong style="color: #d63384;">⚠️ 복수 정답</strong><br>
+                    ${currentProblem.correctAnswers.join(', ')}의 효율이 <strong>${sorted[0].value.toFixed(1)}%로 동일</strong>하므로,<br>
+                    등호(=)를 사용하여 표현합니다.
+                </div>`;
+                
+                explanation += `<div class="explanation-step">
+                    ${answerString}
+                </div>`;
+            } else {
+                explanation += `<div class="explanation-step">
+                    ${answerString}
+                </div>`;
+            }
+            
+            explanation += `<div class="explanation-step" style="margin-top: 10px;">
+                <strong>∴ 정답: ${answerString}</strong>
+            </div>`;
+            
+            explanation += `</div>`;
+            
+            return explanation;
+        }
+
+        function resetAnswer() {
+            selectedAnswers = [];
+            answered = false;
+            document.getElementById('result').classList.remove('show');
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong');
+                opt.style.cursor = 'pointer';
+            });
+        }
+
+        // 초기 문제 생성
+        generateNewProblem();
+    </script>
+</body>
+</html>

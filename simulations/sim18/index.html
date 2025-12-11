@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .question-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .data-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        
+        .data-box div {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .option.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+        
+        .option.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-check {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-check:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-new {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-new:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+        
+        .solution {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f7ff;
+            border-radius: 12px;
+            border-left: 4px solid #2196f3;
+            display: none;
+        }
+        
+        .solution.show {
+            display: block;
+        }
+        
+        .solution-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .solution-title::before {
+            content: "📝";
+            margin-right: 8px;
+        }
+        
+        .solution-step {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        
+        .solution-step strong {
+            color: #1976d2;
+        }
+        
+        .solution-formula {
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 8px 0;
+            display: inline-block;
+        }
+        
+        .solution-answer {
+            margin-top: 12px;
+            padding: 12px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+        
+        .concept {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff8e1;
+            border-radius: 12px;
+            border-left: 4px solid #ffa726;
+            display: none;
+        }
+        
+        .concept.show {
+            display: block;
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f57c00;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .concept-title::before {
+            content: "💡";
+            margin-right: 8px;
+        }
+        
+        .concept-content {
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .concept-point {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #ffa726;
+        }
+        
+        .concept-highlight {
+            background: #ffe0b2;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #e65100;
+        }
+        
+        .score {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .score-text {
+            font-size: 18px;
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ 에너지 효율 시뮬레이션</h1>
+            <p>2022 개정 교육과정 통합과학2</p>
+        </div>
+        
+        <div class="question-box">
+            <div class="question-text" id="questionText"></div>
+            <div class="data-box" id="dataBox"></div>
+        </div>
+        
+        <div class="options" id="optionsContainer"></div>
+        
+        <div class="buttons">
+            <button class="btn-check" id="checkBtn" onclick="checkAnswer()">정답 확인</button>
+            <button class="btn-new" onclick="generateNewQuestion()">새 문제</button>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+        
+        <div class="solution" id="solution"></div>
+        
+        <div class="concept" id="concept"></div>
+        
+        <div class="score">
+            <div class="score-text">정답: <span id="correct">0</span> / 시도: <span id="total">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = {};
+        let selectedOption = null;
+        let answered = false;
+        let correctCount = 0;
+        let totalCount = 0;
+
+        const questionTypes = [
+            {
+                type: 'heater',
+                generate: () => {
+                    const power = [1000, 1200, 1500, 1800, 2000][Math.floor(Math.random() * 5)];
+                    const time = [1, 2, 3, 4, 5][Math.floor(Math.random() * 5)];
+                    const cost = [100, 120, 150][Math.floor(Math.random() * 3)];
+                    
+                    const energy = (power * time) / 1000; // kWh
+                    const totalCost = energy * cost;
+                    
+                    return {
+                        question: `전기히터를 사용하여 난방을 하고 있다. 다음 조건에서 전기 요금을 계산하시오.`,
+                        data: `• 전기히터 소비전력: ${power} W\n• 사용 시간: ${time}시간\n• 전기 요금: ${cost}원/kWh`,
+                        answer: Math.round(totalCost),
+                        unit: '원',
+                        solution: [
+                            `<strong>1단계:</strong> 소비 전력량 계산 (kWh 단위로 변환)`,
+                            `<div class="solution-formula">소비 전력량 = ${power}W × ${time}시간 ÷ 1000 = ${energy} kWh</div>`,
+                            `<strong>2단계:</strong> 전기 요금 계산`,
+                            `<div class="solution-formula">전기 요금 = ${energy} kWh × ${cost}원/kWh = ${Math.round(totalCost)}원</div>`,
+                            `<div class="solution-answer">∴ 답: ${Math.round(totalCost)}원</div>`
+                        ],
+                        concept: {
+                            title: '전력량과 전기 요금',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">전력량(kWh)</span>은 전력(W)과 시간(h)을 곱한 값입니다. 1kWh = 1000Wh입니다.</div>`,
+                                `<div class="concept-point"><span class="concept-highlight">전기 요금</span>은 소비한 전력량(kWh)에 단가(원/kWh)를 곱해서 계산합니다.</div>`,
+                                `<div class="concept-point">💡 <strong>절약 팁:</strong> 전력이 높은 기기일수록 사용 시간을 줄이면 전기 요금 절감 효과가 큽니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.8),
+                                Math.round(ans * 1.2),
+                                Math.round(ans * 0.6),
+                                Math.round(ans * 1.5)
+                            ];
+                            return shuffle(opts).map(v => v + '원');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'efficiency',
+                generate: () => {
+                    const input = [1000, 1500, 2000, 2500][Math.floor(Math.random() * 4)];
+                    const effPercent = [70, 75, 80, 85, 90][Math.floor(Math.random() * 5)];
+                    
+                    const output = input * effPercent / 100;
+                    
+                    return {
+                        question: `어떤 전기 기구의 에너지 효율을 계산하시오.`,
+                        data: `• 입력 에너지: ${input} J\n• 에너지 효율: ${effPercent}%`,
+                        answer: output,
+                        unit: 'J',
+                        solution: [
+                            `<strong>1단계:</strong> 출력 에너지 계산`,
+                            `<div class="solution-formula">출력 에너지 = 입력 에너지 × 효율</div>`,
+                            `<div class="solution-formula">출력 에너지 = ${input}J × ${effPercent}% = ${input}J × ${effPercent/100} = ${output}J</div>`,
+                            `<div class="solution-answer">∴ 답: ${output} J</div>`
+                        ],
+                        concept: {
+                            title: '에너지 효율',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">에너지 효율</span> = (출력 에너지 ÷ 입력 에너지) × 100%</div>`,
+                                `<div class="concept-point">모든 에너지 변환 과정에서는 열, 소리 등으로 <span class="concept-highlight">에너지 손실</span>이 발생합니다.</div>`,
+                                `<div class="concept-point">💡 효율이 높을수록 에너지를 효과적으로 사용하므로 경제적이고 환경친화적입니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.9),
+                                Math.round(ans * 1.1),
+                                Math.round(ans * 0.8),
+                                Math.round(ans * 1.2)
+                            ];
+                            return shuffle(opts).map(v => v + ' J');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'led_comparison',
+                generate: () => {
+                    const ledPower = [8, 10, 12][Math.floor(Math.random() * 3)];
+                    const incanPower = ledPower * 6; // 백열등은 약 6배
+                    const hours = [5, 8, 10][Math.floor(Math.random() * 3)];
+                    const days = 30;
+                    const cost = 150;
+                    
+                    const ledCost = (ledPower * hours * days * cost) / 1000;
+                    const incanCost = (incanPower * hours * days * cost) / 1000;
+                    const savings = Math.round(incanCost - ledCost);
+                    
+                    return {
+                        question: `LED 전구와 백열등의 한 달 전기 요금 차이를 계산하시오.`,
+                        data: `• LED 전구: ${ledPower}W, 백열등: ${incanPower}W\n• 하루 사용 시간: ${hours}시간\n• 한 달 사용: ${days}일\n• 전기 요금: ${cost}원/kWh`,
+                        answer: savings,
+                        unit: '원',
+                        solution: [
+                            `<strong>1단계:</strong> LED 전구 한 달 전기 요금`,
+                            `<div class="solution-formula">LED 요금 = ${ledPower}W × ${hours}h × ${days}일 × ${cost}원/kWh ÷ 1000 = ${Math.round(ledCost)}원</div>`,
+                            `<strong>2단계:</strong> 백열등 한 달 전기 요금`,
+                            `<div class="solution-formula">백열등 요금 = ${incanPower}W × ${hours}h × ${days}일 × ${cost}원/kWh ÷ 1000 = ${Math.round(incanCost)}원</div>`,
+                            `<strong>3단계:</strong> 요금 차이 계산`,
+                            `<div class="solution-formula">절감액 = ${Math.round(incanCost)}원 - ${Math.round(ledCost)}원 = ${savings}원</div>`,
+                            `<div class="solution-answer">∴ 답: ${savings}원</div>`
+                        ],
+                        concept: {
+                            title: 'LED와 백열등의 에너지 효율',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">LED 전구</span>는 백열등에 비해 같은 밝기를 내면서도 전력 소비가 약 1/6 수준입니다.</div>`,
+                                `<div class="concept-point"><span class="concept-highlight">백열등</span>은 전기 에너지의 대부분을 열로 방출하여 효율이 낮습니다 (약 5%).</div>`,
+                                `<div class="concept-point">💡 LED는 초기 비용이 높지만 장기적으로 전기 요금 절감과 긴 수명으로 경제적입니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.85),
+                                Math.round(ans * 1.15),
+                                Math.round(ans * 0.7),
+                                Math.round(ans * 1.3)
+                            ];
+                            return shuffle(opts).map(v => v + '원');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'solar_panel',
+                generate: () => {
+                    const area = [10, 15, 20, 25][Math.floor(Math.random() * 4)];
+                    const efficiency = [15, 18, 20][Math.floor(Math.random() * 3)];
+                    const sunlight = [1000, 1200][Math.floor(Math.random() * 2)];
+                    
+                    const output = area * sunlight * efficiency / 100;
+                    
+                    return {
+                        question: `태양광 패널의 출력 전력을 계산하시오.`,
+                        data: `• 패널 면적: ${area} m²\n• 변환 효율: ${efficiency}%\n• 태양 복사 에너지: ${sunlight} W/m²`,
+                        answer: Math.round(output),
+                        unit: 'W',
+                        solution: [
+                            `<strong>1단계:</strong> 입사 태양 에너지 계산`,
+                            `<div class="solution-formula">입사 에너지 = ${area}m² × ${sunlight}W/m² = ${area * sunlight}W</div>`,
+                            `<strong>2단계:</strong> 출력 전력 계산`,
+                            `<div class="solution-formula">출력 전력 = ${area * sunlight}W × ${efficiency}% = ${area * sunlight}W × ${efficiency/100} = ${Math.round(output)}W</div>`,
+                            `<div class="solution-answer">∴ 답: ${Math.round(output)} W</div>`
+                        ],
+                        concept: {
+                            title: '태양광 발전의 원리',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">태양광 패널</span>은 태양 에너지를 전기 에너지로 변환하는 광전 효과를 이용합니다.</div>`,
+                                `<div class="concept-point">현재 상용 태양광 패널의 <span class="concept-highlight">변환 효율</span>은 약 15~22% 수준입니다.</div>`,
+                                `<div class="concept-point">💡 태양광 발전은 재생 가능한 청정 에너지원으로 온실가스 배출이 없습니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.9),
+                                Math.round(ans * 1.1),
+                                Math.round(ans * 0.75),
+                                Math.round(ans * 1.25)
+                            ];
+                            return shuffle(opts).map(v => v + ' W');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'refrigerator',
+                generate: () => {
+                    const monthlyKwh = [30, 35, 40, 45][Math.floor(Math.random() * 4)];
+                    const cost = [120, 150][Math.floor(Math.random() * 2)];
+                    const months = 12;
+                    
+                    const yearCost = monthlyKwh * cost * months;
+                    
+                    return {
+                        question: `냉장고의 연간 전기 요금을 계산하시오.`,
+                        data: `• 월 평균 소비 전력: ${monthlyKwh} kWh\n• 전기 요금: ${cost}원/kWh`,
+                        answer: yearCost,
+                        unit: '원',
+                        solution: [
+                            `<strong>1단계:</strong> 연간 소비 전력량 계산`,
+                            `<div class="solution-formula">연간 소비량 = ${monthlyKwh}kWh/월 × 12개월 = ${monthlyKwh * 12}kWh</div>`,
+                            `<strong>2단계:</strong> 연간 전기 요금 계산`,
+                            `<div class="solution-formula">연간 요금 = ${monthlyKwh * 12}kWh × ${cost}원/kWh = ${yearCost.toLocaleString()}원</div>`,
+                            `<div class="solution-answer">∴ 답: ${yearCost.toLocaleString()}원</div>`
+                        ],
+                        concept: {
+                            title: '냉장고 에너지 절약',
+                            content: [
+                                `<div class="concept-point">냉장고는 24시간 가동되므로 <span class="concept-highlight">에너지 등급</span>이 높은 제품을 선택하는 것이 중요합니다.</div>`,
+                                `<div class="concept-point">문을 자주 여닫거나 뜨거운 음식을 넣으면 전력 소비가 증가합니다.</div>`,
+                                `<div class="concept-point">💡 냉장고 온도는 3~5℃, 냉동실은 -18℃가 적정 온도입니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.85),
+                                Math.round(ans * 1.15),
+                                Math.round(ans * 0.7),
+                                Math.round(ans * 1.3)
+                            ];
+                            return shuffle(opts).map(v => v.toLocaleString() + '원');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'insulation',
+                generate: () => {
+                    const beforeCost = [150000, 180000, 200000][Math.floor(Math.random() * 3)];
+                    const reduction = [20, 25, 30][Math.floor(Math.random() * 3)];
+                    
+                    const savings = beforeCost * reduction / 100;
+                    
+                    return {
+                        question: `단열재 시공 후 절감되는 연간 난방비를 계산하시오.`,
+                        data: `• 시공 전 연간 난방비: ${beforeCost.toLocaleString()}원\n• 에너지 절감률: ${reduction}%`,
+                        answer: savings,
+                        unit: '원',
+                        solution: [
+                            `<strong>1단계:</strong> 절감되는 난방비 계산`,
+                            `<div class="solution-formula">절감액 = ${beforeCost.toLocaleString()}원 × ${reduction}%</div>`,
+                            `<div class="solution-formula">절감액 = ${beforeCost.toLocaleString()}원 × ${reduction/100} = ${savings.toLocaleString()}원</div>`,
+                            `<div class="solution-answer">∴ 답: ${savings.toLocaleString()}원</div>`
+                        ],
+                        concept: {
+                            title: '건물 단열과 에너지 절약',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">단열재</span>는 열전도율이 낮은 물질로 열의 이동을 차단합니다.</div>`,
+                                `<div class="concept-point">적절한 단열은 겨울에는 난방비, 여름에는 냉방비를 모두 절감할 수 있습니다.</div>`,
+                                `<div class="concept-point">💡 창문 단열이 특히 중요하며, 복층 유리나 단열 필름이 효과적입니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.8),
+                                Math.round(ans * 1.2),
+                                Math.round(ans * 0.6),
+                                Math.round(ans * 1.4)
+                            ];
+                            return shuffle(opts).map(v => v.toLocaleString() + '원');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'ac_efficiency',
+                generate: () => {
+                    const cooling = [3.5, 4.0, 4.5, 5.0][Math.floor(Math.random() * 4)];
+                    const power = [1.0, 1.2, 1.5][Math.floor(Math.random() * 3)];
+                    
+                    const eer = cooling / power;
+                    
+                    return {
+                        question: `에어컨의 에너지 효율 비율(EER)을 계산하시오.`,
+                        data: `• 냉방 능력: ${cooling} kW\n• 소비 전력: ${power} kW`,
+                        answer: parseFloat(eer.toFixed(2)),
+                        unit: '',
+                        solution: [
+                            `<strong>1단계:</strong> EER 공식 적용`,
+                            `<div class="solution-formula">EER = 냉방 능력 ÷ 소비 전력</div>`,
+                            `<div class="solution-formula">EER = ${cooling}kW ÷ ${power}kW = ${eer.toFixed(2)}</div>`,
+                            `<div class="solution-answer">∴ 답: ${eer.toFixed(2)}</div>`
+                        ],
+                        concept: {
+                            title: 'EER (에너지 효율 비율)',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">EER</span>은 에어컨이 1kW의 전력을 소비할 때 제거할 수 있는 열량(kW)입니다.</div>`,
+                                `<div class="concept-point">EER 값이 클수록 같은 전력으로 더 많은 냉방 효과를 낼 수 있어 효율적입니다.</div>`,
+                                `<div class="concept-point">💡 일반적으로 EER 3.0 이상이면 고효율 제품으로 분류됩니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                parseFloat((ans * 0.9).toFixed(2)),
+                                parseFloat((ans * 1.1).toFixed(2)),
+                                parseFloat((ans * 0.8).toFixed(2)),
+                                parseFloat((ans * 1.2).toFixed(2))
+                            ];
+                            return shuffle(opts);
+                        }
+                    };
+                }
+            },
+            {
+                type: 'standby_power',
+                generate: () => {
+                    const devices = [3, 4, 5][Math.floor(Math.random() * 3)];
+                    const standbyPower = [5, 8, 10][Math.floor(Math.random() * 3)];
+                    const hours = 24;
+                    const days = 365;
+                    const cost = 150;
+                    
+                    const totalPower = devices * standbyPower;
+                    const yearCost = (totalPower * hours * days * cost) / 1000;
+                    
+                    return {
+                        question: `대기전력으로 인한 연간 전기 요금을 계산하시오.`,
+                        data: `• 대기전력 기기 수: ${devices}개\n• 개당 대기전력: ${standbyPower}W\n• 전기 요금: ${cost}원/kWh`,
+                        answer: Math.round(yearCost),
+                        unit: '원',
+                        solution: [
+                            `<strong>1단계:</strong> 총 대기전력 계산`,
+                            `<div class="solution-formula">총 대기전력 = ${devices}개 × ${standbyPower}W = ${totalPower}W</div>`,
+                            `<strong>2단계:</strong> 연간 소비 전력량 계산`,
+                            `<div class="solution-formula">연간 소비량 = ${totalPower}W × 24시간 × 365일 ÷ 1000 = ${((totalPower * 24 * 365) / 1000).toFixed(1)}kWh</div>`,
+                            `<strong>3단계:</strong> 연간 전기 요금 계산`,
+                            `<div class="solution-formula">연간 요금 = ${((totalPower * 24 * 365) / 1000).toFixed(1)}kWh × ${cost}원/kWh = ${Math.round(yearCost).toLocaleString()}원</div>`,
+                            `<div class="solution-answer">∴ 답: ${Math.round(yearCost).toLocaleString()}원</div>`
+                        ],
+                        concept: {
+                            title: '대기전력과 에너지 낭비',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">대기전력</span>은 전자제품이 꺼진 상태에서도 소비하는 전력입니다.</div>`,
+                                `<div class="concept-point">TV, 셋톱박스, 컴퓨터, 충전기 등이 대표적인 대기전력 소비 기기입니다.</div>`,
+                                `<div class="concept-point">💡 멀티탭을 사용해 완전히 전원을 차단하면 대기전력을 절약할 수 있습니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.85),
+                                Math.round(ans * 1.15),
+                                Math.round(ans * 0.7),
+                                Math.round(ans * 1.3)
+                            ];
+                            return shuffle(opts).map(v => v.toLocaleString() + '원');
+                        }
+                    };
+                }
+            },
+            {
+                type: 'heat_pump',
+                generate: () => {
+                    const heatOut = [10, 12, 15][Math.floor(Math.random() * 3)];
+                    const workIn = [3, 4, 5][Math.floor(Math.random() * 3)];
+                    
+                    const cop = heatOut / workIn;
+                    
+                    return {
+                        question: `히트펌프의 성능계수(COP)를 계산하시오.`,
+                        data: `• 공급 열량: ${heatOut} kW\n• 소비 전력: ${workIn} kW`,
+                        answer: parseFloat(cop.toFixed(2)),
+                        unit: '',
+                        solution: [
+                            `<strong>1단계:</strong> COP 공식 적용`,
+                            `<div class="solution-formula">COP = 공급 열량 ÷ 소비 전력</div>`,
+                            `<div class="solution-formula">COP = ${heatOut}kW ÷ ${workIn}kW = ${cop.toFixed(2)}</div>`,
+                            `<div class="solution-answer">∴ 답: ${cop.toFixed(2)}</div>`
+                        ],
+                        concept: {
+                            title: 'COP (성능계수)와 히트펌프',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">COP</span>는 히트펌프가 1kW의 전력으로 공급할 수 있는 열량(kW)입니다.</div>`,
+                                `<div class="concept-point">히트펌프는 외부 열을 이동시켜 난방하므로 전기히터보다 효율이 3~4배 높습니다.</div>`,
+                                `<div class="concept-point">💡 COP가 3이면 1의 전력으로 3의 열량을 공급하여 에너지 효율이 300%입니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                parseFloat((ans * 0.9).toFixed(2)),
+                                parseFloat((ans * 1.1).toFixed(2)),
+                                parseFloat((ans * 0.8).toFixed(2)),
+                                parseFloat((ans * 1.2).toFixed(2))
+                            ];
+                            return shuffle(opts);
+                        }
+                    };
+                }
+            },
+            {
+                type: 'energy_grade',
+                generate: () => {
+                    const beforeGrade = [400, 450, 500][Math.floor(Math.random() * 3)];
+                    const afterGrade = [280, 300, 320][Math.floor(Math.random() * 3)];
+                    const cost = 150;
+                    
+                    const savings = (beforeGrade - afterGrade) * cost;
+                    
+                    return {
+                        question: `가전제품 교체 후 연간 절감되는 전기 요금을 계산하시오.`,
+                        data: `• 기존 제품 연간 소비: ${beforeGrade} kWh\n• 신제품 연간 소비: ${afterGrade} kWh\n• 전기 요금: ${cost}원/kWh`,
+                        answer: savings,
+                        unit: '원',
+                        solution: [
+                            `<strong>1단계:</strong> 절감되는 전력량 계산`,
+                            `<div class="solution-formula">절감 전력량 = ${beforeGrade}kWh - ${afterGrade}kWh = ${beforeGrade - afterGrade}kWh</div>`,
+                            `<strong>2단계:</strong> 절감 요금 계산`,
+                            `<div class="solution-formula">절감 요금 = ${beforeGrade - afterGrade}kWh × ${cost}원/kWh = ${savings.toLocaleString()}원</div>`,
+                            `<div class="solution-answer">∴ 답: ${savings.toLocaleString()}원</div>`
+                        ],
+                        concept: {
+                            title: '에너지 등급과 효율',
+                            content: [
+                                `<div class="concept-point"><span class="concept-highlight">에너지 소비효율 등급</span>은 1~5등급으로 나뉘며, 1등급이 가장 효율적입니다.</div>`,
+                                `<div class="concept-point">고효율 제품은 초기 비용이 높지만 장기적으로 전기 요금 절감 효과가 큽니다.</div>`,
+                                `<div class="concept-point">💡 냉장고, 에어컨, TV 등 장시간 사용하는 제품일수록 에너지 등급이 중요합니다.</div>`
+                            ]
+                        },
+                        generateOptions: (ans) => {
+                            const opts = [
+                                ans,
+                                Math.round(ans * 0.85),
+                                Math.round(ans * 1.15),
+                                Math.round(ans * 0.7),
+                                Math.round(ans * 1.3)
+                            ];
+                            return shuffle(opts).map(v => v.toLocaleString() + '원');
+                        }
+                    };
+                }
+            }
+        ];
+
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function generateNewQuestion() {
+            const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+            currentQuestion = questionType.generate();
+            
+            document.getElementById('questionText').textContent = currentQuestion.question;
+            document.getElementById('dataBox').textContent = currentQuestion.data;
+            
+            const options = currentQuestion.generateOptions(currentQuestion.answer);
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = `${index + 1}. ${option}`;
+                div.onclick = () => selectOption(index, div);
+                optionsContainer.appendChild(div);
+            });
+            
+            selectedOption = null;
+            answered = false;
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('solution').classList.remove('show');
+            document.getElementById('concept').classList.remove('show');
+        }
+
+        function selectOption(index, element) {
+            if (answered) return;
+            
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            selectedOption = index;
+        }
+
+        function checkAnswer() {
+            if (selectedOption === null || answered) return;
+            
+            answered = true;
+            totalCount++;
+            
+            // 현재 선택지 배열을 저장
+            const currentOptions = [...document.querySelectorAll('.option')].map(opt => 
+                opt.textContent.substring(3).trim()
+            );
+            
+            const correctValue = currentQuestion.answer + (currentQuestion.unit ? ' ' + currentQuestion.unit : '');
+            const selectedValue = currentOptions[selectedOption];
+            
+            const allOptions = document.querySelectorAll('.option');
+            let correctIndex = -1;
+            
+            // 정답 선택지 찾기
+            currentOptions.forEach((optText, idx) => {
+                // 숫자 부분만 비교 (단위 제거 후)
+                const optValue = optText.replace(/[^\d.]/g, '');
+                const correctNumValue = currentQuestion.answer.toString().replace(/[^\d.]/g, '');
+                
+                if (optValue === correctNumValue) {
+                    correctIndex = idx;
+                    allOptions[idx].classList.add('correct');
+                }
+            });
+            
+            const isCorrect = (selectedOption === correctIndex);
+            
+            if (!isCorrect) {
+                allOptions[selectedOption].classList.add('incorrect');
+            }
+            
+            if (isCorrect) {
+                correctCount++;
+                document.getElementById('feedback').textContent = '✓ 정답입니다!';
+                document.getElementById('feedback').className = 'feedback correct show';
+            } else {
+                document.getElementById('feedback').textContent = '✗ 틀렸습니다. 정답: ' + correctValue;
+                document.getElementById('feedback').className = 'feedback incorrect show';
+            }
+            
+            // 풀이 표시
+            const solutionDiv = document.getElementById('solution');
+            solutionDiv.innerHTML = '<div class="solution-title">풀이 과정</div>';
+            currentQuestion.solution.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'solution-step';
+                stepDiv.innerHTML = step;
+                solutionDiv.appendChild(stepDiv);
+            });
+            solutionDiv.classList.add('show');
+            
+            // 개념 표시
+            const conceptDiv = document.getElementById('concept');
+            conceptDiv.innerHTML = `<div class="concept-title">${currentQuestion.concept.title}</div>`;
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'concept-content';
+            currentQuestion.concept.content.forEach(item => {
+                contentWrapper.innerHTML += item;
+            });
+            conceptDiv.appendChild(contentWrapper);
+            conceptDiv.classList.add('show');
+            
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('total').textContent = totalCount;
+            document.getElementById('checkBtn').disabled = true;
+        }
+
+        // 초기 문제 생성
+        generateNewQuestion();
+    </script>
+</body>
+</html>

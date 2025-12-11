@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 계산 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        
+        .problem-box {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #667eea;
+        }
+        
+        .problem-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .energy-info {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .energy-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .energy-row:last-child {
+            border-bottom: none;
+        }
+        
+        .energy-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .energy-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .input-section {
+            margin: 20px 0;
+        }
+        
+        .input-label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="number"] {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .unit {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-new {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-new:hover {
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-check {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-check:hover {
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .result-box.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-correct {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+        }
+        
+        .result-incorrect {
+            background: #fed7d7;
+            border: 2px solid #f56565;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .result-correct .result-title {
+            color: #22543d;
+        }
+        
+        .result-incorrect .result-title {
+            color: #742a2a;
+        }
+        
+        .result-content {
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .formula {
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 계산</h1>
+        <p class="subtitle">통합과학2 - 에너지 효율 연습 문제</p>
+        
+        <div class="problem-box">
+            <div class="problem-title">
+                어떤 조명에 매초 <span id="totalEnergy">60</span> J의 전기 에너지를 공급하였더니, <span id="lightEnergy">18</span> J의 빛에너지가 발생하고 <span id="heatEnergy">42</span> J의 열에너지가 발생하였다.
+            </div>
+            
+            <div class="energy-info">
+                <div class="energy-row">
+                    <span class="energy-label">🔌 전기 에너지</span>
+                    <span class="energy-value"><span id="totalEnergyDisplay">60</span> J</span>
+                </div>
+                <div class="energy-row">
+                    <span class="energy-label">💡 빛에너지</span>
+                    <span class="energy-value"><span id="lightEnergyDisplay">18</span> J</span>
+                </div>
+                <div class="energy-row">
+                    <span class="energy-label">🔥 열에너지</span>
+                    <span class="energy-value"><span id="heatEnergyDisplay">42</span> J</span>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 8px; font-size: 14px; color: #856404;">
+                💡 <strong>힌트:</strong> 조명의 경우 빛에너지가 유용한 에너지입니다!
+            </div>
+        </div>
+        
+        <div class="input-section">
+            <label class="input-label">이 조명 기구의 에너지 효율은?</label>
+            <div class="input-group">
+                <input type="number" id="answerInput" placeholder="답을 입력하세요" min="0" max="100">
+                <span class="unit">%</span>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-new" onclick="generateNewProblem()">🔄 새문제</button>
+            <button class="btn-check" onclick="checkAnswer()">✓ 확인</button>
+        </div>
+        
+        <div id="resultBox" class="result-box">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        let currentAnswer = 0;
+        
+        function generateNewProblem() {
+            // 10~100 사이의 10단위 숫자 생성
+            const total = (Math.floor(Math.random() * 10) + 1) * 10;
+            
+            // 빛에너지는 전체의 10~50% 사이로 설정 (10단위)
+            const lightPercent = (Math.floor(Math.random() * 5) + 1) * 10;
+            const light = Math.round(total * lightPercent / 100);
+            
+            // 열에너지는 나머지
+            const heat = total - light;
+            
+            // 정답 계산 (소수점 첫째자리에서 반올림)
+            currentAnswer = Math.round((light / total) * 100);
+            
+            // 화면 업데이트
+            document.getElementById('totalEnergy').textContent = total;
+            document.getElementById('lightEnergy').textContent = light;
+            document.getElementById('heatEnergy').textContent = heat;
+            document.getElementById('totalEnergyDisplay').textContent = total;
+            document.getElementById('lightEnergyDisplay').textContent = light;
+            document.getElementById('heatEnergyDisplay').textContent = heat;
+            
+            // 입력값과 결과 초기화
+            document.getElementById('answerInput').value = '';
+            document.getElementById('resultBox').classList.remove('show', 'result-correct', 'result-incorrect');
+        }
+        
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            
+            if (isNaN(userAnswer)) {
+                alert('답을 입력해주세요!');
+                return;
+            }
+            
+            const resultBox = document.getElementById('resultBox');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultContent = document.getElementById('resultContent');
+            
+            const total = parseInt(document.getElementById('totalEnergyDisplay').textContent);
+            const light = parseInt(document.getElementById('lightEnergyDisplay').textContent);
+            const heat = parseInt(document.getElementById('heatEnergyDisplay').textContent);
+            
+            resultBox.classList.remove('result-correct', 'result-incorrect');
+            
+            if (userAnswer === currentAnswer) {
+                resultBox.classList.add('result-correct');
+                resultTitle.textContent = '🎉 정답입니다!';
+                resultContent.innerHTML = `
+                    <div class="explanation">
+                        <p><strong>📝 해설</strong></p>
+                        <p style="margin-top: 10px;">
+                            에너지 효율은 <strong>공급한 에너지 중 유용하게 사용된 에너지의 비율</strong>입니다.
+                        </p>
+                        <div class="formula">
+                            에너지 효율 = (유용한 에너지 / 공급한 에너지) × 100
+                        </div>
+                        <p>
+                            조명에서 유용한 에너지는 <strong>빛에너지 ${light} J</strong>이고,<br>
+                            공급한 에너지는 <strong>전기 에너지 ${total} J</strong>입니다.
+                        </p>
+                        <div class="formula">
+                            (${light} J / ${total} J) × 100 = ${currentAnswer}%
+                        </div>
+                        <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                            💡 열에너지 ${heat} J은 버려지는 에너지입니다.
+                        </p>
+                    </div>
+                `;
+            } else {
+                resultBox.classList.add('result-incorrect');
+                resultTitle.textContent = '❌ 틀렸습니다';
+                resultContent.innerHTML = `
+                    <div class="explanation">
+                        <p><strong>정답: ${currentAnswer}%</strong></p>
+                        <p style="margin-top: 10px;">
+                            <strong>📝 해설</strong>
+                        </p>
+                        <p style="margin-top: 5px;">
+                            에너지 효율은 <strong>공급한 에너지 중 유용하게 사용된 에너지의 비율</strong>입니다.
+                        </p>
+                        <div class="formula">
+                            에너지 효율 = (유용한 에너지 / 공급한 에너지) × 100
+                        </div>
+                        <p>
+                            조명에서 유용한 에너지는 <strong>빛에너지 ${light} J</strong>이고,<br>
+                            공급한 에너지는 <strong>전기 에너지 ${total} J</strong>입니다.
+                        </p>
+                        <div class="formula">
+                            (${light} J / ${total} J) × 100 = ${currentAnswer}%
+                        </div>
+                        <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                            💡 열에너지 ${heat} J은 버려지는 에너지입니다.
+                        </p>
+                    </div>
+                `;
+            }
+            
+            resultBox.classList.add('show');
+        }
+        
+        // 엔터키로 확인
+        document.getElementById('answerInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // 초기 문제 생성
+        generateNewProblem();
+    </script>
+</body>
+</html>

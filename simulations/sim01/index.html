@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 시뮬레이션 문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .problem-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .problem-number {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .problem-type {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .problem-content {
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .data-table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .options {
+            margin-top: 15px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #e8efff;
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .option.wrong {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .input-answer {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-new {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-new:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+        
+        .feedback.wrong {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #f44336;
+        }
+        
+        .hint {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 시뮬레이션 문제</h1>
+        <p class="subtitle">2022 개정 교육과정 통합과학2 - 에너지 효율</p>
+        
+        <div id="problems"></div>
+        
+        <div class="button-group">
+            <button class="btn btn-new" onclick="generateProblems()">🔄 새 문제</button>
+            <button class="btn btn-submit" onclick="checkAnswers()">✓ 채점하기</button>
+            <button class="btn btn-reset" onclick="resetAnswers()">↻ 초기화</button>
+        </div>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        let currentProblems = [];
+        let userAnswers = {};
+
+        function generateProblems() {
+            currentProblems = [];
+            userAnswers = {};
+            
+            // 객관식 8문제 생성
+            for (let i = 1; i <= 8; i++) {
+                currentProblems.push(generateMultipleChoice(i));
+            }
+            
+            // 주관식 2문제 생성
+            for (let i = 9; i <= 10; i++) {
+                currentProblems.push(generateShortAnswer(i));
+            }
+            
+            renderProblems();
+            document.getElementById('result').classList.remove('show');
+        }
+
+        function generateMultipleChoice(num) {
+            const types = [
+                generatePowerEfficiency,
+                generateEnergyConversion,
+                generatePowerComparison,
+                generateEfficiencyCalculation,
+                generateEnergyLoss,
+                generateCostEfficiency,
+                generateRenewableEnergy,
+                generateEnergyOutput
+            ];
+            
+            return types[num - 1]();
+        }
+
+        function generatePowerEfficiency() {
+            const hydro = { energy: rand(100, 200), efficiency: rand(40, 50) };
+            const solar = { energy: rand(500, 1000), efficiency: rand(15, 25) };
+            const thermal = { energy: rand(50, 100), efficiency: rand(35, 45) };
+            
+            const hydroOutput = hydro.energy * hydro.efficiency / 100;
+            const solarOutput = solar.energy * solar.efficiency / 100;
+            const thermalOutput = thermal.energy * thermal.efficiency / 100;
+            
+            const sorted = [
+                { name: '수력', value: hydroOutput },
+                { name: '태양광', value: solarOutput },
+                { name: '화력', value: thermalOutput }
+            ].sort((a, b) => b.value - a.value);
+            
+            return {
+                number: 1,
+                type: '객관식',
+                content: `표는 전기 에너지를 생산하는 발전소 A, B, C에 대한 자료이다.
+                
+                <table class="data-table">
+                    <tr>
+                        <th>발전소</th>
+                        <th>발전 방식</th>
+                        <th>공급 에너지</th>
+                        <th>효율</th>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>수력 발전</td>
+                        <td>${hydro.energy} MJ</td>
+                        <td>${hydro.efficiency}%</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>태양광 발전</td>
+                        <td>${solar.energy} kJ</td>
+                        <td>${solar.efficiency}%</td>
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>화력 발전</td>
+                        <td>${thermal.energy} MJ</td>
+                        <td>${thermal.efficiency}%</td>
+                    </tr>
+                </table>
+                
+                생산하는 전기 에너지의 양을 옳게 비교한 것은?`,
+                options: [
+                    `${sorted[0].name} > ${sorted[1].name} > ${sorted[2].name}`,
+                    `${sorted[0].name} > ${sorted[2].name} > ${sorted[1].name}`,
+                    `${sorted[1].name} > ${sorted[0].name} > ${sorted[2].name}`,
+                    `${sorted[1].name} > ${sorted[2].name} > ${sorted[0].name}`,
+                    `${sorted[2].name} > ${sorted[1].name} > ${sorted[0].name}`
+                ],
+                answer: 0
+            };
+        }
+
+        function generateEnergyConversion() {
+            const input = rand(500, 1000);
+            const efficiency = rand(30, 50);
+            const output = input * efficiency / 100;
+            const loss = input - output;
+            
+            return {
+                number: 2,
+                type: '객관식',
+                content: `어떤 발전기가 ${input} J의 역학적 에너지를 공급받아 ${output} J의 전기 에너지를 생산했다. 이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?
+                
+                <div class="hint">
+                <보기><br>
+                ㄱ. 발전기의 에너지 효율은 ${efficiency}%이다.<br>
+                ㄴ. 열에너지로 손실된 에너지는 ${loss} J이다.<br>
+                ㄷ. 에너지 전환 과정에서 에너지 보존 법칙이 성립한다.
+                </div>`,
+                options: ['ㄱ', 'ㄴ', 'ㄷ', 'ㄱ, ㄴ', 'ㄱ, ㄴ, ㄷ'],
+                answer: 4
+            };
+        }
+
+        function generatePowerComparison() {
+            const wind = rand(60, 80);
+            const solar = rand(15, 25);
+            const hydro = rand(80, 95);
+            
+            return {
+                number: 3,
+                type: '객관식',
+                content: `표는 서로 다른 발전 방식의 평균 에너지 효율을 나타낸 것이다.
+                
+                <table class="data-table">
+                    <tr>
+                        <th>발전 방식</th>
+                        <th>풍력</th>
+                        <th>태양광</th>
+                        <th>수력</th>
+                    </tr>
+                    <tr>
+                        <td>효율(%)</td>
+                        <td>${wind}</td>
+                        <td>${solar}</td>
+                        <td>${hydro}</td>
+                    </tr>
+                </table>
+                
+                각 발전소에 1000 MJ의 에너지를 공급했을 때, 생산되는 전기 에너지의 차이가 가장 큰 두 발전 방식은?`,
+                options: [
+                    '풍력과 태양광',
+                    '풍력과 수력',
+                    '태양광과 수력',
+                    '모두 같다',
+                    '비교할 수 없다'
+                ],
+                answer: 2
+            };
+        }
+
+        function generateEfficiencyCalculation() {
+            const input = rand(2000, 5000);
+            const output = rand(800, 1500);
+            const efficiency = Math.round(output / input * 100);
+            
+            return {
+                number: 4,
+                type: '객관식',
+                content: `어떤 발전소가 ${input} kJ의 화학 에너지를 ${output} kJ의 전기 에너지로 변환했다. 이 발전소의 에너지 효율은?`,
+                options: [
+                    `${efficiency - 2}%`,
+                    `${efficiency - 1}%`,
+                    `${efficiency}%`,
+                    `${efficiency + 1}%`,
+                    `${efficiency + 2}%`
+                ],
+                answer: 2
+            };
+        }
+
+        function generateEnergyLoss() {
+            const efficiency = rand(35, 45);
+            const loss = 100 - efficiency;
+            
+            return {
+                number: 5,
+                type: '객관식',
+                content: `화력 발전소의 에너지 효율이 ${efficiency}%일 때, 1000 J의 화학 에너지를 공급하면 열에너지로 손실되는 에너지는?`,
+                options: [
+                    `${loss - 10} J`,
+                    `${loss * 10 - 50} J`,
+                    `${loss * 10} J`,
+                    `${loss * 10 + 50} J`,
+                    `${loss * 10 + 100} J`
+                ],
+                answer: 2
+            };
+        }
+
+        function generateCostEfficiency() {
+            const costPerKWh = rand(100, 200);
+            const efficiency = rand(30, 50);
+            
+            return {
+                number: 6,
+                type: '객관식',
+                content: `어떤 발전소의 발전 단가가 kWh당 ${costPerKWh}원이고, 에너지 효율이 ${efficiency}%이다. 이에 대한 설명으로 옳은 것은?`,
+                options: [
+                    '효율이 높을수록 발전 단가는 항상 낮아진다',
+                    '효율이 낮을수록 같은 전기를 생산하기 위한 연료비가 증가한다',
+                    '발전 단가는 효율과 무관하다',
+                    '효율이 50%가 되면 발전 단가는 0원이 된다',
+                    '효율이 100%를 넘을 수 있다'
+                ],
+                answer: 1
+            };
+        }
+
+        function generateRenewableEnergy() {
+            const solar = rand(15, 20);
+            const wind = rand(35, 45);
+            const geothermal = rand(10, 15);
+            
+            return {
+                number: 7,
+                type: '객관식',
+                content: `표는 신재생 에너지 발전 방식의 효율을 나타낸 것이다.
+                
+                <table class="data-table">
+                    <tr>
+                        <th>발전 방식</th>
+                        <th>태양광</th>
+                        <th>풍력</th>
+                        <th>지열</th>
+                    </tr>
+                    <tr>
+                        <td>효율(%)</td>
+                        <td>${solar}</td>
+                        <td>${wind}</td>
+                        <td>${geothermal}</td>
+                    </tr>
+                </table>
+                
+                각 발전소에 같은 양의 에너지를 공급했을 때, 전기 에너지 생산량이 가장 많은 것은?`,
+                options: ['태양광', '풍력', '지열', '모두 같다', '비교할 수 없다'],
+                answer: 1
+            };
+        }
+
+        function generateEnergyOutput() {
+            const mass = rand(10, 50);
+            const energyPerG = rand(30, 50);
+            const efficiency = rand(35, 45);
+            const totalEnergy = mass * energyPerG;
+            const output = totalEnergy * efficiency / 100;
+            
+            return {
+                number: 8,
+                type: '객관식',
+                content: `1 g당 ${energyPerG} kJ의 화학 에너지를 가진 석탄 ${mass} kg을 사용하여 효율이 ${efficiency}%인 화력 발전소에서 생산할 수 있는 전기 에너지는?`,
+                options: [
+                    `${output - 100} MJ`,
+                    `${output} MJ`,
+                    `${output + 100} MJ`,
+                    `${output * 2} MJ`,
+                    `${totalEnergy} MJ`
+                ],
+                answer: 1
+            };
+        }
+
+        function generateShortAnswer(num) {
+            if (num === 9) {
+                const input = rand(1000, 2000);
+                const efficiency = rand(40, 60);
+                const output = input * efficiency / 100;
+                
+                return {
+                    number: 9,
+                    type: '주관식',
+                    content: `어떤 발전소가 ${input} J의 에너지를 공급받아 효율 ${efficiency}%로 전기 에너지를 생산한다. 생산되는 전기 에너지는 몇 J인가? (단위 없이 숫자만 입력)`,
+                    answer: output
+                };
+            } else {
+                const output = rand(300, 500);
+                const efficiency = rand(30, 50);
+                const input = Math.round(output * 100 / efficiency);
+                
+                return {
+                    number: 10,
+                    type: '주관식',
+                    content: `어떤 발전기의 에너지 효율이 ${efficiency}%이고, ${output} J의 전기 에너지를 생산했다. 이 발전기에 공급된 역학적 에너지는 몇 J인가? (단위 없이 숫자만 입력, 소수점 첫째자리에서 반올림)`,
+                    answer: input
+                };
+            }
+        }
+
+        function renderProblems() {
+            const container = document.getElementById('problems');
+            container.innerHTML = '';
+            
+            currentProblems.forEach(problem => {
+                const card = document.createElement('div');
+                card.className = 'problem-card';
+                
+                let html = `
+                    <div class="problem-header">
+                        <span class="problem-number">${problem.number}번</span>
+                        <span class="problem-type">${problem.type}</span>
+                    </div>
+                    <div class="problem-content">${problem.content}</div>
+                `;
+                
+                if (problem.options) {
+                    html += '<div class="options">';
+                    problem.options.forEach((option, index) => {
+                        html += `
+                            <div class="option" onclick="selectOption(${problem.number}, ${index})">
+                                ② ${option}
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                } else {
+                    html += `<input type="number" class="input-answer" id="answer-${problem.number}" placeholder="답을 입력하세요">`;
+                }
+                
+                html += `<div class="feedback" id="feedback-${problem.number}"></div>`;
+                
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(problemNum, optionIndex) {
+            const options = document.querySelectorAll(`#problems .problem-card:nth-child(${problemNum}) .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            userAnswers[problemNum] = optionIndex;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            let total = currentProblems.length;
+            
+            currentProblems.forEach(problem => {
+                const feedback = document.getElementById(`feedback-${problem.number}`);
+                
+                if (problem.options) {
+                    const userAnswer = userAnswers[problem.number];
+                    const options = document.querySelectorAll(`#problems .problem-card:nth-child(${problem.number}) .option`);
+                    
+                    if (userAnswer === problem.answer) {
+                        correct++;
+                        options[userAnswer].classList.add('correct');
+                        feedback.className = 'feedback show correct';
+                        feedback.textContent = '✓ 정답입니다!';
+                    } else if (userAnswer !== undefined) {
+                        options[userAnswer].classList.add('wrong');
+                        options[problem.answer].classList.add('correct');
+                        feedback.className = 'feedback show wrong';
+                        feedback.textContent = `✗ 오답입니다. 정답은 ${problem.options[problem.answer]}입니다.`;
+                    } else {
+                        options[problem.answer].classList.add('correct');
+                        feedback.className = 'feedback show wrong';
+                        feedback.textContent = '답을 선택하지 않았습니다.';
+                    }
+                } else {
+                    const input = document.getElementById(`answer-${problem.number}`);
+                    const userAnswer = parseFloat(input.value);
+                    
+                    if (Math.abs(userAnswer - problem.answer) < 1) {
+                        correct++;
+                        input.style.borderColor = '#4caf50';
+                        feedback.className = 'feedback show correct';
+                        feedback.textContent = `✓ 정답입니다! (답: ${problem.answer})`;
+                    } else if (input.value) {
+                        input.style.borderColor = '#f44336';
+                        feedback.className = 'feedback show wrong';
+                        feedback.textContent = `✗ 오답입니다. 정답은 ${problem.answer}입니다.`;
+                    } else {
+                        input.style.borderColor = '#f44336';
+                        feedback.className = 'feedback show wrong';
+                        feedback.textContent = '답을 입력하지 않았습니다.';
+                    }
+                }
+            });
+            
+            const result = document.getElementById('result');
+            const percentage = Math.round(correct / total * 100);
+            result.innerHTML = `
+                <h2>채점 결과</h2>
+                <p style="font-size: 24px; margin: 10px 0;">
+                    ${correct} / ${total} 문제 정답 (${percentage}점)
+                </p>
+                <p>${percentage >= 80 ? '🎉 훌륭합니다!' : percentage >= 60 ? '👍 잘했습니다!' : '💪 조금 더 노력해보세요!'}</p>
+            `;
+            result.classList.add('show');
+        }
+
+        function resetAnswers() {
+            userAnswers = {};
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong');
+            });
+            document.querySelectorAll('.input-answer').forEach(input => {
+                input.value = '';
+                input.style.borderColor = '#e0e0e0';
+            });
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show');
+            });
+            document.getElementById('result').classList.remove('show');
+        }
+
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // 페이지 로드 시 문제 생성
+        generateProblems();
+    </script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 비교 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .new-problem-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: transform 0.2s;
+        }
+        
+        .new-problem-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .cars-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .car-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #dee2e6;
+        }
+        
+        .car-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .car-icon {
+            font-size: 32px;
+        }
+        
+        .car-label {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .energy-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .energy-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .energy-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .energy-value {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .calculation-section {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .calculation-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .calculation-item {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .calculation-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .calculation-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .calculation-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .answer-section {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .answer-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .car-btn {
+            padding: 15px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .car-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .car-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .order-display {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .reset-btn, .check-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .reset-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .reset-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .check-btn {
+            background: #51cf66;
+            color: white;
+        }
+        
+        .check-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .result.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 비교</h1>
+        <div class="subtitle">
+            일반 자동차와 전기 자동차의 에너지 효율을 계산하고,<br>
+            효율이 높은 순서대로 선택하세요.
+        </div>
+        
+        <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
+        
+        <div class="cars-container">
+            <div class="car-card">
+                <div class="car-type">
+                    <span class="car-icon">🚗</span>
+                    <span class="car-label">일반 자동차 A</span>
+                </div>
+                <div class="energy-info">
+                    <div class="energy-row">
+                        <span class="energy-label">공급 에너지</span>
+                        <span class="energy-value" id="supplyA">1000 kJ</span>
+                    </div>
+                    <div class="energy-row">
+                        <span class="energy-label">사용 에너지</span>
+                        <span class="energy-value" id="usedA">200 kJ</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-type">
+                    <span class="car-icon">🚙</span>
+                    <span class="car-label">일반 자동차 B</span>
+                </div>
+                <div class="energy-info">
+                    <div class="energy-row">
+                        <span class="energy-label">공급 에너지</span>
+                        <span class="energy-value" id="supplyB">1000 kJ</span>
+                    </div>
+                    <div class="energy-row">
+                        <span class="energy-label">사용 에너지</span>
+                        <span class="energy-value" id="usedB">250 kJ</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-type">
+                    <span class="car-icon">⚡</span>
+                    <span class="car-label">전기 자동차 C</span>
+                </div>
+                <div class="energy-info">
+                    <div class="energy-row">
+                        <span class="energy-label">공급 에너지</span>
+                        <span class="energy-value" id="supplyC">1000 kJ</span>
+                    </div>
+                    <div class="energy-row">
+                        <span class="energy-label">사용 에너지</span>
+                        <span class="energy-value" id="usedC">750 kJ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calculation-section">
+            <div class="calculation-title">📝 에너지 효율을 계산하세요 (에너지 효율 = 사용/공급 × 100)</div>
+            <div class="calculation-item">
+                <div class="calculation-label">자동차 A의 효율 (%)</div>
+                <input type="number" class="calculation-input" id="efficiencyInputA" placeholder="예: 20">
+            </div>
+            <div class="calculation-item">
+                <div class="calculation-label">자동차 B의 효율 (%)</div>
+                <input type="number" class="calculation-input" id="efficiencyInputB" placeholder="예: 25">
+            </div>
+            <div class="calculation-item">
+                <div class="calculation-label">자동차 C의 효율 (%)</div>
+                <input type="number" class="calculation-input" id="efficiencyInputC" placeholder="예: 75">
+            </div>
+        </div>
+        
+        <div class="answer-section">
+            <div class="answer-label">📊 에너지 효율이 높은 순서를 선택하세요</div>
+            <div class="answer-buttons">
+                <button class="car-btn" onclick="selectCar('A')">A</button>
+                <button class="car-btn" onclick="selectCar('B')">B</button>
+                <button class="car-btn" onclick="selectCar('C')">C</button>
+            </div>
+            <div class="order-display" id="orderDisplay">버튼을 클릭하세요</div>
+        </div>
+        
+        <div class="button-group">
+            <button class="reset-btn" onclick="resetSelection()">🔄 다시 선택</button>
+            <button class="check-btn" onclick="checkAnswer()">✓ 정답 확인</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let selectedOrder = [];
+        let currentData = {};
+        
+        function generateNewProblem() {
+            // 일반 자동차 효율: 15-30%
+            const efficiencyA = Math.floor(Math.random() * 16) + 15; // 15-30
+            const efficiencyB = Math.floor(Math.random() * 16) + 15; // 15-30
+            
+            // 전기 자동차 효율: 70-85%
+            const efficiencyC = Math.floor(Math.random() * 16) + 70; // 70-85
+            
+            const supply = 1000; // 고정값
+            
+            currentData = {
+                A: { supply: supply, efficiency: efficiencyA, used: supply * efficiencyA / 100 },
+                B: { supply: supply, efficiency: efficiencyB, used: supply * efficiencyB / 100 },
+                C: { supply: supply, efficiency: efficiencyC, used: supply * efficiencyC / 100 }
+            };
+            
+            // UI 업데이트
+            ['A', 'B', 'C'].forEach(car => {
+                document.getElementById('supply' + car).textContent = currentData[car].supply + ' kJ';
+                document.getElementById('used' + car).textContent = currentData[car].used + ' kJ';
+            });
+            
+            // 입력 필드 초기화
+            document.getElementById('efficiencyInputA').value = '';
+            document.getElementById('efficiencyInputB').value = '';
+            document.getElementById('efficiencyInputC').value = '';
+            
+            resetSelection();
+        }
+        
+        function selectCar(car) {
+            const buttons = document.querySelectorAll('.car-btn');
+            const clickedButton = Array.from(buttons).find(btn => btn.textContent === car);
+            
+            if (selectedOrder.includes(car)) {
+                // 이미 선택된 경우 선택 해제
+                selectedOrder = selectedOrder.filter(c => c !== car);
+                clickedButton.classList.remove('selected');
+            } else {
+                if (selectedOrder.length >= 3) {
+                    alert('최대 3개까지만 선택할 수 있습니다!');
+                    return;
+                }
+                selectedOrder.push(car);
+                clickedButton.classList.add('selected');
+            }
+            
+            updateOrderDisplay();
+        }
+        
+        function updateOrderDisplay() {
+            const display = document.getElementById('orderDisplay');
+            if (selectedOrder.length === 0) {
+                display.textContent = '버튼을 클릭하세요';
+            } else {
+                display.textContent = selectedOrder.join(' > ');
+            }
+        }
+        
+        function resetSelection() {
+            selectedOrder = [];
+            const buttons = document.querySelectorAll('.car-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            updateOrderDisplay();
+            document.getElementById('result').innerHTML = '';
+        }
+        
+        function checkAnswer() {
+            // 효율 계산 확인
+            const inputA = parseFloat(document.getElementById('efficiencyInputA').value);
+            const inputB = parseFloat(document.getElementById('efficiencyInputB').value);
+            const inputC = parseFloat(document.getElementById('efficiencyInputC').value);
+            
+            const hasInputs = inputA || inputB || inputC;
+            const hasOrder = selectedOrder.length > 0;
+            
+            // 아무것도 입력/선택하지 않은 경우 정답만 보여주기
+            if (!hasInputs && !hasOrder) {
+                showCorrectAnswer();
+                return;
+            }
+            
+            if (!inputA || !inputB || !inputC) {
+                alert('모든 자동차의 에너지 효율을 계산해서 입력해주세요!');
+                return;
+            }
+            
+            if (selectedOrder.length !== 3) {
+                alert('에너지 효율이 높은 순서대로 세 개를 모두 선택해주세요!');
+                return;
+            }
+            
+            // 정답 계산
+            const sorted = ['A', 'B', 'C'].sort((a, b) => 
+                currentData[b].efficiency - currentData[a].efficiency
+            );
+            
+            // 효율 계산이 맞는지 확인 (오차 범위 1% 허용)
+            const efficiencyCorrectA = Math.abs(inputA - currentData.A.efficiency) <= 1;
+            const efficiencyCorrectB = Math.abs(inputB - currentData.B.efficiency) <= 1;
+            const efficiencyCorrectC = Math.abs(inputC - currentData.C.efficiency) <= 1;
+            
+            const allEfficiencyCorrect = efficiencyCorrectA && efficiencyCorrectB && efficiencyCorrectC;
+            
+            // 순서가 맞는지 확인
+            const orderCorrect = JSON.stringify(selectedOrder) === JSON.stringify(sorted);
+            
+            const resultDiv = document.getElementById('result');
+            
+            if (allEfficiencyCorrect && orderCorrect) {
+                resultDiv.innerHTML = `
+                    <div class="result correct">
+                        ✓ 정답입니다! 완벽해요!
+                    </div>
+                    <div class="explanation">
+                        <strong>💡 정답</strong><br>
+                        • 자동차 A: ${currentData.A.efficiency}%<br>
+                        • 자동차 B: ${currentData.B.efficiency}%<br>
+                        • 자동차 C: ${currentData.C.efficiency}%<br>
+                        • 순서: ${sorted.join(' > ')}<br><br>
+                        전기 자동차는 일반 자동차보다 에너지 효율이 훨씬 높습니다. 
+                        일반 자동차는 연료 연소 과정에서 많은 열에너지가 손실되기 때문입니다.
+                    </div>
+                `;
+            } else if (!allEfficiencyCorrect && orderCorrect) {
+                resultDiv.innerHTML = `
+                    <div class="result incorrect">
+                        ⚠️ 순서는 맞지만 효율 계산이 틀렸습니다!
+                    </div>
+                    <div class="explanation">
+                        <strong>정답</strong><br>
+                        • 자동차 A: ${currentData.A.efficiency}% (입력: ${inputA}%)${!efficiencyCorrectA ? ' ✗' : ' ✓'}<br>
+                        • 자동차 B: ${currentData.B.efficiency}% (입력: ${inputB}%)${!efficiencyCorrectB ? ' ✗' : ' ✓'}<br>
+                        • 자동차 C: ${currentData.C.efficiency}% (입력: ${inputC}%)${!efficiencyCorrectC ? ' ✗' : ' ✓'}<br><br>
+                        에너지 효율 = (사용 에너지 / 공급 에너지) × 100%
+                    </div>
+                `;
+            } else if (allEfficiencyCorrect && !orderCorrect) {
+                resultDiv.innerHTML = `
+                    <div class="result incorrect">
+                        ⚠️ 효율 계산은 맞지만 순서가 틀렸습니다!
+                    </div>
+                    <div class="explanation">
+                        <strong>효율 계산</strong> ✓<br>
+                        • 자동차 A: ${currentData.A.efficiency}%<br>
+                        • 자동차 B: ${currentData.B.efficiency}%<br>
+                        • 자동차 C: ${currentData.C.efficiency}%<br><br>
+                        <strong>정답 순서:</strong> ${sorted.join(' > ')}<br>
+                        <strong>입력한 순서:</strong> ${selectedOrder.join(' > ')}
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result incorrect">
+                        ✗ 틀렸습니다. 다시 시도해보세요!
+                    </div>
+                    <div class="explanation">
+                        <strong>정답</strong><br>
+                        • 자동차 A: ${currentData.A.efficiency}% (입력: ${inputA}%)${!efficiencyCorrectA ? ' ✗' : ' ✓'}<br>
+                        • 자동차 B: ${currentData.B.efficiency}% (입력: ${inputB}%)${!efficiencyCorrectB ? ' ✗' : ' ✓'}<br>
+                        • 자동차 C: ${currentData.C.efficiency}% (입력: ${inputC}%)${!efficiencyCorrectC ? ' ✗' : ' ✓'}<br>
+                        • 정답 순서: ${sorted.join(' > ')}<br>
+                        • 입력한 순서: ${selectedOrder.join(' > ')}<br><br>
+                        에너지 효율 = (사용 에너지 / 공급 에너지) × 100%
+                    </div>
+                `;
+            }
+        }
+        
+        function showCorrectAnswer() {
+            const sorted = ['A', 'B', 'C'].sort((a, b) => 
+                currentData[b].efficiency - currentData[a].efficiency
+            );
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="result correct">
+                    📌 정답 보기
+                </div>
+                <div class="explanation">
+                    <strong>💡 정답</strong><br>
+                    에너지 효율 = (사용 에너지 / 공급 에너지) × 100%<br><br>
+                    • 자동차 A: ${currentData.A.used} ÷ ${currentData.A.supply} × 100 = ${currentData.A.efficiency}%<br>
+                    • 자동차 B: ${currentData.B.used} ÷ ${currentData.B.supply} × 100 = ${currentData.B.efficiency}%<br>
+                    • 자동차 C: ${currentData.C.used} ÷ ${currentData.C.supply} × 100 = ${currentData.C.efficiency}%<br><br>
+                    <strong>효율이 높은 순서: ${sorted.join(' > ')}</strong><br><br>
+                    전기 자동차는 일반 자동차보다 에너지 효율이 훨씬 높습니다. 
+                    일반 자동차는 연료 연소 과정에서 많은 열에너지가 손실되기 때문입니다.
+                </div>
+            `;
+        }
+        
+        // 초기 문제 생성
+        generateNewProblem();
+    </script>
+</body>
+</html>

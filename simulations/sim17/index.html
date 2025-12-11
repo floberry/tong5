@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 시뮬레이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            background: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #667eea;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .match-section {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .match-section.active {
+            display: block;
+        }
+
+        .match-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .match-status {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+        }
+
+        .paper {
+            background: #e8e8e8;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: repeating-linear-gradient(90deg, #333 0px, #333 20px, transparent 20px, transparent 40px);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .score-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .opponent-score {
+            display: none;
+        }
+
+        .opponent-score.active {
+            display: block;
+        }
+
+        .question-box {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .data-box {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .data-item {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .choices {
+            list-style: none;
+        }
+
+        .choice {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .choice:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .choice.selected {
+            border-color: #667eea;
+            background: #e8eaff;
+        }
+
+        .choice.correct {
+            border-color: #51cf66;
+            background: #d3f9d8;
+        }
+
+        .choice.wrong {
+            border-color: #ff6b6b;
+            background: #ffe0e0;
+        }
+
+        .choice.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .explanation {
+            display: none;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .new-problem-btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 0 0 10px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .new-problem-btn:hover {
+            background: #5568d3;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: fall 2s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .penalty-flash {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px 0;
+            }
+            .paper {
+                padding: 15px;
+            }
+            .question-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔋 에너지 효율 시뮬레이션</h1>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('single')">혼자 풀기</button>
+                <button class="mode-btn" onclick="setMode('match')">친구와 대결</button>
+            </div>
+            <div class="match-section" id="matchSection">
+                <div class="match-status" id="matchStatus">친구와 실시간 대결을 시작하세요!</div>
+                <button class="match-btn" onclick="startMatch()">매칭 시작</button>
+            </div>
+        </div>
+        
+        <div class="paper">
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">정답</div>
+                    <div class="score-value" id="correctScore">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">오답</div>
+                    <div class="score-value" style="color: #ff6b6b;" id="wrongScore">0</div>
+                </div>
+                <div class="score-item opponent-score" id="opponentScore">
+                    <div class="score-label">상대 점수</div>
+                    <div class="score-value" style="color: #51cf66;" id="opponentValue">0</div>
+                </div>
+            </div>
+
+            <div class="question-box" id="questionBox">
+                <!-- 문제가 여기에 표시됩니다 -->
+            </div>
+        </div>
+
+        <button class="new-problem-btn" onclick="generateNewProblem()">🔄 새 문제</button>
+    </div>
+
+    <script>
+        let currentMode = 'single';
+        let correctCount = 0;
+        let wrongCount = 0;
+        let opponentScore = 0;
+        let isMatched = false;
+        let selectedChoice = null;
+        let isAnswered = false;
+        let currentAnswer = null;
+
+        const problemTemplates = [
+            {
+                type: 'comparison',
+                generate: () => {
+                    const energyA = Math.floor(Math.random() * 6 + 5) * 10;
+                    const efficiencyA = Math.floor(Math.random() * 3 + 6) * 10;
+                    const usefulA = energyA * efficiencyA / 100;
+                    
+                    const energyB = Math.floor(Math.random() * 6 + 5) * 10;
+                    const efficiencyB = Math.floor(Math.random() * 3 + 3) * 10;
+                    const usefulB = energyB * efficiencyB / 100;
+
+                    const variations = [
+                        {
+                            question: `전기 자동차 A, B에 공급한 전기 에너지와 바퀴를 움직이는 데 사용한 에너지는 다음과 같다.`,
+                            data: `• A: 공급 에너지 ${energyA} J, 유용한 에너지 ${usefulA} J<br>• B: 공급 에너지 ${energyB} J, 유용한 에너지 ${usefulB} J`,
+                            options: [
+                                { text: '에너지 효율은 B가 A보다 크다.', correct: efficiencyB > efficiencyA },
+                                { text: '공급한 전기 에너지가 같을 때 버려지는 열에너지는 A가 B보다 많다.', correct: efficiencyA < efficiencyB },
+                                { text: '바퀴를 움직이는 에너지가 같을 때 공급된 전기 에너지의 양은 A가 B보다 적다.', correct: efficiencyA > efficiencyB },
+                            ],
+                            explanation: `A의 효율: ${usefulA}/${energyA}×100=${efficiencyA}%, B의 효율: ${usefulB}/${energyB}×100=${efficiencyB}%<br>효율이 높을수록 같은 에너지로 더 많은 일을 할 수 있고, 버려지는 에너지가 적습니다.`
+                        },
+                        {
+                            question: `두 가전제품 A와 B의 에너지 사용 현황이다.`,
+                            data: `• A: 소비 전력 ${energyA} W, 출력 ${usefulA} W<br>• B: 소비 전력 ${energyB} W, 출력 ${usefulB} W`,
+                            options: [
+                                { text: 'A의 에너지 효율이 B보다 높다.', correct: efficiencyA > efficiencyB },
+                                { text: 'B가 A보다 더 많은 에너지를 낭비한다.', correct: (energyB - usefulB) > (energyA - usefulA) },
+                                { text: '같은 시간 작동 시 A가 B보다 전기를 더 많이 소비한다.', correct: energyA > energyB },
+                            ],
+                            explanation: `A의 효율: ${efficiencyA}%, B의 효율: ${efficiencyB}%<br>효율이 높은 제품일수록 같은 효과를 내는데 더 적은 에너지를 사용합니다.`
+                        }
+                    ];
+
+                    return variations[Math.floor(Math.random() * variations.length)];
+                }
+            },
+            {
+                type: 'calculation',
+                generate: () => {
+                    const supplied = Math.floor(Math.random() * 6 + 4) * 10;
+                    const useful = Math.floor(Math.random() * 4 + 2) * 10;
+                    const correctEfficiency = Math.round(useful / supplied * 100);
+
+                    const variations = [
+                        {
+                            question: `어떤 조명에 매초 ${supplied} J의 전기 에너지를 공급하였더니, ${useful} J의 빛에너지가 발생하였다. 이 조명의 에너지 효율은?`,
+                            options: [
+                                { text: `${correctEfficiency - 10}%`, correct: false },
+                                { text: `${correctEfficiency - 5}%`, correct: false },
+                                { text: `${correctEfficiency}%`, correct: true },
+                                { text: `${correctEfficiency + 5}%`, correct: false },
+                                { text: `${correctEfficiency + 10}%`, correct: false }
+                            ],
+                            explanation: `에너지 효율 = (유용한 에너지 / 공급한 에너지) × 100<br>= (${useful} / ${supplied}) × 100 = ${correctEfficiency}%`
+                        },
+                        {
+                            question: `열기관이 ${supplied} J의 에너지를 공급받아 ${useful} J의 일을 하였다. 이 열기관의 열효율은?`,
+                            options: [
+                                { text: `${correctEfficiency}%`, correct: true },
+                                { text: `${100 - correctEfficiency}%`, correct: false },
+                                { text: `${correctEfficiency + 10}%`, correct: false },
+                                { text: `${Math.round(supplied/useful)}%`, correct: false },
+                                { text: `${Math.round(useful/10)}%`, correct: false }
+                            ],
+                            explanation: `열효율 = (한 일 / 공급받은 에너지) × 100<br>= (${useful} / ${supplied}) × 100 = ${correctEfficiency}%`
+                        }
+                    ];
+
+                    return variations[Math.floor(Math.random() * variations.length)];
+                }
+            },
+            {
+                type: 'concept',
+                generate: () => {
+                    const concepts = [
+                        {
+                            question: '에너지 효율에 대한 설명으로 옳은 것을 모두 고르면?',
+                            options: [
+                                { text: '효율이 높을수록 같은 효과를 내는 데 더 적은 에너지를 사용한다.', correct: true },
+                                { text: '에너지 효율은 버려진 에너지의 비율이다.', correct: false },
+                                { text: '에너지 효율은 100%를 넘을 수 있다.', correct: false },
+                                { text: '효율이 낮을수록 버려지는 열에너지가 많다.', correct: true },
+                                { text: '에너지 효율 등급 5등급이 가장 효율이 좋다.', correct: false }
+                            ],
+                            explanation: '에너지 효율은 공급한 에너지 중 유용하게 사용된 비율이며, 100%를 초과할 수 없습니다. 효율이 높을수록 에너지를 효과적으로 사용하는 것입니다.'
+                        },
+                        {
+                            question: '에너지 전환과 보존에 대한 설명으로 옳은 것은?',
+                            options: [
+                                { text: '에너지는 전환되어도 총량이 보존된다.', correct: true },
+                                { text: '전환 시 일부 에너지가 사라진다.', correct: false },
+                                { text: '열에너지는 다시 100% 사용할 수 있다.', correct: false },
+                                { text: '에너지 보존 법칙 때문에 절약이 필요없다.', correct: false },
+                                { text: '에너지는 새롭게 만들어질 수 있다.', correct: false }
+                            ],
+                            explanation: '에너지 보존 법칙에 따라 에너지의 총량은 일정하지만, 전환 과정에서 유용하게 사용할 수 없는 형태(열)로 변환되므로 절약이 필요합니다.'
+                        }
+                    ];
+
+                    return concepts[Math.floor(Math.random() * concepts.length)];
+                }
+            }
+        ];
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (mode === 'match') {
+                document.getElementById('matchSection').classList.add('active');
+            } else {
+                document.getElementById('matchSection').classList.remove('active');
+                document.getElementById('opponentScore').classList.remove('active');
+                isMatched = false;
+            }
+        }
+
+        function startMatch() {
+            const statusEl = document.getElementById('matchStatus');
+            statusEl.textContent = '매칭 중...';
+            
+            setTimeout(() => {
+                isMatched = true;
+                opponentScore = 0;
+                statusEl.textContent = '매칭 완료! 대결이 시작되었습니다!';
+                document.getElementById('opponentScore').classList.add('active');
+                
+                // 상대방 점수 시뮬레이션
+                setInterval(() => {
+                    if (isMatched && Math.random() > 0.7) {
+                        opponentScore++;
+                        document.getElementById('opponentValue').textContent = opponentScore;
+                    }
+                }, 3000);
+            }, 1500);
+        }
+
+        function generateNewProblem() {
+            isAnswered = false;
+            selectedChoice = null;
+            
+            const template = problemTemplates[Math.floor(Math.random() * problemTemplates.length)];
+            const problem = template.generate();
+            
+            let html = `
+                <div class="question-number">문제</div>
+                <div class="question-text">${problem.question}</div>
+            `;
+
+            if (problem.data) {
+                html += `<div class="data-box">${problem.data}</div>`;
+            }
+
+            const shuffledOptions = [...problem.options].sort(() => Math.random() - 0.5);
+            const correctIndex = shuffledOptions.findIndex(opt => opt.correct);
+            currentAnswer = correctIndex;
+
+            html += '<ul class="choices">';
+            shuffledOptions.forEach((option, index) => {
+                html += `<li class="choice" onclick="selectChoice(${index}, ${option.correct})">${index + 1}. ${option.text}</li>`;
+            });
+            html += '</ul>';
+
+            html += `<div class="explanation" id="explanation">
+                <div class="explanation-title">💡 해설</div>
+                <div>${problem.explanation}</div>
+            </div>`;
+
+            document.getElementById('questionBox').innerHTML = html;
+        }
+
+        function selectChoice(index, isCorrect) {
+            if (isAnswered) {
+                // 이미 선택한 답을 다시 클릭하면 취소
+                if (selectedChoice === index) {
+                    document.querySelectorAll('.choice').forEach(choice => {
+                        choice.classList.remove('selected', 'correct', 'wrong', 'disabled');
+                    });
+                    document.getElementById('explanation').classList.remove('show');
+                    isAnswered = false;
+                    selectedChoice = null;
+                }
+                return;
+            }
+
+            selectedChoice = index;
+            isAnswered = true;
+
+            const choices = document.querySelectorAll('.choice');
+            choices.forEach((choice, i) => {
+                choice.classList.add('disabled');
+                if (i === index) {
+                    choice.classList.add('selected');
+                }
+            });
+
+            if (isCorrect) {
+                choices[index].classList.add('correct');
+                correctCount++;
+                document.getElementById('correctScore').textContent = correctCount;
+                createConfetti();
+            } else {
+                choices[index].classList.add('wrong');
+                choices[currentAnswer].classList.add('correct');
+                wrongCount++;
+                document.getElementById('wrongScore').textContent = wrongCount;
+                document.getElementById('questionBox').classList.add('penalty-flash');
+                setTimeout(() => {
+                    document.getElementById('questionBox').classList.remove('penalty-flash');
+                }, 500);
+                document.getElementById('explanation').classList.add('show');
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#51cf66', '#ffd93d', '#6bcfff', '#a78bfa'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 2000);
+                }, i * 30);
+            }
+        }
+
+        // 초기 문제 생성
+        generateNewProblem();
+    </script>
+</body>
+</html>

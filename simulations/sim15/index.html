@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 계산 문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .problem {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .choices {
+            margin-bottom: 25px;
+        }
+        
+        .choice {
+            background: white;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+        
+        .choice:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+        
+        .choice.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .choice-number {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 20px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .new-problem-btn {
+            background: #667eea;
+            color: white;
+        }
+        
+        .new-problem-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .check-answer-btn {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .check-answer-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+        
+        .check-answer-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #48bb78;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result h3 {
+            color: #38a169;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .result p {
+            line-height: 1.8;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .highlight {
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 효율 계산</h1>
+        
+        <div class="problem" id="problem"></div>
+        
+        <div class="choices" id="choices"></div>
+        
+        <div class="buttons">
+            <button class="new-problem-btn" onclick="generateProblem()">🔄 새 문제</button>
+            <button class="check-answer-btn" id="checkBtn" onclick="checkAnswer()" disabled>✓ 정답 확인</button>
+        </div>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        let currentProblem = {};
+        let selectedAnswer = null;
+
+        function generateProblem() {
+            // 정수 나누기가 가능한 값 생성
+            const efficiencyPercent = (Math.floor(Math.random() * 13) + 2) * 5; // 10%~70% (5의 배수)
+            const totalEnergy = (Math.floor(Math.random() * 20) + 4) * 10; // 40~230 (10의 배수)
+            const usefulEnergy = Math.round(totalEnergy * efficiencyPercent / 100);
+            const wasteEnergy = totalEnergy - usefulEnergy;
+            
+            // 정답 계산
+            const correctAnswer = efficiencyPercent;
+            
+            // 오답 보기 생성 (모두 5 또는 0으로 끝남)
+            const wrongAnswers = new Set();
+            wrongAnswers.add(correctAnswer + 10);
+            wrongAnswers.add(correctAnswer - 10);
+            wrongAnswers.add(correctAnswer + 5);
+            wrongAnswers.add(correctAnswer - 5);
+            wrongAnswers.add(correctAnswer + 15);
+            wrongAnswers.add(correctAnswer - 15);
+            
+            // 오답 중복 제거 및 정답과 다른 값만 유지
+            const wrongAnswersArray = Array.from(wrongAnswers)
+                .filter(ans => ans !== correctAnswer && ans > 0 && ans <= 100)
+                .slice(0, 4);
+            
+            // 부족하면 추가 생성 (5의 배수로)
+            while(wrongAnswersArray.length < 4) {
+                const newWrong = (Math.floor(Math.random() * 18) + 1) * 5; // 5~90
+                if(newWrong !== correctAnswer && !wrongAnswersArray.includes(newWrong)) {
+                    wrongAnswersArray.push(newWrong);
+                }
+            }
+            
+            // 보기 섞기
+            const allChoices = [correctAnswer, ...wrongAnswersArray].sort(() => Math.random() - 0.5);
+            
+            currentProblem = {
+                totalEnergy,
+                usefulEnergy,
+                wasteEnergy,
+                correctAnswer,
+                choices: allChoices.map(c => `${c} %`)
+            };
+            
+            displayProblem();
+            selectedAnswer = null;
+            document.getElementById('checkBtn').disabled = true;
+            document.getElementById('result').classList.remove('show');
+        }
+
+        function displayProblem() {
+            const { totalEnergy, usefulEnergy, wasteEnergy } = currentProblem;
+            
+            document.getElementById('problem').innerHTML = `
+                어떤 조명에 매초 <span class="highlight">${totalEnergy} J</span>의 전기 에너지를 공급하였더니, 
+                <span class="highlight">${usefulEnergy} J</span>의 빛에너지가 발생하고 
+                <span class="highlight">${wasteEnergy} J</span>의 열에너지가 발생하였다. 
+                이 조명 기구의 에너지 효율은?
+            `;
+            
+            const choiceNumbers = ['①', '②', '③', '④', '⑤'];
+            const choicesHtml = currentProblem.choices.map((choice, index) => `
+                <div class="choice" onclick="selectChoice(${index})">
+                    <span class="choice-number">${choiceNumbers[index]}</span>
+                    <span>${choice}</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('choices').innerHTML = choicesHtml;
+        }
+
+        function selectChoice(index) {
+            // 이전 선택 해제
+            document.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected');
+            });
+            
+            // 새로운 선택
+            document.querySelectorAll('.choice')[index].classList.add('selected');
+            selectedAnswer = index;
+            document.getElementById('checkBtn').disabled = false;
+        }
+
+        function checkAnswer() {
+            if(selectedAnswer === null) return;
+            
+            const selectedValue = currentProblem.choices[selectedAnswer];
+            const isCorrect = selectedValue === `${currentProblem.correctAnswer} %`;
+            const correctIndex = currentProblem.choices.indexOf(`${currentProblem.correctAnswer} %`);
+            const choiceNumbers = ['①', '②', '③', '④', '⑤'];
+            const correctNumber = choiceNumbers[correctIndex];
+            
+            const { totalEnergy, usefulEnergy, correctAnswer } = currentProblem;
+            
+            const resultHtml = `
+                <h3>${isCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.'}</h3>
+                <p><strong>정답: ${correctNumber} ${correctAnswer} %</strong></p>
+                
+                <p><strong>📝 풀이 과정:</strong></p>
+                
+                <p>에너지 효율은 공급한 에너지 중에서 유용하게 사용된 에너지의 비율입니다.</p>
+                
+                <div class="formula">
+                에너지 효율 = (유용한 에너지 / 공급한 에너지) × 100
+                </div>
+                
+                <p>주어진 값을 대입하면:</p>
+                
+                <div class="formula">
+                에너지 효율 = (${usefulEnergy} J / ${totalEnergy} J) × 100 = ${correctAnswer} %
+                </div>
+                
+                <p>따라서 이 조명 기구의 에너지 효율은 <span class="highlight">${correctAnswer} %</span>입니다.</p>
+            `;
+            
+            document.getElementById('result').innerHTML = resultHtml;
+            document.getElementById('result').classList.add('show');
+        }
+
+        // 페이지 로드 시 첫 문제 생성
+        generateProblem();
+    </script>
+</body>
+</html>

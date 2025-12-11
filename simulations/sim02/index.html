@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 효율 문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .diagram {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .device-image {
+            width: 100%;
+            max-width: 320px;
+            height: 220px;
+            margin: 0 auto 20px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .device-visual {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .energy-flow {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .energy-box {
+            display: inline-block;
+            padding: 14px 24px;
+            margin: 5px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .energy-box:hover {
+            transform: translateY(-2px);
+        }
+        
+        .electric {
+            background: linear-gradient(145deg, #ff8787, #ff6b6b);
+            color: white;
+        }
+        
+        .light {
+            background: linear-gradient(145deg, #ffe066, #ffd93d);
+            color: #333;
+        }
+        
+        .sound {
+            background: linear-gradient(145deg, #8ce99a, #6bcf7f);
+            color: white;
+        }
+        
+        .heat {
+            background: linear-gradient(145deg, #ffa07a, #ff8787);
+            color: white;
+        }
+        
+        .motion {
+            background: linear-gradient(145deg, #74c0fc, #4dabf7);
+            color: white;
+        }
+        
+        .unknown {
+            background: linear-gradient(145deg, #c5c5c5, #adb5bd);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .arrow {
+            font-size: 28px;
+            color: #667eea;
+            margin: 0 10px;
+        }
+        
+        .options-label {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            border: 2px dashed #667eea;
+        }
+        
+        .statements {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            padding: 18px;
+            border-radius: 12px;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .statement {
+            padding: 14px;
+            margin: 12px 0;
+            background: white;
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.6;
+            border-left: 5px solid #ddd;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        .statement:hover {
+            border-left-color: #667eea;
+            background: linear-gradient(145deg, #ffffff, #f0f4ff);
+            transform: translateX(5px);
+        }
+        
+        .statement.selected {
+            border-left-color: #667eea;
+            background: linear-gradient(145deg, #e0e7ff, #d0d9ff);
+            font-weight: bold;
+        }
+        
+        .statement.correct {
+            border-left-color: #51cf66;
+            background: linear-gradient(145deg, #d3f9d8, #b2f2bb);
+        }
+        
+        .statement.incorrect {
+            border-left-color: #ff6b6b;
+            background: linear-gradient(145deg, #ffe3e3, #ffc9c9);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .new-problem-btn {
+            background: linear-gradient(145deg, #7c8de8, #667eea);
+            color: white;
+        }
+        
+        .new-problem-btn:hover {
+            background: linear-gradient(145deg, #667eea, #5568d3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(102,126,234,0.35);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(145deg, #69db7c, #51cf66);
+            color: white;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(145deg, #51cf66, #40c057);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(81,207,102,0.35);
+        }
+        
+        .submit-btn:disabled {
+            background: linear-gradient(145deg, #dee2e6, #ccc);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.correct {
+            background: linear-gradient(145deg, #d3f9d8, #b2f2bb);
+            color: #2b8a3e;
+            border: 3px solid #51cf66;
+        }
+        
+        .result.incorrect {
+            background: linear-gradient(145deg, #ffe3e3, #ffc9c9);
+            color: #c92a2a;
+            border: 3px solid #ff6b6b;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: normal;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+        }
+        
+        .explanation strong {
+            color: #c92a2a;
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 에너지 전환과 효율 문제</h1>
+        
+        <div class="question-text" id="questionText"></div>
+        
+        <div class="diagram">
+            <div class="device-image" id="deviceImage"></div>
+            <div class="energy-flow" id="energyFlow"></div>
+        </div>
+        
+        <div class="options-label">< 보기 ></div>
+        
+        <div class="statements" id="statements"></div>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="buttons">
+            <button class="new-problem-btn" onclick="newProblem()">🔄 새 문제</button>
+            <button class="submit-btn" id="submitBtn" onclick="checkAnswer()" disabled>✓ 정답 확인</button>
+        </div>
+    </div>
+
+    <script>
+        const deviceTemplates = [
+            {
+                device: 'TV',
+                svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                    <rect x="20" y="20" width="160" height="100" rx="5" fill="#2c3e50" stroke="#34495e" stroke-width="3"/>
+                    <rect x="30" y="30" width="140" height="80" fill="#3498db"/>
+                    <rect x="85" y="125" width="30" height="15" fill="#34495e"/>
+                    <rect x="60" y="140" width="80" height="5" rx="2" fill="#7f8c8d"/>
+                </svg>`,
+                energyInput: 100,
+                useful: [
+                    { type: '빛에너지', value: 30, class: 'light' },
+                    { type: '소리 에너지', value: 20, class: 'sound' }
+                ],
+                wasteValue: 50
+            },
+            {
+                device: '전등',
+                svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                    <ellipse cx="100" cy="60" rx="40" ry="50" fill="#fff9c4" opacity="0.5"/>
+                    <ellipse cx="100" cy="60" rx="35" ry="45" fill="#fff59d" opacity="0.7"/>
+                    <path d="M 100 20 Q 70 35 70 65 L 70 85 Q 70 95 80 95 L 120 95 Q 130 95 130 85 L 130 65 Q 130 35 100 20 Z" fill="#ffd54f" stroke="#fbc02d" stroke-width="2"/>
+                    <circle cx="100" cy="55" r="8" fill="#fff176" opacity="0.8"/>
+                    <rect x="88" y="95" width="24" height="18" fill="#9e9e9e" stroke="#757575" stroke-width="1"/>
+                    <path d="M 83 113 L 90 133 L 110 133 L 117 113 Z" fill="#757575" stroke="#616161" stroke-width="1"/>
+                    <rect x="95" y="133" width="10" height="5" fill="#616161"/>
+                </svg>`,
+                energyInput: 80,
+                useful: [
+                    { type: '빛에너지', value: 20, class: 'light' }
+                ],
+                wasteValue: 60
+            },
+            {
+                device: '스피커',
+                svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                    <rect x="50" y="20" width="100" height="110" rx="8" fill="#37474f" stroke="#263238" stroke-width="3"/>
+                    <circle cx="100" cy="60" r="25" fill="#546e7a" stroke="#263238" stroke-width="2"/>
+                    <circle cx="100" cy="60" r="18" fill="#455a64"/>
+                    <circle cx="100" cy="60" r="8" fill="#263238"/>
+                    <circle cx="100" cy="110" r="15" fill="#546e7a" stroke="#263238" stroke-width="2"/>
+                    <circle cx="100" cy="110" r="8" fill="#263238"/>
+                </svg>`,
+                energyInput: 60,
+                useful: [
+                    { type: '소리 에너지', value: 20, class: 'sound' }
+                ],
+                wasteValue: 40
+            },
+            {
+                device: '세탁기',
+                svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                    <rect x="50" y="20" width="100" height="110" rx="8" fill="#eceff1" stroke="#90a4ae" stroke-width="3"/>
+                    <rect x="60" y="30" width="80" height="25" rx="3" fill="#b0bec5"/>
+                    <circle cx="75" cy="42" r="4" fill="#4caf50"/>
+                    <circle cx="90" cy="42" r="4" fill="#2196f3"/>
+                    <circle cx="130" cy="42" r="8" fill="#546e7a"/>
+                    <circle cx="100" cy="90" r="32" fill="#90a4ae" stroke="#607d8b" stroke-width="3"/>
+                    <circle cx="100" cy="90" r="25" fill="#b0bec5"/>
+                    <path d="M 85 80 Q 100 95 115 80" stroke="#607d8b" stroke-width="2" fill="none"/>
+                </svg>`,
+                energyInput: 200,
+                useful: [
+                    { type: '운동 에너지', value: 140, class: 'motion' }
+                ],
+                wasteValue: 60
+            },
+            {
+                device: '전기밥솥',
+                svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                    <ellipse cx="100" cy="110" rx="50" ry="15" fill="#d32f2f"/>
+                    <rect x="50" y="60" width="100" height="50" fill="#f44336" stroke="#c62828" stroke-width="2"/>
+                    <ellipse cx="100" cy="60" rx="50" ry="15" fill="#e57373"/>
+                    <path d="M 80 50 Q 100 35 120 50" fill="none" stroke="#9e9e9e" stroke-width="4" stroke-linecap="round"/>
+                    <rect x="85" y="65" width="30" height="15" rx="3" fill="#424242"/>
+                    <circle cx="130" cy="72" r="5" fill="#4caf50"/>
+                </svg>`,
+                energyInput: 100,
+                useful: [
+                    { type: '열에너지', value: 70, class: 'heat' }
+                ],
+                wasteValue: 30
+            }
+        ];
+
+        const problemPool = [];
+        let currentProblem = null;
+        let selectedStatements = new Set();
+
+        function generateRandomProblems() {
+            problemPool.length = 0;
+            
+            deviceTemplates.forEach(template => {
+                const statements = generateDiverseStatements(template);
+                statements.forEach(statementSet => {
+                    problemPool.push({
+                        device: template.device,
+                        svg: template.svg,
+                        energyInput: template.energyInput,
+                        useful: template.useful,
+                        wasteValue: template.wasteValue,
+                        statements: statementSet
+                    });
+                });
+            });
+        }
+
+        function generateDiverseStatements(template) {
+            const allStatementSets = [];
+            const totalUseful = template.useful.reduce((sum, e) => sum + e.value, 0);
+            const efficiency = (totalUseful / template.energyInput * 100);
+            const roundedEfficiency = Math.round(efficiency / 10) * 10;
+            
+            const allPossibleStatements = [
+                // 효율 계산 (이상)
+                {
+                    text: `${template.device}의 에너지 효율은 ${roundedEfficiency}% 이상이다.`,
+                    isCorrect: efficiency >= roundedEfficiency,
+                    explanation: `에너지 효율 = (유용한 에너지/투입 에너지) × 100 = (${totalUseful}/${template.energyInput}) × 100 = ${efficiency.toFixed(1)}%입니다.`
+                },
+                // 효율 계산 (이하)
+                {
+                    text: `${template.device}의 에너지 효율은 ${roundedEfficiency}% 이하이다.`,
+                    isCorrect: efficiency <= roundedEfficiency,
+                    explanation: `에너지 효율 = (유용한 에너지/투입 에너지) × 100 = (${totalUseful}/${template.energyInput}) × 100 = ${efficiency.toFixed(1)}%입니다.`
+                },
+                // 열에너지 양 계산 (정답)
+                {
+                    text: `?로 전환된 에너지의 양은 ${template.wasteValue}이다.`,
+                    isCorrect: true,
+                    explanation: `투입 에너지 ${template.energyInput} - 유용한 에너지 ${totalUseful} = ${template.wasteValue}이므로 열에너지로 전환된 양은 ${template.wasteValue}입니다.`
+                },
+                // 열에너지 양 계산 (오답)
+                {
+                    text: `?로 전환된 에너지의 양은 ${template.wasteValue + 10}이다.`,
+                    isCorrect: false,
+                    explanation: `투입 에너지 ${template.energyInput} - 유용한 에너지 ${totalUseful} = ${template.wasteValue}이므로 ${template.wasteValue + 10}이 아닙니다.`
+                },
+                // ?는 열에너지
+                {
+                    text: `?는 열에너지이다.`,
+                    isCorrect: true,
+                    explanation: `모든 기기에서 버려지는 에너지는 열에너지입니다.`
+                },
+                // 유용한 에너지 여부
+                {
+                    text: `?는 ${template.device}에서 유용하게 사용되는 에너지이다.`,
+                    isCorrect: template.device === '전기밥솥',
+                    explanation: template.device === '전기밥솥' 
+                        ? `전기밥솥은 열에너지를 이용해 밥을 짓기 때문에 ?인 열에너지가 유용한 에너지입니다.`
+                        : `${template.device}에서 ?인 열에너지는 버려지는 에너지로, 유용하게 사용할 수 없습니다.`
+                },
+                // 유용한 에너지와 열에너지 비교
+                {
+                    text: `유용하게 사용되는 에너지가 ?보다 크다.`,
+                    isCorrect: totalUseful > template.wasteValue,
+                    explanation: totalUseful > template.wasteValue
+                        ? `유용한 에너지(${totalUseful})가 열에너지(${template.wasteValue})보다 큽니다.`
+                        : `유용한 에너지(${totalUseful})가 열에너지(${template.wasteValue})보다 작거나 같습니다.`
+                },
+                {
+                    text: `?가 유용하게 사용되는 에너지보다 크다.`,
+                    isCorrect: template.wasteValue > totalUseful,
+                    explanation: template.wasteValue > totalUseful
+                        ? `열에너지(${template.wasteValue})가 유용한 에너지(${totalUseful})보다 큽니다.`
+                        : `열에너지(${template.wasteValue})가 유용한 에너지(${totalUseful})보다 작거나 같습니다.`
+                },
+                // 효율이 50% 이상/이하
+                {
+                    text: `${template.device}의 에너지 효율은 50% 이상이다.`,
+                    isCorrect: efficiency >= 50,
+                    explanation: `에너지 효율 = (${totalUseful}/${template.energyInput}) × 100 = ${efficiency.toFixed(1)}%입니다.`
+                },
+                {
+                    text: `${template.device}의 에너지 효율은 50% 이하이다.`,
+                    isCorrect: efficiency <= 50,
+                    explanation: `에너지 효율 = (${totalUseful}/${template.energyInput}) × 100 = ${efficiency.toFixed(1)}%입니다.`
+                },
+                // 투입 에너지의 절반 이상/이하가 유용하게 사용
+                {
+                    text: `투입한 전기 에너지의 절반 이상이 유용하게 사용된다.`,
+                    isCorrect: totalUseful >= template.energyInput / 2,
+                    explanation: totalUseful >= template.energyInput / 2
+                        ? `유용한 에너지(${totalUseful})가 투입 에너지(${template.energyInput})의 절반(${template.energyInput/2}) 이상입니다.`
+                        : `유용한 에너지(${totalUseful})가 투입 에너지(${template.energyInput})의 절반(${template.energyInput/2})보다 작습니다.`
+                },
+                {
+                    text: `투입한 전기 에너지의 절반 이상이 ?로 전환된다.`,
+                    isCorrect: template.wasteValue >= template.energyInput / 2,
+                    explanation: template.wasteValue >= template.energyInput / 2
+                        ? `열에너지(${template.wasteValue})가 투입 에너지(${template.energyInput})의 절반(${template.energyInput/2}) 이상입니다.`
+                        : `열에너지(${template.wasteValue})가 투입 에너지(${template.energyInput})의 절반(${template.energyInput/2})보다 작습니다.`
+                }
+            ];
+            
+            // 에너지 효율에 집중한 다양한 조합 (중복 없이)
+            const combinations = [
+                [0, 2, 6],   // 효율(이상) + 열 계산 + 비교
+                [1, 4, 7],   // 효율(이하) + ?는 열 + 비교
+                [0, 5, 10],  // 효율(이상) + 유용성 + 절반 이상 유용
+                [2, 8, 11],  // 열 계산 + 50% 이상 + 절반 이상 ?
+                [3, 6, 9],   // 잘못된 열 + 비교 + 50% 이하
+                [4, 7, 10],  // ?는 열 + 비교 + 절반 이상 유용
+                [1, 2, 11],  // 효율(이하) + 열 계산 + 절반 이상 ?
+                [0, 4, 6]    // 효율(이상) + ?는 열 + 비교
+            ];
+            
+            combinations.forEach(combo => {
+                const statements = combo.map((idx, i) => ({
+                    label: ['ㄱ', 'ㄴ', 'ㄷ'][i],
+                    ...allPossibleStatements[idx]
+                }));
+                allStatementSets.push(statements);
+            });
+            
+            return allStatementSets;
+        }
+
+        function loadProblem() {
+            if (problemPool.length === 0) {
+                generateRandomProblems();
+            }
+            
+            const randomIndex = Math.floor(Math.random() * problemPool.length);
+            currentProblem = problemPool[randomIndex];
+            selectedStatements.clear();
+            
+            document.getElementById('questionText').innerHTML = 
+                `그림은 ${currentProblem.device}를 켤 때, ${currentProblem.device}에서 일어나는 에너지 전환을 나타낸 것이다.<br>
+                이에 대한 설명으로 옳은 것만을 [보기]에서 있는 대로 고르시오.`;
+            
+            document.getElementById('deviceImage').innerHTML = currentProblem.svg;
+            
+            let flowHTML = `<div class="energy-box electric">전기 에너지 [${currentProblem.energyInput}]</div>`;
+            flowHTML += '<br><span class="arrow">↓</span><br>';
+            
+            currentProblem.useful.forEach((energy, index) => {
+                if (index > 0) flowHTML += '<br><span class="arrow">↓</span><br>';
+                flowHTML += `<div class="energy-box ${energy.class}">${energy.type} [${energy.value}]</div>`;
+            });
+            
+            flowHTML += '<br><span class="arrow">↓</span><br>';
+            flowHTML += `<div class="energy-box unknown">? [?]</div>`;
+            
+            document.getElementById('energyFlow').innerHTML = flowHTML;
+            
+            let statementsHTML = '';
+            currentProblem.statements.forEach((stmt, index) => {
+                statementsHTML += `<div class="statement" onclick="toggleStatement(${index})"><strong>${stmt.label}.</strong> ${stmt.text}</div>`;
+            });
+            document.getElementById('statements').innerHTML = statementsHTML;
+            
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('submitBtn').disabled = true;
+        }
+
+        function toggleStatement(index) {
+            if (document.getElementById('result').classList.contains('show')) return;
+            
+            const statements = document.querySelectorAll('.statement');
+            const label = currentProblem.statements[index].label;
+            
+            if (selectedStatements.has(label)) {
+                selectedStatements.delete(label);
+                statements[index].classList.remove('selected');
+            } else {
+                selectedStatements.add(label);
+                statements[index].classList.add('selected');
+            }
+            
+            document.getElementById('submitBtn').disabled = selectedStatements.size === 0;
+        }
+        
+        function checkAnswer() {
+            if (selectedStatements.size === 0) return;
+            
+            const resultDiv = document.getElementById('result');
+            const statements = document.querySelectorAll('.statement');
+            
+            const correctLabels = new Set(
+                currentProblem.statements.filter(s => s.isCorrect).map(s => s.label)
+            );
+            
+            const isCorrect = selectedStatements.size === correctLabels.size &&
+                            [...selectedStatements].every(label => correctLabels.has(label));
+            
+            currentProblem.statements.forEach((stmt, index) => {
+                if (stmt.isCorrect) {
+                    statements[index].classList.add('correct');
+                } else if (selectedStatements.has(stmt.label)) {
+                    statements[index].classList.add('incorrect');
+                }
+            });
+            
+            if (isCorrect) {
+                resultDiv.innerHTML = '<div>✓ 정답입니다!</div>';
+                resultDiv.className = 'result show correct';
+            } else {
+                const correctAnswer = [...correctLabels].sort().join(', ');
+                
+                let explanationHTML = `<div>✗ 틀렸습니다. 정답은 ${correctAnswer}입니다.</div>`;
+                explanationHTML += '<div class="explanation">';
+                explanationHTML += '<strong>📖 풀이:</strong>';
+                
+                currentProblem.statements.forEach(stmt => {
+                    const mark = stmt.isCorrect ? '✓' : '✗';
+                    explanationHTML += `<div style="margin-top:8px">• <strong>${stmt.label} (${mark})</strong>: ${stmt.explanation}</div>`;
+                });
+                
+                explanationHTML += '</div>';
+                
+                resultDiv.innerHTML = explanationHTML;
+                resultDiv.className = 'result show incorrect';
+            }
+            
+            document.getElementById('submitBtn').disabled = true;
+        }
+        
+        function newProblem() {
+            loadProblem();
+        }
+        
+        generateRandomProblems();
+        loadProblem();
+    </script>
+</body>
+</html>
